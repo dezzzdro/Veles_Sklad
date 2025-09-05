@@ -201,27 +201,128 @@ async function loadUvedomleniya() {
 
 async function loadOtladka() {
     const content = document.getElementById('otladka-content');
+
     const html = `
-        <h3>Тестирование соединения с СУБД</h3>
-        <button onclick="testConnection()">Тест соединения</button>
-        <div id="connection-status"></div>
-        <h3>Выбор таблицы для тестирования</h3>
-        <select id="table-select">
-            <option value="склад">Склад</option>
-            <option value="сборка">Сборка</option>
-            <option value="приход">Приход</option>
-            <option value="выданное">Выданное</option>
-            <option value="контрагенты">Контрагенты</option>
-            <option value="настройки">Настройки</option>
-            <option value="уведомления">Уведомления</option>
-        </select>
-        <button onclick="testTable()">Тест таблицы</button>
-        <h3>Лог запросов</h3>
-        <textarea id="log-area" rows="10" readonly></textarea>
-        <button onclick="copyLog()">Копировать лог</button>
-        <button onclick="clearLog()">Очистить лог</button>
-        <button onclick="exportLog()">Экспорт в txt</button>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Тестирование соединения -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-plug me-2"></i>Тестирование соединения с СУБД
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success" onclick="testConnection()">
+                                <i class="fas fa-play me-2"></i>Тест соединения
+                            </button>
+                        </div>
+                        <div id="connection-status" class="mt-3">
+                            <div class="alert alert-secondary">
+                                <i class="fas fa-info-circle me-2"></i>Нажмите кнопку для тестирования
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Выбор таблицы для тестирования -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="fas fa-table me-2"></i>Выбор таблицы для тестирования
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="table-select" class="form-label">Выберите таблицу:</label>
+                            <select id="table-select" class="form-select">
+                                <option value="склад">Склад</option>
+                                <option value="сборка">Сборка</option>
+                                <option value="приход">Приход</option>
+                                <option value="выданное">Выданное</option>
+                                <option value="контрагенты">Контрагенты</option>
+                                <option value="ответственные_лица">Ответственные лица</option>
+                                <option value="настройки">Настройки</option>
+                                <option value="уведомления">Уведомления</option>
+                                <option value="операции">Операции</option>
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" onclick="testTable()">
+                                <i class="fas fa-search me-2"></i>Тест таблицы
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="testAllTables()">
+                                <i class="fas fa-list me-2"></i>Тест всех таблиц
+                            </button>
+                        </div>
+                        <div id="table-test-result" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Лог запросов -->
+                <div class="card">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-terminal me-2"></i>Лог запросов и ответов
+                        </h5>
+                        <small class="text-light">Коды ошибок с расшифровкой</small>
+                    </div>
+                    <div class="card-body p-0">
+                        <textarea id="log-area" class="form-control border-0" rows="15" readonly
+                            style="resize: none; font-family: 'Courier New', monospace; font-size: 12px;"></textarea>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary w-100" onclick="copyLog()">
+                                    <i class="fas fa-copy me-1"></i>Копировать лог
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-outline-danger w-100" onclick="clearLog()">
+                                    <i class="fas fa-trash me-1"></i>Очистить лог
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-outline-success w-100" onclick="exportLog()">
+                                <i class="fas fa-file-export me-1"></i>Экспорт в txt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Дополнительная информация -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Информация о системе
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Supabase URL:</strong> <code>https://tqwagbbppfklqgmyyrwj.supabase.co</code></p>
+                                <p><strong>Время последнего теста:</strong> <span id="last-test-time">-</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Версия приложения:</strong> 1.0.0</p>
+                                <p><strong>Статус БД:</strong> <span id="db-status" class="badge bg-secondary">Неизвестно</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     `;
+
     content.innerHTML = html;
 }
 
@@ -1810,51 +1911,200 @@ async function viewUved(id) {
 
 async function testConnection() {
     const status = document.getElementById('connection-status');
+    const startTime = Date.now();
+
+    status.innerHTML = `
+        <div class="alert alert-info">
+            <i class="fas fa-spinner fa-spin me-2"></i>Тестирование соединения...
+        </div>
+    `;
+
     try {
-        const { data, error } = await supabase.from('склад').select('count').limit(1);
+        const { data, error } = await supabase.from('склад').select('count', { count: 'exact' }).limit(1);
+        const responseTime = Date.now() - startTime;
+
         if (error) throw error;
-        status.innerHTML = '<p style="color: green;">Соединение успешно</p>';
-        logMessage('Соединение успешно');
+
+        status.innerHTML = `
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>Соединение успешно!
+                <br><small>Время ответа: ${responseTime}ms</small>
+            </div>
+        `;
+
+        document.getElementById('db-status').className = 'badge bg-success';
+        document.getElementById('db-status').textContent = 'Подключено';
+        document.getElementById('last-test-time').textContent = new Date().toLocaleTimeString('ru-RU');
+
+        logMessage(`✅ Соединение успешно (${responseTime}ms)`);
+        logMessage(`📊 Доступно записей в таблице склад: ${data.length || 0}`);
+
     } catch (error) {
-        status.innerHTML = '<p style="color: red;">Ошибка соединения: ' + error.message + '</p>';
-        logMessage('Ошибка соединения: ' + error.message);
+        const responseTime = Date.now() - startTime;
+
+        status.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>Ошибка соединения!
+                <br><small>Код ошибки: ${error.code || 'Неизвестен'}</small>
+                <br><small>Время ответа: ${responseTime}ms</small>
+                <br><small>Сообщение: ${error.message}</small>
+            </div>
+        `;
+
+        document.getElementById('db-status').className = 'badge bg-danger';
+        document.getElementById('db-status').textContent = 'Ошибка';
+
+        logMessage(`❌ Ошибка соединения (${responseTime}ms)`);
+        logMessage(`🔍 Код ошибки: ${error.code || 'Неизвестен'}`);
+        logMessage(`📝 Сообщение: ${error.message}`);
     }
 }
 
 async function testTable() {
     const table = document.getElementById('table-select').value;
+    const resultDiv = document.getElementById('table-test-result');
+    const startTime = Date.now();
+
+    resultDiv.innerHTML = `
+        <div class="alert alert-info">
+            <i class="fas fa-spinner fa-spin me-2"></i>Тестирование таблицы ${table}...
+        </div>
+    `;
+
     try {
-        const { data, error } = await supabase.from(table).select('*').limit(5);
+        const { data, error, count } = await supabase
+            .from(table)
+            .select('*', { count: 'exact' })
+            .limit(5);
+
+        const responseTime = Date.now() - startTime;
+
         if (error) throw error;
-        logMessage('Тест таблицы ' + table + ': ' + data.length + ' записей');
+
+        resultDiv.innerHTML = `
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>Таблица ${table} доступна
+                <br><small>Всего записей: ${count}</small>
+                <br><small>Время ответа: ${responseTime}ms</small>
+            </div>
+        `;
+
+        logMessage(`✅ Таблица ${table}: ${count} записей (${responseTime}ms)`);
+        if (data && data.length > 0) {
+            logMessage(`📋 Пример данных: ${JSON.stringify(data[0], null, 2)}`);
+        }
+
     } catch (error) {
-        logMessage('Ошибка теста таблицы ' + table + ': ' + error.message);
+        const responseTime = Date.now() - startTime;
+
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>Ошибка тестирования таблицы ${table}
+                <br><small>Код ошибки: ${error.code || 'Неизвестен'}</small>
+                <br><small>Время ответа: ${responseTime}ms</small>
+            </div>
+        `;
+
+        logMessage(`❌ Ошибка таблицы ${table} (${responseTime}ms)`);
+        logMessage(`🔍 Код ошибки: ${error.code || 'Неизвестен'}`);
+        logMessage(`📝 Сообщение: ${error.message}`);
     }
+}
+
+async function testAllTables() {
+    const tables = [
+        'склад', 'сборка', 'приход', 'выданное',
+        'контрагенты', 'ответственные_лица', 'настройки',
+        'уведомления', 'операции'
+    ];
+
+    logMessage('🚀 Начало тестирования всех таблиц');
+
+    for (const table of tables) {
+        try {
+            const { count, error } = await supabase
+                .from(table)
+                .select('*', { count: 'exact', head: true });
+
+            if (error) {
+                logMessage(`❌ Таблица ${table}: Ошибка - ${error.message}`);
+            } else {
+                logMessage(`✅ Таблица ${table}: ${count} записей`);
+            }
+        } catch (error) {
+            logMessage(`❌ Таблица ${table}: Исключение - ${error.message}`);
+        }
+
+        // Небольшая задержка между запросами
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    logMessage('🏁 Тестирование всех таблиц завершено');
 }
 
 function logMessage(message) {
     const log = document.getElementById('log-area');
-    log.value += new Date().toISOString() + ': ' + message + '\n';
+    const timestamp = new Date().toLocaleString('ru-RU', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+    const logEntry = `[${timestamp}] ${message}\n`;
+    log.value += logEntry;
+
+    // Автоматическая прокрутка вниз
+    log.scrollTop = log.scrollHeight;
+
+    console.log(message); // Также выводим в консоль браузера
 }
 
 function copyLog() {
     const log = document.getElementById('log-area');
-    navigator.clipboard.writeText(log.value);
-    alert('Лог скопирован');
+    if (log.value.trim() === '') {
+        showNotification('Лог пуст', 'warning');
+        return;
+    }
+
+    navigator.clipboard.writeText(log.value).then(() => {
+        showNotification('Лог скопирован в буфер обмена', 'success');
+    }).catch(() => {
+        showNotification('Ошибка копирования лога', 'error');
+    });
 }
 
 function clearLog() {
-    document.getElementById('log-area').value = '';
+    const log = document.getElementById('log-area');
+    if (confirm('Очистить лог запросов?')) {
+        log.value = '';
+        logMessage('🧹 Лог очищен пользователем');
+        showNotification('Лог очищен', 'info');
+    }
 }
 
 function exportLog() {
-    const log = document.getElementById('log-area').value;
-    const blob = new Blob([log], { type: 'text/plain' });
+    const log = document.getElementById('log-area');
+    if (log.value.trim() === '') {
+        showNotification('Лог пуст, нечего экспортировать', 'warning');
+        return;
+    }
+
+    const timestamp = new Date().toISOString().split('T')[0];
+    const filename = `debug_log_${timestamp}.txt`;
+
+    const blob = new Blob([log.value], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'log.txt';
+    a.download = filename;
     a.click();
+
+    URL.revokeObjectURL(url);
+    logMessage(`📤 Лог экспортирован в файл: ${filename}`);
+    showNotification(`Лог экспортирован: ${filename}`, 'success');
 }
 
 // Initialize
