@@ -12,46 +12,48 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <nav id="sidebar" class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
-            <h5 class="text-center mb-4">Разделы</h5>
+            <h5 class="text-center mb-4 fw-bold">
+                <i class="fas fa-list me-2"></i>Разделы
+            </h5>
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#sklad">
-                        <i class="fas fa-warehouse"></i> Склад
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#sklad">
+                        <i class="fas fa-warehouse me-3"></i> Склад
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#sborka">
-                        <i class="fas fa-cogs"></i> Сборка
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#sborka">
+                        <i class="fas fa-cogs me-3"></i> Сборка
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#prihod">
-                        <i class="fas fa-truck"></i> Приход
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#prihod">
+                        <i class="fas fa-truck me-3"></i> Приход
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#vydannoe">
-                        <i class="fas fa-box-open"></i> Выданное
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#vydannoe">
+                        <i class="fas fa-box-open me-3"></i> Выданное
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#kontragenty">
-                        <i class="fas fa-users"></i> Контрагенты
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#kontragenty">
+                        <i class="fas fa-users me-3"></i> Контрагенты
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#nastroyki">
-                        <i class="fas fa-cog"></i> Настройки
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#nastroyki">
+                        <i class="fas fa-cog me-3"></i> Настройки
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#uvedomleniya">
-                        <i class="fas fa-bell"></i> Уведомления
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#uvedomleniya">
+                        <i class="fas fa-bell me-3"></i> Уведомления
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#otladka">
-                        <i class="fas fa-tools"></i> Отладка
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white py-3 px-3 rounded" href="#otladka">
+                        <i class="fas fa-tools me-3"></i> Отладка
                     </a>
                 </li>
             </ul>
@@ -60,51 +62,77 @@
         <!-- Main content -->
         <div class="flex-grow-1">
             <!-- Header -->
-            <header class="bg-primary text-white p-3 d-flex justify-content-between align-items-center">
-                <h1 class="h4 mb-0">Велес Склад</h1>
+            <header class="bg-primary text-white p-3 d-flex justify-content-between align-items-center shadow">
+                <h1 class="h4 mb-0 fw-bold">
+                    <i class="fas fa-box me-2"></i>Велес Склад
+                </h1>
                 <div class="d-flex align-items-center">
-                    <div id="datetime" class="me-3"></div>
-                    <div class="theme-icons">
-                        <i class="fas fa-sun text-warning me-2" onclick="setTheme('light')" style="cursor: pointer;"></i>
-                        <i class="fas fa-moon text-secondary me-2" onclick="setTheme('dark')" style="cursor: pointer;"></i>
-                        <i class="fas fa-adjust text-info" onclick="setTheme('auto')" style="cursor: pointer;"></i>
+                    <div id="datetime" class="me-3 fw-semibold text-light"></div>
+                    <div class="theme-icons d-flex">
+                        <i class="fas fa-sun text-warning me-2 p-2 rounded-circle" onclick="setTheme('light')" title="Светлая тема"></i>
+                        <i class="fas fa-moon text-secondary me-2 p-2 rounded-circle" onclick="setTheme('dark')" title="Тёмная тема"></i>
+                        <i class="fas fa-adjust text-info p-2 rounded-circle" onclick="setTheme('auto')" title="Автоматическая тема"></i>
                     </div>
                 </div>
             </header>
 
             <!-- Content -->
-            <main class="p-4">
+            <main class="p-4 bg-transparent">
                 <div id="content">
                     <section id="sklad" class="content-section">
-                        <h2><i class="fas fa-warehouse"></i> Склад</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-warehouse text-primary me-3"></i> Склад</h2>
+                            <small class="text-muted">Управление товарами на складе</small>
+                        </div>
                         <div id="sklad-content"></div>
                     </section>
                     <section id="sborka" class="content-section">
-                        <h2><i class="fas fa-cogs"></i> Сборка</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-cogs text-success me-3"></i> Сборка</h2>
+                            <small class="text-muted">Подготовка товаров к выдаче</small>
+                        </div>
                         <div id="sborka-content"></div>
                     </section>
                     <section id="prihod" class="content-section">
-                        <h2><i class="fas fa-truck"></i> Приход</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-truck text-info me-3"></i> Приход</h2>
+                            <small class="text-muted">Регистрация поступления товаров</small>
+                        </div>
                         <div id="prihod-content"></div>
                     </section>
                     <section id="vydannoe" class="content-section">
-                        <h2><i class="fas fa-box-open"></i> Выданное</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-box-open text-warning me-3"></i> Выданное</h2>
+                            <small class="text-muted">История выдачи товаров</small>
+                        </div>
                         <div id="vydannoe-content"></div>
                     </section>
                     <section id="kontragenty" class="content-section">
-                        <h2><i class="fas fa-users"></i> Контрагенты</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-users text-danger me-3"></i> Контрагенты</h2>
+                            <small class="text-muted">Управление партнёрами</small>
+                        </div>
                         <div id="kontragenty-content"></div>
                     </section>
                     <section id="nastroyki" class="content-section">
-                        <h2><i class="fas fa-cog"></i> Настройки</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-cog text-secondary me-3"></i> Настройки</h2>
+                            <small class="text-muted">Персонализация приложения</small>
+                        </div>
                         <div id="nastroyki-content"></div>
                     </section>
                     <section id="uvedomleniya" class="content-section">
-                        <h2><i class="fas fa-bell"></i> Уведомления</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-bell text-primary me-3"></i> Уведомления</h2>
+                            <small class="text-muted">Система оповещений</small>
+                        </div>
                         <div id="uvedomleniya-content"></div>
                     </section>
                     <section id="otladka" class="content-section">
-                        <h2><i class="fas fa-tools"></i> Инструмент отладки</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-tools text-dark me-3"></i> Инструмент отладки</h2>
+                            <small class="text-muted">Тестирование и диагностика</small>
+                        </div>
                         <div id="otladka-content"></div>
                     </section>
                 </div>
