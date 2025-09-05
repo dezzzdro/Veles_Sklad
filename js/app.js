@@ -175,13 +175,14 @@ async function loadKontragenty() {
 
 async function loadNastroyki() {
     const content = document.getElementById('nastroyki-content');
-    content.innerHTML = '<p>Загрузка настроек...</p>';
+    content.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Загрузка настроек...</p></div>';
+
     try {
         const { data, error } = await supabase.from('настройки').select('*').limit(1);
         if (error) throw error;
-        renderNastroyki(data[0] || {});
+        renderNastroyki(data[0] || { тема: 'light' });
     } catch (error) {
-        content.innerHTML = '<p>Ошибка загрузки: ' + error.message + '</p>';
+        showError('nastroyki', error.message);
     }
 }
 
@@ -1377,15 +1378,128 @@ async function addKontr() {
 
 function renderNastroyki(settings) {
     const content = document.getElementById('nastroyki-content');
+
     const html = `
-        <h3>Выбор темы оформления</h3>
-        <select id="theme-select">
-            <option value="light" ${settings.тема === 'light' ? 'selected' : ''}>Светлая</option>
-            <option value="dark" ${settings.тема === 'dark' ? 'selected' : ''}>Тёмная</option>
-        </select>
-        <button onclick="saveTheme()">Сохранить</button>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-palette me-2"></i>Выбор темы оформления
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="theme-select" class="form-label fw-bold">
+                                        <i class="fas fa-sun me-2"></i>Тема интерфейса
+                                    </label>
+                                    <select id="theme-select" class="form-select form-select-lg">
+                                        <option value="light" ${settings.тема === 'light' ? 'selected' : ''}>
+                                            <i class="fas fa-sun me-2"></i>Светлая тема
+                                        </option>
+                                        <option value="dark" ${settings.тема === 'dark' ? 'selected' : ''}>
+                                            <i class="fas fa-moon me-2"></i>Тёмная тема
+                                        </option>
+                                        <option value="auto" ${settings.тема === 'auto' ? 'selected' : ''}>
+                                            <i class="fas fa-adjust me-2"></i>Автоматическая
+                                        </option>
+                                    </select>
+                                    <div class="form-text">
+                                        Выберите предпочтительную тему оформления интерфейса
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="theme-preview p-3 border rounded">
+                                    <h6 class="fw-bold mb-3">Предварительный просмотр:</h6>
+                                    <div class="d-flex justify-content-around">
+                                        <div class="theme-option ${settings.тема === 'light' ? 'active' : ''}" onclick="previewTheme('light')">
+                                            <div class="theme-sample bg-light border p-2 mb-2">
+                                                <div class="bg-primary text-white p-1 mb-1"></div>
+                                                <div class="bg-secondary p-1"></div>
+                                            </div>
+                                            <small class="text-center d-block">Светлая</small>
+                                        </div>
+                                        <div class="theme-option ${settings.тема === 'dark' ? 'active' : ''}" onclick="previewTheme('dark')">
+                                            <div class="theme-sample bg-dark border p-2 mb-2">
+                                                <div class="bg-primary text-white p-1 mb-1"></div>
+                                                <div class="bg-secondary p-1"></div>
+                                            </div>
+                                            <small class="text-center d-block">Тёмная</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <button class="btn btn-success btn-lg px-5" onclick="saveTheme()">
+                                    <i class="fas fa-save me-2"></i>Сохранить настройки
+                                </button>
+                                <button class="btn btn-outline-secondary ms-3" onclick="resetTheme()">
+                                    <i class="fas fa-undo me-2"></i>Сбросить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Дополнительные настройки -->
+                <div class="card mt-4 shadow">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-cogs me-2"></i>Дополнительные настройки
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="notifications-enabled">
+                                    <label class="form-check-label" for="notifications-enabled">
+                                        <i class="fas fa-bell me-2"></i>Включить уведомления
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="auto-save-enabled">
+                                    <label class="form-check-label" for="auto-save-enabled">
+                                        <i class="fas fa-save me-2"></i>Автосохранение данных
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="compact-view-enabled">
+                                    <label class="form-check-label" for="compact-view-enabled">
+                                        <i class="fas fa-compress me-2"></i>Компактный вид таблиц
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="animations-enabled">
+                                    <label class="form-check-label" for="animations-enabled">
+                                        <i class="fas fa-magic me-2"></i>Включить анимации
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     `;
+
     content.innerHTML = html;
+
+    // Добавить обработчики для предварительного просмотра тем
+    document.querySelectorAll('.theme-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
 }
 
 async function saveTheme() {
@@ -1393,10 +1507,58 @@ async function saveTheme() {
     try {
         const { error } = await supabase.from('настройки').upsert({ id: 1, тема: theme });
         if (error) throw error;
-        alert('Тема сохранена');
+
+        // Применить тему сразу
+        setTheme(theme);
+        localStorage.setItem('theme', theme);
+
+        // Показать уведомление об успехе
+        showNotification('Тема успешно сохранена!', 'success');
     } catch (error) {
-        alert('Ошибка: ' + error.message);
+        showNotification('Ошибка сохранения темы: ' + error.message, 'error');
     }
+}
+
+function previewTheme(theme) {
+    // Временно применить тему для предварительного просмотра
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-select').value = theme;
+}
+
+async function resetTheme() {
+    try {
+        const { error } = await supabase.from('настройки').upsert({ id: 1, тема: 'light' });
+        if (error) throw error;
+
+        setTheme('light');
+        localStorage.setItem('theme', 'light');
+        document.getElementById('theme-select').value = 'light';
+
+        showNotification('Настройки сброшены к значениям по умолчанию', 'info');
+        loadNastroyki(); // Перезагрузить настройки
+    } catch (error) {
+        showNotification('Ошибка сброса настроек: ' + error.message, 'error');
+    }
+}
+
+function showNotification(message, type = 'info') {
+    // Создать временное уведомление
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Автоматически удалить через 5 секунд
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
 }
 
 function renderUvedomleniya(data) {
