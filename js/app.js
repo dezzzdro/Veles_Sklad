@@ -1241,27 +1241,139 @@ async function addVydannoe() {
 
 function renderKontragenty(kontragenty, persons) {
     const content = document.getElementById('kontragenty-content');
-    let html = '<div class="kontragenty-cards">';
+
+    let html = `
+        <div class="row">
+    `;
+
     kontragenty.forEach(kontr => {
         const kontrPersons = persons.filter(p => p.id_контрагента === kontr.id);
         html += `
-            <div class="card">
-                <h3>${kontr.организация}</h3>
-                <ul>
-                    ${kontrPersons.map(p => `<li>${p.имя}</li>`).join('')}
-                </ul>
-                <button onclick="editKontr(${kontr.id})">Редактировать</button>
-                <button onclick="deleteKontr(${kontr.id})">Удалить</button>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-building me-2"></i>${kontr.организация}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-3 text-muted">
+                            <i class="fas fa-users me-2"></i>Ответственные лица:
+                        </h6>
+                        <ul class="list-group list-group-flush">
+        `;
+
+        if (kontrPersons.length > 0) {
+            kontrPersons.forEach(person => {
+                html += `<li class="list-group-item px-0">${person.имя}</li>`;
+            });
+        } else {
+            html += `<li class="list-group-item px-0 text-muted">Нет ответственных лиц</li>`;
+        }
+
+        html += `
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100" role="group">
+                            <button class="btn btn-outline-primary" onclick="editKontr(${kontr.id})" title="Редактировать">
+                                <i class="fas fa-edit me-1"></i>Редактировать
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="deleteKontr(${kontr.id})" title="Удалить">
+                                <i class="fas fa-trash me-1"></i>Удалить
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     });
-    html += '</div><button onclick="addKontr()">Добавить контрагента</button>';
+
+    html += `
+        </div>
+        <div class="mt-4 text-center">
+            <button class="btn btn-success btn-lg" onclick="addKontr()">
+                <i class="fas fa-plus me-2"></i>Добавить контрагента
+            </button>
+        </div>
+    `;
+
     content.innerHTML = html;
 }
 
-function editKontr(id) { alert('Редактировать ' + id); }
-function deleteKontr(id) { alert('Удалить ' + id); }
-function addKontr() { alert('Добавить'); }
+async function editKontr(id) {
+    const { data: kontr, error: kontrError } = await supabase.from('контрагенты').select('*').eq('id', id).single();
+    if (kontrError) { alert('Ошибка: ' + kontrError.message); return; }
+
+    const { data: persons, error: personsError } = await supabase.from('ответственные_лица').select('*').eq('id_контрагента', id);
+    if (personsError) { alert('Ошибка: ' + personsError.message); return; }
+
+    const organization = prompt('Название организации:', kontr.организация);
+    if (!organization) return;
+
+    // Обновить организацию
+    const { error: updateError } = await supabase.from('контрагенты').update({ организация: organization }).eq('id', id);
+    if (updateError) { alert('Ошибка: ' + updateError.message); return; }
+
+    // Обновить ответственных лиц
+    const personsText = prompt('Ответственные лица (через запятую):', persons.map(p => p.имя).join(', '));
+    if (personsText !== null) {
+        // Удалить старых
+        await supabase.from('ответственные_лица').delete().eq('id_контрагента', id);
+
+        // Добавить новых
+        const names = personsText.split(',').map(name => name.trim()).filter(name => name);
+        for (const name of names) {
+            await supabase.from('ответственные_лица').insert({
+                id_контрагента: id,
+                имя: name
+            });
+        }
+    }
+
+    loadKontragenty();
+}
+
+async function deleteKontr(id) {
+    if (confirm('Удалить контрагента и всех его ответственных лиц?')) {
+        try {
+            // Удалить ответственных лиц
+            await supabase.from('ответственные_лица').delete().eq('id_контрагента', id);
+            // Удалить контрагента
+            const { error } = await supabase.from('контрагенты').delete().eq('id', id);
+            if (error) throw error;
+            loadKontragenty();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function addKontr() {
+    const organization = prompt('Название организации:');
+    if (!organization) return;
+
+    const personsText = prompt('Ответственные лица (через запятую):');
+    const names = personsText ? personsText.split(',').map(name => name.trim()).filter(name => name) : [];
+
+    try {
+        // Добавить контрагента
+        const { data: kontr, error: kontrError } = await supabase.from('контрагенты').insert({ организация: organization }).select().single();
+        if (kontrError) throw kontrError;
+
+        // Добавить ответственных лиц
+        for (const name of names) {
+            await supabase.from('ответственные_лица').insert({
+                id_контрагента: kontr.id,
+                имя: name
+            });
+        }
+
+        loadKontragenty();
+    } catch (error) {
+        alert('Ошибка: ' + error.message);
+    }
+}
 
 function renderNastroyki(settings) {
     const content = document.getElementById('nastroyki-content');
