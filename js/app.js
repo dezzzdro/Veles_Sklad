@@ -344,6 +344,31 @@ function filterSborka() {
     });
 }
 
+function filterPrihod() {
+    const filters = {
+        date: document.getElementById('prihod-filter-date').value.toLowerCase(),
+        name: document.getElementById('prihod-filter-name').value.toLowerCase(),
+        unit: document.getElementById('prihod-filter-unit').value.toLowerCase(),
+        quantity: document.getElementById('prihod-filter-quantity').value.toLowerCase(),
+        registry: document.getElementById('prihod-filter-registry').value.toLowerCase(),
+        upd: document.getElementById('prihod-filter-upd').value.toLowerCase()
+    };
+
+    const rows = document.querySelectorAll('#prihod-content tbody tr');
+    rows.forEach(row => {
+        const cells = row.cells;
+        const matches =
+            cells[0].textContent.toLowerCase().includes(filters.date) &&
+            cells[1].textContent.toLowerCase().includes(filters.name) &&
+            cells[2].textContent.toLowerCase().includes(filters.unit) &&
+            cells[3].textContent.toLowerCase().includes(filters.quantity) &&
+            cells[4].textContent.toLowerCase().includes(filters.registry) &&
+            cells[5].textContent.toLowerCase().includes(filters.upd);
+
+        row.style.display = matches ? '' : 'none';
+    });
+}
+
 async function refreshSborka() {
     await loadSborka();
 }
@@ -586,99 +611,289 @@ async function transferToSborkaFromSborka(id) {
 
 function renderPrihodTable(data) {
     const content = document.getElementById('prihod-content');
+
+    // Фильтры
     let html = `
-        <div>
-            <h3>Принятие прихода</h3>
-            <button onclick="pasteFromClipboard()">Вставить из буфера обмена</button>
-            <button onclick="importPrihod()">Импорт из xlsx</button>
-            <button onclick="addPrihod()">Добавить строку</button>
-            <button onclick="acceptPrihod()">Принять</button>
+        <div class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <input type="text" id="prihod-filter-date" class="form-control" placeholder="Дата">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" id="prihod-filter-name" class="form-control" placeholder="Наименование">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="prihod-filter-unit" class="form-control" placeholder="Ед.изм.">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="prihod-filter-quantity" class="form-control" placeholder="Количество">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="prihod-filter-registry" class="form-control" placeholder="Реестровый номер">
+                </div>
+                <div class="col-md-1">
+                    <input type="text" id="prihod-filter-upd" class="form-control" placeholder="УПД">
+                </div>
+            </div>
         </div>
-        <div>
-            <h3>Документы прихода</h3>
-            <input type="text" id="registry-number" placeholder="Реестровый номер заявки">
-            <button onclick="applyRegistryNumber()">Применить реестровый номер</button>
-            <input type="text" id="upd-number" placeholder="УПД">
-            <button onclick="applyUPD()">Применить УПД</button>
+
+        <!-- Секция 1: Принятие прихода -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Принятие прихода</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-primary w-100" onclick="pasteFromClipboard()">
+                            <i class="fas fa-paste me-1"></i>Вставить из буфера обмена
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-success w-100" onclick="importPrihod()">
+                            <i class="fas fa-file-excel me-1"></i>Импорт из xlsx
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-info w-100" onclick="addPrihod()">
+                            <i class="fas fa-plus me-1"></i>Добавить строку
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100" onclick="acceptPrihod()">
+                            <i class="fas fa-check me-1"></i>Принять
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <h3>Редактирование</h3>
-            <button onclick="clearPrihod()">Очистить приход</button>
-            <button onclick="exportPrihod()">Экспорт в xlsx</button>
+
+        <!-- Секция 2: Документы прихода -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Документы прихода</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-md-5">
+                        <input type="text" id="registry-number" class="form-control" placeholder="Реестровый номер заявки">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary w-100" onclick="applyRegistryNumber()">
+                            <i class="fas fa-arrow-right me-1"></i>Применить
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" id="upd-number" class="form-control" placeholder="УПД">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary w-100" onclick="applyUPD()">
+                            <i class="fas fa-arrow-right me-1"></i>Применить
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Наименование</th>
-                    <th>Ед.изм.</th>
-                    <th>Количество</th>
-                    <th>Реестровый номер</th>
-                    <th>УПД</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
+
+        <!-- Секция 3: Редактирование -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Редактирование</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-danger w-100" onclick="clearPrihod()">
+                            <i class="fas fa-trash me-1"></i>Очистить приход
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-primary w-100" onclick="exportPrihod()">
+                            <i class="fas fa-file-export me-1"></i>Экспорт в xlsx
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Таблица -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Дата</th>
+                        <th>Наименование</th>
+                        <th>Ед.изм.</th>
+                        <th>Количество</th>
+                        <th>Реестровый номер</th>
+                        <th>УПД</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
     data.forEach(item => {
         html += `
             <tr>
-                <td>${item.дата}</td>
-                <td>${item.наименование}</td>
-                <td>${item.ед_изм}</td>
-                <td>${item.количество}</td>
-                <td>${item.реестровый_номер}</td>
-                <td>${item.upd}</td>
+                <td>${new Date(item.дата).toLocaleDateString('ru-RU')}</td>
+                <td>${item.наименование || ''}</td>
+                <td>${item.ед_изм || ''}</td>
+                <td>${item.количество || ''}</td>
+                <td>${item.реестровый_номер || ''}</td>
+                <td>${item.upd || ''}</td>
                 <td>
-                    <button onclick="editPrihod(${item.id})">Редактировать</button>
-                    <button onclick="deletePrihod(${item.id})">Удалить</button>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editPrihod(${item.id})" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deletePrihod(${item.id})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `;
     });
     html += `
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     `;
     content.innerHTML = html;
+
+    // Add filter listeners
+    ['date', 'name', 'unit', 'quantity', 'registry', 'upd'].forEach(field => {
+        document.getElementById(`prihod-filter-${field}`).addEventListener('input', filterPrihod);
+    });
 }
 
-function editPrihod(id) { alert('Редактировать ' + id); }
-function deletePrihod(id) { alert('Удалить ' + id); }
-function addPrihod() { alert('Добавить'); }
+async function editPrihod(id) {
+    const { data, error } = await supabase.from('приход').select('*').eq('id', id).single();
+    if (error) { alert('Ошибка: ' + error.message); return; }
 
-function importPrihod() {
+    const name = prompt('Наименование:', data.наименование);
+    const unit = prompt('Ед.изм.:', data.ед_изм);
+    const quantity = prompt('Количество:', data.количество);
+    const registry = prompt('Реестровый номер:', data.реестровый_номер);
+    const upd = prompt('УПД:', data.upd);
+
+    if (name && unit) {
+        try {
+            const { error } = await supabase.from('приход').update({
+                наименование: name,
+                ед_изм: unit,
+                количество: parseFloat(quantity) || 0,
+                реестровый_номер: registry,
+                upd: upd
+            }).eq('id', id);
+            if (error) throw error;
+            loadPrihod();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function deletePrihod(id) {
+    if (confirm('Удалить запись?')) {
+        try {
+            const { error } = await supabase.from('приход').delete().eq('id', id);
+            if (error) throw error;
+            loadPrihod();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function addPrihod() {
+    const name = prompt('Наименование:');
+    const unit = prompt('Ед.изм.:');
+    const quantity = prompt('Количество:');
+    const registry = prompt('Реестровый номер:');
+    const upd = prompt('УПД:');
+
+    if (name && unit) {
+        try {
+            const { error } = await supabase.from('приход').insert({
+                наименование: name,
+                ед_изм: unit,
+                количество: parseFloat(quantity) || 0,
+                реестровый_номер: registry,
+                upd: upd
+            });
+            if (error) throw error;
+            loadPrihod();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function importPrihod() {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.xlsx';
+    input.accept = '.xlsx,.xls';
     input.onchange = async (e) => {
         const file = e.target.files[0];
-        const data = await file.arrayBuffer();
-        const workbook = XLSX.read(data);
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(sheet);
-        for (const row of json) {
-            await supabase.from('приход').insert({
-                наименование: row.Наименование,
-                ед_изм: row['Ед.изм.'],
-                количество: row.Количество
-            });
+        if (!file) return;
+
+        try {
+            const data = await file.arrayBuffer();
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+            // Пропустить заголовок и обработать данные
+            const rows = json.slice(1);
+            let imported = 0;
+
+            for (const row of rows) {
+                if (row.length >= 3 && row[0] && row[1] && row[2]) {
+                    const { error } = await supabase.from('приход').insert({
+                        наименование: row[0].toString().trim(),
+                        ед_изм: row[1].toString().trim(),
+                        количество: parseFloat(row[2]) || 0
+                    });
+                    if (!error) imported++;
+                }
+            }
+
+            alert(`Импортировано ${imported} записей из файла ${file.name}`);
+            loadPrihod();
+        } catch (error) {
+            alert('Ошибка импорта: ' + error.message);
         }
-        loadPrihod();
     };
     input.click();
 }
 
-function exportPrihod() {
-    const { data } = supabase.from('приход').select('*');
-    const ws = XLSX.utils.json_to_sheet(data.map(item => ({
-        Наименование: item.наименование,
-        'Ед.изм.': item.ед_изм,
-        Количество: item.количество
-    })));
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Приход');
-    XLSX.writeFile(wb, 'Приход_' + new Date().toISOString().split('T')[0] + '.xlsx');
+async function exportPrihod() {
+    try {
+        const { data, error } = await supabase.from('приход').select('*');
+        if (error) throw error;
+
+        const exportData = data.map(item => ({
+            'Дата': new Date(item.дата).toLocaleDateString('ru-RU'),
+            'Наименование': item.наименование || '',
+            'Ед.изм.': item.ед_изм || '',
+            'Количество': item.количество || 0,
+            'Реестровый номер': item.реестровый_номер || '',
+            'УПД': item.upd || ''
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Приход');
+
+        const fileName = 'Приход_' + new Date().toISOString().split('T')[0] + '.xlsx';
+        XLSX.writeFile(wb, fileName);
+
+        alert(`Файл ${fileName} успешно экспортирован`);
+    } catch (error) {
+        alert('Ошибка экспорта: ' + error.message);
+    }
 }
 
 function clearPrihod() {
@@ -688,9 +903,77 @@ function clearPrihod() {
     }
 }
 
-function acceptPrihod() {
-    // Implement accept logic as per TЗ
-    alert('Принять приход - реализация в процессе');
+async function acceptPrihod() {
+    if (!confirm('Принять приход? Все данные будут перенесены в Склад.')) return;
+
+    try {
+        // Получить все записи прихода
+        const { data: prihodData, error: prihodError } = await supabase.from('приход').select('*');
+        if (prihodError) throw prihodError;
+
+        for (const item of prihodData) {
+            if (!item.наименование || !item.ед_изм || !item.количество) continue;
+
+            // Проверить, существует ли товар в складе
+            const { data: existingItem, error: checkError } = await supabase
+                .from('склад')
+                .select('*')
+                .eq('наименование', item.наименование)
+                .eq('ед_изм', item.ед_изм)
+                .single();
+
+            if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = not found
+                throw checkError;
+            }
+
+            if (existingItem) {
+                // Обновить существующий товар
+                const { error: updateError } = await supabase
+                    .from('склад')
+                    .update({
+                        числится: existingItem.числится + item.количество,
+                        на_складе: existingItem.на_складе + item.количество
+                    })
+                    .eq('id', existingItem.id);
+                if (updateError) throw updateError;
+            } else {
+                // Создать новый товар
+                const { error: insertError } = await supabase
+                    .from('склад')
+                    .insert({
+                        наименование: item.наименование,
+                        ед_изм: item.ед_изм,
+                        числится: item.количество,
+                        на_складе: item.количество,
+                        выдано: 0
+                    });
+                if (insertError) throw insertError;
+            }
+
+            // Записать операцию
+            const { error: operationError } = await supabase
+                .from('операции')
+                .insert({
+                    тип_операции: 'Принятый приход',
+                    детали: `Принят приход: ${item.наименование} - ${item.количество} ${item.ед_изм}`
+                });
+            if (operationError) throw operationError;
+        }
+
+        // Очистить таблицу прихода
+        const { error: clearError } = await supabase.from('приход').delete().neq('id', 0);
+        if (clearError) throw clearError;
+
+        alert('Приход успешно принят!');
+        loadPrihod();
+        // Обновить склад если открыт
+        if (currentSection === 'sklad') {
+            loadSklad();
+        }
+
+    } catch (error) {
+        alert('Ошибка при принятии прихода: ' + error.message);
+    }
 }
 
 async function pasteFromClipboard() {
