@@ -205,16 +205,24 @@ header {
     border-right: none;
 }
 
-/* Идеальное совпадение: заголовки + фильтры + содержимое */
-.table-fixed-header-container {
-    position: relative;
+/* Единая таблица с идеальным совпадением колонок */
+.table-container {
     border: 1px solid var(--border-color);
     border-radius: 6px;
     overflow: hidden;
-    background: var(--card-bg);
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.table-header-fixed thead {
+.table-container table {
+    margin: 0;
+    border: none;
+    width: 100%;
+}
+
+/* Фиксированный заголовок */
+.table-header-fixed {
     position: sticky;
     top: 0;
     z-index: 10;
@@ -222,14 +230,14 @@ header {
 }
 
 .table-header-fixed th {
-    position: relative;
     background: var(--table-header) !important;
     border-bottom: 2px solid var(--border-color);
+    border-right: 1px solid var(--border-color) !important;
     font-weight: bold;
     height: 45px;
     vertical-align: middle;
     padding: 12px 16px;
-    border-right: 1px solid var(--border-color) !important;
+    white-space: nowrap;
 }
 
 .table-header-fixed th:last-child {
@@ -243,12 +251,12 @@ header {
 }
 
 .filter-row th {
-    padding: 8px 16px !important;
-    border-bottom: none !important;
     background: var(--bg-color) !important;
-    vertical-align: middle !important;
-    height: 40px !important;
+    border-bottom: none !important;
     border-right: 1px solid var(--border-color) !important;
+    padding: 8px 16px !important;
+    vertical-align: middle;
+    height: 40px;
 }
 
 .filter-row th:last-child {
@@ -270,10 +278,16 @@ header {
 }
 
 /* Тело таблицы */
+.table-body-scroll {
+    overflow-y: auto;
+    flex: 1;
+}
+
 .table-body-scroll td {
-    vertical-align: middle;
-    padding: 12px 16px;
     border-right: 1px solid var(--border-color) !important;
+    padding: 12px 16px;
+    vertical-align: middle;
+    white-space: nowrap;
 }
 
 .table-body-scroll td:last-child {

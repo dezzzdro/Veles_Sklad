@@ -103,40 +103,33 @@ export class SkladModule {
                 </div>
             </div>
 
-            <!-- Таблица с интегрированными фильтрами -->
-            <div class="table-fixed-header-container">
-                <div class="table-header-fixed">
-                    <table class="table table-striped table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Наименование</th>
-                                <th>Ед.изм.</th>
-                                <th>Числится</th>
-                                <th>На складе</th>
-                                <th>Выдано</th>
-                                <th>Действия</th>
-                            </tr>
-                            <tr class="filter-row">
-                                <th><input type="text" id="sklad-filter-id" placeholder="ID"></th>
-                                <th><input type="text" id="sklad-filter-наименование" placeholder="Наименование"></th>
-                                <th><input type="text" id="sklad-filter-ед_изм" placeholder="Ед.изм."></th>
-                                <th><input type="text" id="sklad-filter-числится" placeholder="Числится"></th>
-                                <th><input type="text" id="sklad-filter-на_складе" placeholder="На складе"></th>
-                                <th><input type="text" id="sklad-filter-выдано" placeholder="Выдано"></th>
-                                <th><button class="btn btn-secondary btn-sm" onclick="window.app.getModule('sklad').resetFilters()"><i class="fas fa-times"></i> Сброс</button></th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-
-                <div class="table-body-scroll">
-                    <table class="table table-striped table-hover mb-0">
-                        <tbody id="sklad-table-body">
-                            ${this.renderTableRows()}
-                        </tbody>
-                    </table>
-                </div>
+            <!-- Единая таблица с фиксированным заголовком -->
+            <div class="table-container">
+                <table class="table table-striped table-hover">
+                    <thead class="table-header-fixed">
+                        <tr>
+                            <th>ID</th>
+                            <th>Наименование</th>
+                            <th>Ед.изм.</th>
+                            <th>Числится</th>
+                            <th>На складе</th>
+                            <th>Выдано</th>
+                            <th>Действия</th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th><input type="text" id="sklad-filter-id" placeholder="ID"></th>
+                            <th><input type="text" id="sklad-filter-наименование" placeholder="Наименование"></th>
+                            <th><input type="text" id="sklad-filter-ед_изм" placeholder="Ед.изм."></th>
+                            <th><input type="text" id="sklad-filter-числится" placeholder="Числится"></th>
+                            <th><input type="text" id="sklad-filter-на_складе" placeholder="На складе"></th>
+                            <th><input type="text" id="sklad-filter-выдано" placeholder="Выдано"></th>
+                            <th><button class="btn btn-secondary btn-sm" onclick="window.app.getModule('sklad').resetFilters()"><i class="fas fa-times"></i> Сброс</button></th>
+                        </tr>
+                    </thead>
+                    <tbody id="sklad-table-body" class="table-body-scroll">
+                        ${this.renderTableRows()}
+                    </tbody>
+                </table>
             </div>
         `;
 
@@ -190,9 +183,6 @@ export class SkladModule {
      * Настройка обработчиков событий
      */
     setupEventListeners() {
-        // Синхронизация ширины фильтров с колонками таблицы
-        this.syncFilterWidths();
-
         // Глобальный поиск
         const globalSearch = document.getElementById('sklad-global-search');
         if (globalSearch) {
@@ -211,51 +201,6 @@ export class SkladModule {
                 }, CONFIG.UI.DEBOUNCE_DELAY));
             }
         });
-
-        // Пересинхронизация ширины при изменении размера окна
-        window.addEventListener('resize', () => {
-            setTimeout(() => this.syncFilterWidths(), 100);
-        });
-    }
-
-    /**
-     * Абсолютная синхронизация ширины фильтров с колонками таблицы
-     */
-    syncFilterWidths() {
-        // Ждем полной загрузки DOM
-        setTimeout(() => {
-            const headerRow = document.querySelector('.table-header-fixed thead tr:first-child');
-            const filterRow = document.querySelector('.table-header-fixed thead tr.filter-row');
-
-            if (!headerRow || !filterRow) return;
-
-            const headerCells = headerRow.querySelectorAll('th');
-            const filterCells = filterRow.querySelectorAll('th');
-
-            headerCells.forEach((headerCell, index) => {
-                const filterCell = filterCells[index];
-                if (filterCell && headerCell.textContent.trim() !== 'Действия') {
-                    // Точное копирование ширины
-                    const headerWidth = headerCell.offsetWidth;
-                    const filterInput = filterCell.querySelector('input');
-
-                    if (filterInput) {
-                        // Учитываем точные отступы и границы
-                        const computedStyle = window.getComputedStyle(headerCell);
-                        const paddingLeft = parseFloat(computedStyle.paddingLeft);
-                        const paddingRight = parseFloat(computedStyle.paddingRight);
-                        const borderLeft = parseFloat(computedStyle.borderLeftWidth);
-                        const borderRight = parseFloat(computedStyle.borderRightWidth);
-
-                        const contentWidth = headerWidth - paddingLeft - paddingRight - borderLeft - borderRight - 2; // -2 для точности
-
-                        filterInput.style.width = contentWidth + 'px';
-                        filterInput.style.minWidth = contentWidth + 'px';
-                        filterInput.style.maxWidth = contentWidth + 'px';
-                    }
-                }
-            });
-        }, 50); // Небольшая задержка для полной загрузки
     }
 
     /**
