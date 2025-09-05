@@ -188,13 +188,14 @@ async function loadNastroyki() {
 
 async function loadUvedomleniya() {
     const content = document.getElementById('uvedomleniya-content');
-    content.innerHTML = '<p>Загрузка уведомлений...</p>';
+    content.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Загрузка уведомлений...</p></div>';
+
     try {
-        const { data, error } = await supabase.from('уведомления').select('*');
+        const { data, error } = await supabase.from('уведомления').select('*').order('дата', { ascending: false });
         if (error) throw error;
-        renderUvedomleniya(data);
+        renderUvedomleniya(data || []);
     } catch (error) {
-        content.innerHTML = '<p>Ошибка загрузки: ' + error.message + '</p>';
+        showError('uvedomleniya', error.message);
     }
 }
 
@@ -1563,45 +1564,249 @@ function showNotification(message, type = 'info') {
 
 function renderUvedomleniya(data) {
     const content = document.getElementById('uvedomleniya-content');
+
     let html = `
-        <div>
-            <input type="text" placeholder="Фильтр по дате">
-            <input type="text" placeholder="Фильтр по типу">
-            <input type="text" placeholder="Фильтр по тексту">
+        <!-- Фильтры -->
+        <div class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <input type="text" id="uvedomleniya-filter-date" class="form-control" placeholder="Дата">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="uvedomleniya-filter-type" class="form-control" placeholder="Тип уведомления">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="uvedomleniya-filter-text" class="form-control" placeholder="Текст уведомления">
+                </div>
+            </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Тип уведомления</th>
-                    <th>Текст уведомления</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
+
+        <!-- Управление уведомлениями -->
+        <div class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <button class="btn btn-outline-primary w-100" onclick="refreshUvedomleniya()">
+                        <i class="fas fa-sync-alt me-1"></i>Обновить список
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-success w-100" onclick="addUved()">
+                        <i class="fas fa-plus me-1"></i>Добавить уведомление
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Таблица -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Дата</th>
+                        <th>Тип уведомления</th>
+                        <th>Текст уведомления</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
+
     data.forEach(item => {
+        const notificationType = getNotificationTypeIcon(item.тип_уведомления);
         html += `
             <tr>
-                <td>${item.дата}</td>
-                <td>${item.тип_уведомления}</td>
-                <td>${item.текст_уведомления}</td>
+                <td>${new Date(item.дата).toLocaleDateString('ru-RU')} ${new Date(item.дата).toLocaleTimeString('ru-RU')}</td>
                 <td>
-                    <button onclick="deleteUved(${item.id})">Удалить</button>
+                    <span class="badge ${notificationType.class}">
+                        <i class="${notificationType.icon} me-1"></i>${item.тип_уведомления || 'Неизвестно'}
+                    </span>
+                </td>
+                <td>${item.текст_уведомления || ''}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-info" onclick="viewUved(${item.id})" title="Просмотреть">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteUved(${item.id})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `;
     });
+
     html += `
-            </tbody>
-        </table>
-        <button onclick="addUved()">Добавить уведомление</button>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Статистика -->
+        <div class="mt-4">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">${data.length}</h5>
+                            <p class="card-text">Всего уведомлений</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">${data.filter(item => item.тип_уведомления === 'Информация').length}</h5>
+                            <p class="card-text">Информационных</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">${data.filter(item => item.тип_уведомления === 'Предупреждение').length}</h5>
+                            <p class="card-text">Предупреждений</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     `;
+
     content.innerHTML = html;
+
+    // Add filter listeners
+    ['date', 'type', 'text'].forEach(field => {
+        document.getElementById(`uvedomleniya-filter-${field}`).addEventListener('input', filterUvedomleniya);
+    });
 }
 
-function deleteUved(id) { alert('Удалить ' + id); }
-function addUved() { alert('Добавить'); }
+function getNotificationTypeIcon(type) {
+    switch(type) {
+        case 'Ошибка':
+            return { icon: 'fas fa-exclamation-triangle', class: 'bg-danger' };
+        case 'Предупреждение':
+            return { icon: 'fas fa-exclamation-circle', class: 'bg-warning text-dark' };
+        case 'Информация':
+            return { icon: 'fas fa-info-circle', class: 'bg-info' };
+        case 'Успех':
+            return { icon: 'fas fa-check-circle', class: 'bg-success' };
+        default:
+            return { icon: 'fas fa-bell', class: 'bg-secondary' };
+    }
+}
+
+function filterUvedomleniya() {
+    const filters = {
+        date: document.getElementById('uvedomleniya-filter-date').value.toLowerCase(),
+        type: document.getElementById('uvedomleniya-filter-type').value.toLowerCase(),
+        text: document.getElementById('uvedomleniya-filter-text').value.toLowerCase()
+    };
+
+    const rows = document.querySelectorAll('#uvedomleniya-content tbody tr');
+    rows.forEach(row => {
+        const cells = row.cells;
+        const matches =
+            cells[0].textContent.toLowerCase().includes(filters.date) &&
+            cells[1].textContent.toLowerCase().includes(filters.type) &&
+            cells[2].textContent.toLowerCase().includes(filters.text);
+
+        row.style.display = matches ? '' : 'none';
+    });
+}
+
+async function refreshUvedomleniya() {
+    await loadUvedomleniya();
+}
+
+async function deleteUved(id) {
+    if (confirm('Удалить уведомление?')) {
+        try {
+            const { error } = await supabase.from('уведомления').delete().eq('id', id);
+            if (error) throw error;
+            loadUvedomleniya();
+            showNotification('Уведомление удалено', 'success');
+        } catch (error) {
+            showNotification('Ошибка удаления: ' + error.message, 'error');
+        }
+    }
+}
+
+async function addUved() {
+    const type = prompt('Тип уведомления (Ошибка/Предупреждение/Информация/Успех):');
+    const text = prompt('Текст уведомления:');
+
+    if (type && text) {
+        try {
+            const { error } = await supabase.from('уведомления').insert({
+                тип_уведомления: type,
+                текст_уведомления: text
+            });
+            if (error) throw error;
+            loadUvedomleniya();
+            showNotification('Уведомление добавлено', 'success');
+        } catch (error) {
+            showNotification('Ошибка добавления: ' + error.message, 'error');
+        }
+    }
+}
+
+async function viewUved(id) {
+    try {
+        const { data, error } = await supabase.from('уведомления').select('*').eq('id', id).single();
+        if (error) throw error;
+
+        const notificationType = getNotificationTypeIcon(data.тип_уведомления);
+
+        // Показать модальное окно с деталями
+        const modalHtml = `
+            <div class="modal fade" id="notificationModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="${notificationType.icon} me-2"></i>Уведомление
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <strong>Дата:</strong> ${new Date(data.дата).toLocaleString('ru-RU')}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Тип:</strong>
+                                <span class="badge ${notificationType.class} ms-2">
+                                    ${data.тип_уведомления}
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Текст:</strong>
+                                <div class="alert alert-light mt-2">${data.текст_уведомления}</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Добавить модальное окно в DOM
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        // Показать модальное окно
+        const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+        modal.show();
+
+        // Удалить модальное окно после закрытия
+        document.getElementById('notificationModal').addEventListener('hidden.bs.modal', function() {
+            this.remove();
+        });
+
+    } catch (error) {
+        showNotification('Ошибка просмотра уведомления: ' + error.message, 'error');
+    }
+}
 
 async function testConnection() {
     const status = document.getElementById('connection-status');
