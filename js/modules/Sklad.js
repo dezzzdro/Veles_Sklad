@@ -119,39 +119,14 @@ export class SkladModule {
                                 <th style="font-weight: bold; vertical-align: middle;">Действия</th>
                             </tr>
                             <!-- Фильтры -->
-                            <tr class="filter-row" style="background-color: var(--bg-color); border-bottom: 1px solid var(--border-color);">
-                                <th style="padding: 8px 12px; vertical-align: middle;">
-                                    <input type="text" id="sklad-filter-id" placeholder="ID"
-                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
-                                </th>
-                                <th style="padding: 8px 12px; vertical-align: middle;">
-                                    <input type="text" id="sklad-filter-наименование" placeholder="Наименование"
-                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
-                                </th>
-                                <th style="padding: 8px 12px; vertical-align: middle;">
-                                    <input type="text" id="sklad-filter-ед_изм" placeholder="Ед.изм."
-                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
-                                </th>
-                                <th style="padding: 8px 12px; vertical-align: middle;">
-                                    <input type="text" id="sklad-filter-числится" placeholder="Числится"
-                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
-                                </th>
-                                <th style="padding: 8px 12px; vertical-align: middle;">
-                                    <input type="text" id="sklad-filter-на_складе" placeholder="На складе"
-                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
-                                </th>
-                                <th style="padding: 8px 12px; vertical-align: middle;">
-                                    <input type="text" id="sklad-filter-выдано" placeholder="Выдано"
-                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
-                                </th>
-                                <th style="padding: 8px 12px; vertical-align: middle;">
-                                    <button class="btn btn-secondary btn-sm d-flex align-items-center"
-                                            onclick="window.app.getModule('sklad').resetFilters()"
-                                            style="width: 100%; height: 32px; font-size: 12px; padding: 4px 8px;">
-                                        <i class="fas fa-times me-1"></i>
-                                        <span>Сброс</span>
-                                    </button>
-                                </th>
+                            <tr class="filter-row">
+                                <th><input type="text" id="sklad-filter-id" placeholder="ID"></th>
+                                <th><input type="text" id="sklad-filter-наименование" placeholder="Наименование"></th>
+                                <th><input type="text" id="sklad-filter-ед_изм" placeholder="Ед.изм."></th>
+                                <th><input type="text" id="sklad-filter-числится" placeholder="Числится"></th>
+                                <th><input type="text" id="sklad-filter-на_складе" placeholder="На складе"></th>
+                                <th><input type="text" id="sklad-filter-выдано" placeholder="Выдано"></th>
+                                <th><button class="btn btn-secondary btn-sm" onclick="window.app.getModule('sklad').resetFilters()"><i class="fas fa-times"></i> Сброс</button></th>
                             </tr>
                         </thead>
                     </table>
@@ -246,21 +221,43 @@ export class SkladModule {
     }
 
     /**
-     * Синхронизация ширины фильтров с колонками таблицы
+     * Абсолютная синхронизация ширины фильтров с колонками таблицы
      */
     syncFilterWidths() {
-        const tableHeaders = document.querySelectorAll('.table-header-fixed th');
-        const filterInputs = document.querySelectorAll('.filter-row input');
+        // Ждем полной загрузки DOM
+        setTimeout(() => {
+            const headerRow = document.querySelector('.table-header-fixed thead tr:first-child');
+            const filterRow = document.querySelector('.table-header-fixed thead tr.filter-row');
 
-        tableHeaders.forEach((header, index) => {
-            const filterInput = filterInputs[index];
-            if (filterInput && header.textContent.trim() !== 'Действия') {
-                const headerWidth = header.offsetWidth;
-                filterInput.style.width = (headerWidth - 24) + 'px'; // Учитываем padding
-                filterInput.style.minWidth = (headerWidth - 24) + 'px';
-                filterInput.style.maxWidth = (headerWidth - 24) + 'px';
-            }
-        });
+            if (!headerRow || !filterRow) return;
+
+            const headerCells = headerRow.querySelectorAll('th');
+            const filterCells = filterRow.querySelectorAll('th');
+
+            headerCells.forEach((headerCell, index) => {
+                const filterCell = filterCells[index];
+                if (filterCell && headerCell.textContent.trim() !== 'Действия') {
+                    // Точное копирование ширины
+                    const headerWidth = headerCell.offsetWidth;
+                    const filterInput = filterCell.querySelector('input');
+
+                    if (filterInput) {
+                        // Учитываем точные отступы и границы
+                        const computedStyle = window.getComputedStyle(headerCell);
+                        const paddingLeft = parseFloat(computedStyle.paddingLeft);
+                        const paddingRight = parseFloat(computedStyle.paddingRight);
+                        const borderLeft = parseFloat(computedStyle.borderLeftWidth);
+                        const borderRight = parseFloat(computedStyle.borderRightWidth);
+
+                        const contentWidth = headerWidth - paddingLeft - paddingRight - borderLeft - borderRight - 2; // -2 для точности
+
+                        filterInput.style.width = contentWidth + 'px';
+                        filterInput.style.minWidth = contentWidth + 'px';
+                        filterInput.style.maxWidth = contentWidth + 'px';
+                    }
+                }
+            });
+        }, 50); // Небольшая задержка для полной загрузки
     }
 
     /**
