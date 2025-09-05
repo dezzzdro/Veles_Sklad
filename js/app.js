@@ -140,13 +140,22 @@ async function loadPrihod() {
 
 async function loadVydannoe() {
     const content = document.getElementById('vydannoe-content');
-    content.innerHTML = '<p>Загрузка данных выданного...</p>';
+    content.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Загрузка данных выданного...</p></div>';
+
     try {
         const { data, error } = await supabase.from('выданное').select('*');
         if (error) throw error;
-        renderVydannoeTable(data);
+
+        // Получить списки контрагентов и ответственных для выпадающих списков
+        const { data: kontragenty, error: kontrError } = await supabase.from('контрагенты').select('*');
+        if (kontrError) throw kontrError;
+
+        const { data: persons, error: personsError } = await supabase.from('ответственные_лица').select('*');
+        if (personsError) throw personsError;
+
+        renderVydannoeTable(data || [], kontragenty || [], persons || []);
     } catch (error) {
-        content.innerHTML = '<p>Ошибка загрузки: ' + error.message + '</p>';
+        showError('vydannoe', error.message);
     }
 }
 
@@ -364,6 +373,33 @@ function filterPrihod() {
             cells[3].textContent.toLowerCase().includes(filters.quantity) &&
             cells[4].textContent.toLowerCase().includes(filters.registry) &&
             cells[5].textContent.toLowerCase().includes(filters.upd);
+
+        row.style.display = matches ? '' : 'none';
+    });
+}
+
+function filterVydannoe() {
+    const filters = {
+        date: document.getElementById('vydannoe-filter-date').value.toLowerCase(),
+        id: document.getElementById('vydannoe-filter-id').value.toLowerCase(),
+        name: document.getElementById('vydannoe-filter-name').value.toLowerCase(),
+        registry: document.getElementById('vydannoe-filter-registry').value.toLowerCase(),
+        upd: document.getElementById('vydannoe-filter-upd').value.toLowerCase(),
+        contractor: document.getElementById('vydannoe-filter-contractor').value,
+        responsible: document.getElementById('vydannoe-filter-responsible').value
+    };
+
+    const rows = document.querySelectorAll('#vydannoe-content tbody tr');
+    rows.forEach(row => {
+        const cells = row.cells;
+        const matches =
+            cells[0].textContent.toLowerCase().includes(filters.date) &&
+            cells[1].textContent.toLowerCase().includes(filters.id) &&
+            cells[2].textContent.toLowerCase().includes(filters.name) &&
+            cells[7].textContent.toLowerCase().includes(filters.registry) &&
+            cells[8].textContent.toLowerCase().includes(filters.upd) &&
+            (filters.contractor === '' || cells[5].textContent.includes(filters.contractor)) &&
+            (filters.responsible === '' || cells[6].textContent.includes(filters.responsible));
 
         row.style.display = matches ? '' : 'none';
     });
@@ -1007,65 +1043,201 @@ async function applyUPD() {
     }
 }
 
-function renderVydannoeTable(data) {
+function renderVydannoeTable(data, kontragenty, persons) {
     const content = document.getElementById('vydannoe-content');
+
+    // Создать карты для быстрого поиска
+    const kontrMap = {};
+    kontragenty.forEach(k => kontrMap[k.id] = k.организация);
+
+    const personsMap = {};
+    persons.forEach(p => {
+        if (!personsMap[p.id_контрагента]) personsMap[p.id_контрагента] = [];
+        personsMap[p.id_контрагента].push(p.имя);
+    });
+
     let html = `
-        <div>
-            <input type="text" placeholder="Фильтр по дате">
-            <input type="text" placeholder="Фильтр по ID">
-            <input type="text" placeholder="Фильтр по наименованию">
-            <input type="text" placeholder="Фильтр по реестровому номеру">
-            <input type="text" placeholder="Фильтр по УПД">
-            <select><option>Контрагент</option></select>
-            <select><option>Ответственный</option></select>
+        <!-- Фильтры -->
+        <div class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <input type="text" id="vydannoe-filter-date" class="form-control" placeholder="Дата">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="vydannoe-filter-id" class="form-control" placeholder="ID">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" id="vydannoe-filter-name" class="form-control" placeholder="Наименование">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="vydannoe-filter-registry" class="form-control" placeholder="Реестровый номер">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="vydannoe-filter-upd" class="form-control" placeholder="УПД">
+                </div>
+            </div>
+            <div class="row g-2 mt-2">
+                <div class="col-md-4">
+                    <select id="vydannoe-filter-contractor" class="form-select">
+                        <option value="">Все контрагенты</option>
+    `;
+    kontragenty.forEach(k => {
+        html += `<option value="${k.id}">${k.организация}</option>`;
+    });
+    html += `
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select id="vydannoe-filter-responsible" class="form-select">
+                        <option value="">Все ответственные</option>
+    `;
+    // Соберем уникальных ответственных
+    const uniquePersons = [...new Set(persons.map(p => p.имя))];
+    uniquePersons.forEach(name => {
+        html += `<option value="${name}">${name}</option>`;
+    });
+    html += `
+                    </select>
+                </div>
+            </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>ID</th>
-                    <th>Наименование</th>
-                    <th>Ед.изм.</th>
-                    <th>Количество</th>
-                    <th>Контрагент</th>
-                    <th>Ответственный</th>
-                    <th>Реестровый номер</th>
-                    <th>УПД</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
+
+        <!-- Таблица -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Дата</th>
+                        <th>ID</th>
+                        <th>Наименование</th>
+                        <th>Ед.изм.</th>
+                        <th>Количество</th>
+                        <th>Контрагент</th>
+                        <th>Ответственный</th>
+                        <th>Реестровый номер</th>
+                        <th>УПД</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
     data.forEach(item => {
         html += `
             <tr>
-                <td>${item.дата}</td>
+                <td>${new Date(item.дата).toLocaleDateString('ru-RU')}</td>
                 <td>${item.id}</td>
-                <td>${item.наименование}</td>
-                <td>${item.ед_изм}</td>
-                <td>${item.количество}</td>
-                <td>${item.контрагент}</td>
-                <td>${item.ответственный}</td>
-                <td>${item.реестровый_номер}</td>
-                <td>${item.upd}</td>
+                <td>${item.наименование || ''}</td>
+                <td>${item.ед_изм || ''}</td>
+                <td>${item.количество || ''}</td>
+                <td>${item.контрагент || ''}</td>
+                <td>${item.ответственный || ''}</td>
+                <td>${item.реестровый_номер || ''}</td>
+                <td>${item.upd || ''}</td>
                 <td>
-                    <button onclick="editVydannoe(${item.id})">Редактировать</button>
-                    <button onclick="deleteVydannoe(${item.id})">Удалить</button>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editVydannoe(${item.id})" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteVydannoe(${item.id})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `;
     });
     html += `
-            </tbody>
-        </table>
-        <button onclick="addVydannoe()">Добавить</button>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Кнопка добавления -->
+        <div class="mt-3">
+            <button class="btn btn-primary" onclick="addVydannoe()">
+                <i class="fas fa-plus me-1"></i>Добавить выдачу
+            </button>
+        </div>
     `;
     content.innerHTML = html;
+
+    // Add filter listeners
+    ['date', 'id', 'name', 'registry', 'upd'].forEach(field => {
+        document.getElementById(`vydannoe-filter-${field}`).addEventListener('input', filterVydannoe);
+    });
+    document.getElementById('vydannoe-filter-contractor').addEventListener('change', filterVydannoe);
+    document.getElementById('vydannoe-filter-responsible').addEventListener('change', filterVydannoe);
 }
 
-function editVydannoe(id) { alert('Редактировать ' + id); }
-function deleteVydannoe(id) { alert('Удалить ' + id); }
-function addVydannoe() { alert('Добавить'); }
+async function editVydannoe(id) {
+    const { data, error } = await supabase.from('выданное').select('*').eq('id', id).single();
+    if (error) { alert('Ошибка: ' + error.message); return; }
+
+    const name = prompt('Наименование:', data.наименование);
+    const unit = prompt('Ед.изм.:', data.ед_изм);
+    const quantity = prompt('Количество:', data.количество);
+    const contractor = prompt('Контрагент:', data.контрагент);
+    const responsible = prompt('Ответственный:', data.ответственный);
+    const registry = prompt('Реестровый номер:', data.реестровый_номер);
+    const upd = prompt('УПД:', data.upd);
+
+    if (name && unit) {
+        try {
+            const { error } = await supabase.from('выданное').update({
+                наименование: name,
+                ед_изм: unit,
+                количество: parseFloat(quantity) || 0,
+                контрагент: contractor,
+                ответственный: responsible,
+                реестровый_номер: registry,
+                upd: upd
+            }).eq('id', id);
+            if (error) throw error;
+            loadVydannoe();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function deleteVydannoe(id) {
+    if (confirm('Удалить запись?')) {
+        try {
+            const { error } = await supabase.from('выданное').delete().eq('id', id);
+            if (error) throw error;
+            loadVydannoe();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function addVydannoe() {
+    const name = prompt('Наименование:');
+    const unit = prompt('Ед.изм.:');
+    const quantity = prompt('Количество:');
+    const contractor = prompt('Контрагент:');
+    const responsible = prompt('Ответственный:');
+    const registry = prompt('Реестровый номер:');
+    const upd = prompt('УПД:');
+
+    if (name && unit) {
+        try {
+            const { error } = await supabase.from('выданное').insert({
+                наименование: name,
+                ед_изм: unit,
+                количество: parseFloat(quantity) || 0,
+                контрагент: contractor,
+                ответственный: responsible,
+                реестровый_номер: registry,
+                upd: upd
+            });
+            if (error) throw error;
+            loadVydannoe();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
 
 function renderKontragenty(kontragenty, persons) {
     const content = document.getElementById('kontragenty-content');
