@@ -130,6 +130,44 @@
                             <h2 class="mb-0"><i class="fas fa-tools text-dark me-3"></i> Инструмент отладки</h2>
                             <small class="text-muted">Тестирование и диагностика</small>
                         </div>
+
+                        <!-- Database Metrics -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-database fa-2x mb-2"></i>
+                                        </h5>
+                                        <h3 id="total-records">-</h3>
+                                        <p class="card-text">Всего записей</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-table fa-2x mb-2"></i>
+                                        </h5>
+                                        <h3 id="active-tables">-</h3>
+                                        <p class="card-text">Активных таблиц</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-clock fa-2x mb-2"></i>
+                                        </h5>
+                                        <h3 id="last-activity">-</h3>
+                                        <p class="card-text">Последняя активность</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div id="otladka-content"></div>
                     </section>
                 </div>
