@@ -1,0 +1,824 @@
+INFO 2025-09-04 23:58:52,042 autoreload 16356 14952 Watching for file changes with StatReloader
+INFO 2025-09-05 00:04:10,958 autoreload 12472 7492 Watching for file changes with StatReloader
+INFO 2025-09-05 00:04:42,207 autoreload 12472 7492 D:\Projekt\Veles_Sklad\venv\Lib\site-packages\httpcore\_sync\http_proxy.py changed, reloading.
+INFO 2025-09-05 00:09:25,170 autoreload 17036 2968 Watching for file changes with StatReloader
+ERROR 2025-09-05 00:09:42,858 views 17036 7364 Error in assembly_list raw SQL: no such table: Сборка_Сборки
+WARNING 2025-09-05 00:09:42,860 views 17036 7364 Assembly list fallback to ORM executed in 0.002s
+INFO 2025-09-05 00:09:55,129 views 17036 7364 2025-09-05 00:09:55 - READ: Чтение из таблицы item: найдено 0 записей | SUCCESS
+INFO 2025-09-05 00:09:57,741 views 17036 7364 2025-09-05 00:09:57 - WRITE: Тестовая запись в item выполнена (ID: None) | SUCCESS
+INFO 2025-09-05 00:09:59,632 views 17036 7364 2025-09-05 00:09:59 - UPDATE: Тестовое обновление в item выполнено (ID: None) | SUCCESS
+ERROR 2025-09-05 00:09:59,961 views 17036 7364 2025-09-05 00:09:59 - DELETE: Ошибка удаления в item: Item object can't be deleted because its id attribute is set to None. | ERROR
+ERROR 2025-09-05 00:10:00,457 views 17036 7364 2025-09-05 00:10:00 - PERFORMANCE: Ошибка тестирования производительности: cannot access free variable 'connection' where it is not associated with a value in enclosing scope | ERROR
+INFO 2025-09-05 00:10:00,902 views 17036 7364 2025-09-05 00:10:00 - TRANSACTION: Тест транзакции выполнен успешно (Item ID: None, Notification ID: None) | SUCCESS | 85ms
+INFO 2025-09-05 00:10:01,173 views 17036 7364 2025-09-05 00:10:01 - COMPLEX_QUERY: Сложный запрос выполнен: {'items_with_assemblies': 0, 'orgs_with_responsibles': 0, 'complex_joins': 0, 'aggregations': {'total_accounted': Decimal('40'), 'total_in_stock': Decimal('40'), 'total_issued': Decimal('0'), 'avg_accounted': Decimal('10')}} | SUCCESS | 3ms
+INFO 2025-09-05 00:10:01,859 views 17036 7364 2025-09-05 00:10:01 - API_TEST: GET /api/items/ - Получение списка товаров: OK | SUCCESS
+INFO 2025-09-05 00:10:01,859 views 17036 7364 2025-09-05 00:10:01 - API_TEST: GET /api/organizations/ - Получение списка организаций: OK | SUCCESS
+INFO 2025-09-05 00:10:01,860 views 17036 7364 2025-09-05 00:10:01 - API_TEST: GET /api/notifications/ - Получение уведомлений: OK | SUCCESS
+ERROR 2025-09-05 00:10:01,860 views 17036 7364 2025-09-05 00:10:01 - API_TEST: GET /api/assemblies/ - Получение сборок: ERROR - cannot access free variable 'connection' where it is not associated with a value in enclosing scope | ERROR
+INFO 2025-09-05 00:10:01,861 views 17036 7364 2025-09-05 00:10:01 - API_TEST: GET /api/arrivals/ - Получение приходов: OK | SUCCESS
+INFO 2025-09-05 00:10:01,861 views 17036 7364 2025-09-05 00:10:01 - API_TEST: GET /api/issued/ - Получение выданного: OK | SUCCESS
+ERROR 2025-09-05 00:10:01,979 views 17036 7364 2025-09-05 00:10:01 - API_TEST: POST /api/items/ - Создание товара: ERROR - Item object can't be deleted because its id attribute is set to None. | ERROR
+ERROR 2025-09-05 00:10:02,083 views 17036 7364 2025-09-05 00:10:02 - API_TEST: POST /api/organizations/ - Создание организации: ERROR - Organization object can't be deleted because its id attribute is set to None. | ERROR
+ERROR 2025-09-05 00:10:02,174 views 17036 7364 2025-09-05 00:10:02 - API_TEST: POST /api/notifications/ - Создание уведомления: ERROR - Notification object can't be deleted because its id attribute is set to None. | ERROR
+INFO 2025-09-05 00:10:02,175 views 17036 7364 2025-09-05 00:10:02 - API_ENDPOINTS: Тестирование API завершено: 5/9 успешно (55.6%) | SUCCESS | 316ms
+INFO 2025-09-05 00:11:19,457 autoreload 17036 2968 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 00:11:20,499 autoreload 15428 16504 Watching for file changes with StatReloader
+INFO 2025-09-05 00:11:44,377 autoreload 15428 16504 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 00:11:45,403 autoreload 14672 5136 Watching for file changes with StatReloader
+INFO 2025-09-05 00:21:08,793 autoreload 14672 5136 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 00:25:35,441 autoreload 7732 1612 Watching for file changes with StatReloader
+INFO 2025-09-05 00:26:34,291 autoreload 14396 3164 Watching for file changes with StatReloader
+INFO 2025-09-05 00:35:06,044 autoreload 17300 13844 Watching for file changes with StatReloader
+INFO 2025-09-05 00:36:46,092 autoreload 14356 16956 Watching for file changes with StatReloader
+INFO 2025-09-05 00:37:17,164 autoreload 17300 13844 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 00:37:17,933 autoreload 14356 16956 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 00:37:17,976 autoreload 14396 3164 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 00:37:18,017 autoreload 7732 1612 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 00:41:10,158 autoreload 2868 17300 Watching for file changes with StatReloader
+ERROR 2025-09-05 00:41:20,610 log 2868 14392 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\veles_sklad\middleware.py", line 9, in __call__
+    if not request.user.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\auth\__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\auth\__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\query.py", line 629, in get
+    num = len(clone)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ~~~~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases or bool(combinator),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 85, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 74, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 316, in get_select
+    sql, params = self.compile(col)
+                  ~~~~~~~~~~~~^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\expressions.py", line 1322, in as_sql
+    sql = ".".join(map(compiler.quote_name_unless_alias, identifiers))
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\db\backends\dummy\base.py", line 20, in complain
+    raise ImproperlyConfigured(
+    ...<3 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+INFO 2025-09-05 00:41:53,732 autoreload 2868 17300 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 00:41:54,775 autoreload 16484 5916 Watching for file changes with StatReloader
+INFO 2025-09-05 00:43:07,881 autoreload 2696 14356 Watching for file changes with StatReloader
+ERROR 2025-09-05 00:43:24,238 log 16484 13844 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 22, in home_view
+    return render(request, 'sklad/home.html', {
+        'total_items': total_items,
+    ...<3 lines>...
+        'recent_operations': notifications or [],
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'item_list' not found. 'item_list' is not a valid view function or pattern name.
+ERROR 2025-09-05 00:43:35,371 log 16484 7028 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 22, in home_view
+    return render(request, 'sklad/home.html', {
+        'total_items': total_items,
+    ...<3 lines>...
+        'recent_operations': notifications or [],
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'item_list' not found. 'item_list' is not a valid view function or pattern name.
+INFO 2025-09-05 00:44:09,852 autoreload 2696 14356 D:\Projekt\Veles_Sklad\sklad\urls.py changed, reloading.
+INFO 2025-09-05 00:44:10,410 autoreload 16484 5916 D:\Projekt\Veles_Sklad\sklad\urls.py changed, reloading.
+INFO 2025-09-05 00:44:10,865 autoreload 7360 12888 Watching for file changes with StatReloader
+ERROR 2025-09-05 00:44:45,353 log 7360 14832 Internal Server Error: /sklad/items/
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 33, in items_list
+    return render(request, 'sklad/item_list.html', {
+        'items': items or []
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'item_create' not found. 'item_create' is not a valid view function or pattern name.
+INFO 2025-09-05 00:48:26,233 autoreload 7360 12888 D:\Projekt\Veles_Sklad\manage.py changed, reloading.
+INFO 2025-09-05 00:49:59,306 autoreload 6232 17224 Watching for file changes with StatReloader
+ERROR 2025-09-05 00:50:12,741 log 6232 1904 Internal Server Error: /sklad/items/
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 33, in items_list
+    return render(request, 'sklad/item_list.html', {
+        'items': items or []
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'item_create' not found. 'item_create' is not a valid view function or pattern name.
+INFO 2025-09-05 00:59:21,061 autoreload 8388 12000 Watching for file changes with StatReloader
+INFO 2025-09-05 01:12:18,400 autoreload 8388 12000 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 01:12:18,401 autoreload 6232 17224 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 01:20:40,442 autoreload 15468 11524 Watching for file changes with StatReloader
+INFO 2025-09-05 01:21:47,524 autoreload 15468 11524 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 01:21:48,846 autoreload 17248 8092 Watching for file changes with StatReloader
+INFO 2025-09-05 01:22:01,097 autoreload 17248 8092 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 01:22:02,342 autoreload 5532 13992 Watching for file changes with StatReloader
+INFO 2025-09-05 01:22:16,664 autoreload 5532 13992 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 01:22:17,857 autoreload 3876 17028 Watching for file changes with StatReloader
+INFO 2025-09-05 01:22:30,135 autoreload 3876 17028 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 01:22:31,530 autoreload 10908 4852 Watching for file changes with StatReloader
+INFO 2025-09-05 01:23:35,835 autoreload 10908 4852 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 01:23:37,091 autoreload 15964 2708 Watching for file changes with StatReloader
+INFO 2025-09-05 01:24:00,768 autoreload 15964 2708 D:\Projekt\Veles_Sklad\sklad\urls.py changed, reloading.
+INFO 2025-09-05 01:24:01,779 autoreload 12528 11764 Watching for file changes with StatReloader
+INFO 2025-09-05 01:30:16,280 autoreload 12528 11764 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 01:30:17,293 autoreload 13020 8768 Watching for file changes with StatReloader
+INFO 2025-09-05 01:30:52,395 autoreload 13020 8768 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 01:30:53,502 autoreload 14576 15124 Watching for file changes with StatReloader
+INFO 2025-09-05 01:31:18,175 autoreload 14576 15124 D:\Projekt\Veles_Sklad\veles_sklad\urls.py changed, reloading.
+INFO 2025-09-05 01:31:19,241 autoreload 13796 3604 Watching for file changes with StatReloader
+INFO 2025-09-05 01:31:30,472 autoreload 13796 3604 D:\Projekt\Veles_Sklad\veles_sklad\urls.py changed, reloading.
+INFO 2025-09-05 01:31:31,554 autoreload 16336 14208 Watching for file changes with StatReloader
+INFO 2025-09-05 01:32:13,991 autoreload 16336 14208 D:\Projekt\Veles_Sklad\veles_sklad\urls.py changed, reloading.
+INFO 2025-09-05 01:32:15,039 autoreload 2236 10256 Watching for file changes with StatReloader
+INFO 2025-09-05 01:32:27,252 autoreload 2236 10256 D:\Projekt\Veles_Sklad\veles_sklad\urls.py changed, reloading.
+INFO 2025-09-05 01:32:28,313 autoreload 12720 7560 Watching for file changes with StatReloader
+INFO 2025-09-05 01:33:11,619 autoreload 12720 7560 D:\Projekt\Veles_Sklad\veles_sklad\urls.py changed, reloading.
+INFO 2025-09-05 01:33:12,679 autoreload 11632 9556 Watching for file changes with StatReloader
+INFO 2025-09-05 01:36:42,417 autoreload 11632 9556 D:\Projekt\Veles_Sklad\sklad\urls.py changed, reloading.
+INFO 2025-09-05 01:36:43,576 autoreload 13116 4844 Watching for file changes with StatReloader
+INFO 2025-09-05 01:37:19,728 autoreload 13116 4844 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 01:37:21,017 autoreload 9632 15496 Watching for file changes with StatReloader
+INFO 2025-09-05 02:02:18,815 autoreload 9632 15496 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 02:02:21,398 autoreload 9096 13136 Watching for file changes with StatReloader
+INFO 2025-09-05 02:02:33,187 autoreload 9096 13136 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 02:02:34,357 autoreload 6400 7452 Watching for file changes with StatReloader
+INFO 2025-09-05 02:02:46,523 autoreload 6400 7452 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 02:02:47,667 autoreload 17144 15464 Watching for file changes with StatReloader
+INFO 2025-09-05 02:03:03,057 autoreload 17144 15464 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 02:03:04,237 autoreload 16072 13844 Watching for file changes with StatReloader
+INFO 2025-09-05 02:03:16,396 autoreload 16072 13844 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 02:03:17,593 autoreload 13980 12872 Watching for file changes with StatReloader
+INFO 2025-09-05 02:03:31,911 autoreload 13980 12872 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 02:03:33,108 autoreload 13584 14348 Watching for file changes with StatReloader
+INFO 2025-09-05 02:12:55,980 autoreload 5100 14508 Watching for file changes with StatReloader
+INFO 2025-09-05 02:13:04,955 autoreload 5100 14508 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:13:11,470 autoreload 12440 15016 Watching for file changes with StatReloader
+INFO 2025-09-05 02:13:18,398 autoreload 12440 15016 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:13:19,594 autoreload 13744 10444 Watching for file changes with StatReloader
+INFO 2025-09-05 02:13:33,849 autoreload 13744 10444 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:13:34,958 autoreload 5388 15068 Watching for file changes with StatReloader
+INFO 2025-09-05 02:13:51,342 autoreload 5388 15068 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:13:52,662 autoreload 14612 11428 Watching for file changes with StatReloader
+INFO 2025-09-05 02:14:08,010 autoreload 14612 11428 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:14:09,259 autoreload 3096 8216 Watching for file changes with StatReloader
+INFO 2025-09-05 02:14:44,357 autoreload 3096 8216 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 02:14:45,449 autoreload 16900 14012 Watching for file changes with StatReloader
+INFO 2025-09-05 02:15:00,754 autoreload 16900 14012 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 02:15:01,848 autoreload 15944 1692 Watching for file changes with StatReloader
+INFO 2025-09-05 02:15:17,140 autoreload 15944 1692 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 02:15:18,295 autoreload 17092 14568 Watching for file changes with StatReloader
+INFO 2025-09-05 02:15:33,559 autoreload 17092 14568 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 02:15:34,640 autoreload 8936 8876 Watching for file changes with StatReloader
+INFO 2025-09-05 02:18:22,579 autoreload 8936 8876 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:18:23,733 autoreload 10884 2168 Watching for file changes with StatReloader
+INFO 2025-09-05 02:18:39,270 autoreload 10884 2168 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:18:40,490 autoreload 11636 6968 Watching for file changes with StatReloader
+INFO 2025-09-05 02:24:16,244 autoreload 11636 6968 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 02:24:18,131 autoreload 14388 16324 Watching for file changes with StatReloader
+INFO 2025-09-05 06:47:41,315 autoreload 14388 16324 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 07:09:12,004 autoreload 15112 15628 Watching for file changes with StatReloader
+INFO 2025-09-05 07:09:59,823 autoreload 15112 15628 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 07:10:01,028 autoreload 9224 11628 Watching for file changes with StatReloader
+INFO 2025-09-05 07:10:26,641 autoreload 9224 11628 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 07:10:27,772 autoreload 11996 15828 Watching for file changes with StatReloader
+INFO 2025-09-05 07:10:55,535 autoreload 11996 15828 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 07:10:56,716 autoreload 15564 15128 Watching for file changes with StatReloader
+INFO 2025-09-05 07:11:16,209 autoreload 15564 15128 D:\Projekt\Veles_Sklad\sklad\supabase_service.py changed, reloading.
+INFO 2025-09-05 07:11:17,382 autoreload 14216 16596 Watching for file changes with StatReloader
+INFO 2025-09-05 07:12:31,788 autoreload 15380 4448 Watching for file changes with StatReloader
+INFO 2025-09-05 07:12:43,081 autoreload 12596 11840 Watching for file changes with StatReloader
+INFO 2025-09-05 07:15:37,001 autoreload 12596 11840 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 07:15:37,003 autoreload 15380 4448 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 07:15:38,316 autoreload 13328 8420 Watching for file changes with StatReloader
+INFO 2025-09-05 07:17:57,643 autoreload 13328 8420 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 07:17:58,703 autoreload 12684 5264 Watching for file changes with StatReloader
+ERROR 2025-09-05 08:59:42,165 log 12684 13028 Internal Server Error: /sklad/issued/
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 65, in issued_list
+    return render(request, 'sklad/issued_list.html', {
+        'issued_items': issued or []
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'contractor_list' not found. 'contractor_list' is not a valid view function or pattern name.
+INFO 2025-09-05 09:37:30,099 autoreload 16168 4644 Watching for file changes with StatReloader
+INFO 2025-09-05 09:41:39,463 autoreload 16168 4644 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:41:39,509 autoreload 12684 5264 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:41:40,334 autoreload 16912 12132 Watching for file changes with StatReloader
+INFO 2025-09-05 09:41:59,137 autoreload 16912 12132 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:41:59,952 autoreload 15200 13616 Watching for file changes with StatReloader
+INFO 2025-09-05 09:42:19,766 autoreload 15200 13616 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:42:20,487 autoreload 14464 13840 Watching for file changes with StatReloader
+INFO 2025-09-05 09:42:43,339 autoreload 14464 13840 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:42:44,154 autoreload 12624 10180 Watching for file changes with StatReloader
+INFO 2025-09-05 09:43:03,965 autoreload 12624 10180 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:43:04,725 autoreload 2128 12168 Watching for file changes with StatReloader
+INFO 2025-09-05 09:43:25,541 autoreload 2128 12168 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:43:26,670 autoreload 14120 8416 Watching for file changes with StatReloader
+INFO 2025-09-05 09:43:46,606 autoreload 14120 8416 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:43:47,349 autoreload 15036 12748 Watching for file changes with StatReloader
+INFO 2025-09-05 09:44:08,148 autoreload 15036 12748 D:\Projekt\Veles_Sklad\sklad\models.py changed, reloading.
+INFO 2025-09-05 09:44:09,253 autoreload 2296 13556 Watching for file changes with StatReloader
+INFO 2025-09-05 09:59:05,849 autoreload 2296 13556 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 09:59:06,965 autoreload 16588 8008 Watching for file changes with StatReloader
+INFO 2025-09-05 09:59:16,603 autoreload 16588 8008 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 09:59:17,722 autoreload 17160 3640 Watching for file changes with StatReloader
+INFO 2025-09-05 09:59:23,290 autoreload 17160 3640 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 09:59:24,363 autoreload 3296 15092 Watching for file changes with StatReloader
+INFO 2025-09-05 10:00:07,641 autoreload 3296 15092 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:00:08,650 autoreload 14204 3456 Watching for file changes with StatReloader
+INFO 2025-09-05 10:00:14,253 autoreload 14204 3456 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:00:15,357 autoreload 15512 8072 Watching for file changes with StatReloader
+INFO 2025-09-05 10:00:22,958 autoreload 15512 8072 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:00:24,074 autoreload 15280 15340 Watching for file changes with StatReloader
+INFO 2025-09-05 10:00:30,666 autoreload 15280 15340 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:00:31,790 autoreload 15576 16188 Watching for file changes with StatReloader
+INFO 2025-09-05 10:00:43,480 autoreload 15576 16188 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:00:44,489 autoreload 1456 14784 Watching for file changes with StatReloader
+INFO 2025-09-05 10:00:49,050 autoreload 1456 14784 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:00:50,127 autoreload 14980 14328 Watching for file changes with StatReloader
+INFO 2025-09-05 10:00:55,705 autoreload 14980 14328 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:00:56,845 autoreload 16828 7676 Watching for file changes with StatReloader
+INFO 2025-09-05 10:01:03,533 autoreload 16828 7676 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:01:04,612 autoreload 9068 4152 Watching for file changes with StatReloader
+INFO 2025-09-05 10:01:12,237 autoreload 9068 4152 D:\Projekt\Veles_Sklad\sklad\admin.py changed, reloading.
+INFO 2025-09-05 10:01:13,328 autoreload 13532 5592 Watching for file changes with StatReloader
+INFO 2025-09-05 10:03:50,572 autoreload 13532 5592 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 10:03:51,761 autoreload 12804 11200 Watching for file changes with StatReloader
+INFO 2025-09-05 10:06:07,540 autoreload 12804 11200 D:\Projekt\Veles_Sklad\sklad\migrations\0001_initial.py changed, reloading.
+INFO 2025-09-05 10:06:08,581 autoreload 5620 6728 Watching for file changes with StatReloader
+INFO 2025-09-05 10:06:23,304 autoreload 3780 12132 Watching for file changes with StatReloader
+INFO 2025-09-05 10:07:10,348 autoreload 3780 12132 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 10:07:10,646 autoreload 5620 6728 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 10:07:11,497 autoreload 11516 16284 Watching for file changes with StatReloader
+INFO 2025-09-05 10:07:11,827 autoreload 16708 7552 Watching for file changes with StatReloader
+INFO 2025-09-05 10:07:19,914 autoreload 16708 7552 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 10:07:21,103 autoreload 13812 13804 Watching for file changes with StatReloader
+INFO 2025-09-05 10:07:21,141 autoreload 11516 16284 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 10:07:22,442 autoreload 5824 13616 Watching for file changes with StatReloader
+ERROR 2025-09-05 10:14:00,571 log 13812 3012 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 26, in home_view
+    return render(request, 'sklad/home.html', {
+        'total_items': total_items,
+    ...<3 lines>...
+        'recent_operations': notifications or [],
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 134, in render
+    compiled_parent = self.get_parent(context)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 131, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader_tags.py", line 109, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 577, in invalid_block_tag
+    raise self.error(
+    ...<3 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 21: 'static'. Did you forget to register or load this tag?
+ERROR 2025-09-05 10:15:29,353 log 13812 16368 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 26, in home_view
+    return render(request, 'sklad/home.html', {
+        'total_items': total_items,
+    ...<3 lines>...
+        'recent_operations': notifications or [],
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 519, in parse
+    self.extend_nodelist(nodelist, compiled_result, token)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 540, in extend_nodelist
+    raise self.error(
+    ...<2 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: {% extends 'sklad/base.html' %} must be the first tag in 'sklad/home.html'.
+ERROR 2025-09-05 10:15:49,429 log 13812 16644 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Projekt\Veles_Sklad\sklad\views.py", line 26, in home_view
+    return render(request, 'sklad/home.html', {
+        'total_items': total_items,
+    ...<3 lines>...
+        'recent_operations': notifications or [],
+    })
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 519, in parse
+    self.extend_nodelist(nodelist, compiled_result, token)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projekt\Veles_Sklad\venv\Lib\site-packages\django\template\base.py", line 540, in extend_nodelist
+    raise self.error(
+    ...<2 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: {% extends 'sklad/base.html' %} must be the first tag in 'sklad/home.html'.
+INFO 2025-09-05 17:19:53,299 autoreload 6840 14036 Watching for file changes with StatReloader
+INFO 2025-09-05 17:30:22,528 autoreload 6840 14036 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 17:30:23,701 autoreload 8088 13084 Watching for file changes with StatReloader
+INFO 2025-09-05 17:31:28,530 autoreload 8088 13084 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 17:31:29,653 autoreload 988 11112 Watching for file changes with StatReloader
+INFO 2025-09-05 17:34:25,739 autoreload 988 11112 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 17:34:26,992 autoreload 3484 7696 Watching for file changes with StatReloader
+INFO 2025-09-05 17:35:24,471 autoreload 3484 7696 D:\Projekt\Veles_Sklad\sklad\views.py changed, reloading.
+INFO 2025-09-05 17:35:25,634 autoreload 2916 13296 Watching for file changes with StatReloader
+INFO 2025-09-05 17:42:22,288 autoreload 7580 13720 Watching for file changes with StatReloader
+INFO 2025-09-05 17:53:16,571 autoreload 9568 6976 Watching for file changes with StatReloader
+INFO 2025-09-05 17:54:54,881 autoreload 11976 3752 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:03,733 autoreload 3556 4536 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:37,096 autoreload 7580 13720 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:37,208 autoreload 3556 4536 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:37,419 autoreload 11976 3752 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:37,492 autoreload 9568 6976 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:38,148 autoreload 240 2676 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:38,252 autoreload 5716 6048 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:38,408 autoreload 8788 9112 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:38,518 autoreload 4964 6860 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:51,366 autoreload 5716 6048 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:51,404 autoreload 240 2676 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:51,662 autoreload 8788 9112 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:51,744 autoreload 4964 6860 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:55:52,361 autoreload 2540 11328 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:52,414 autoreload 13880 3680 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:52,628 autoreload 13480 8128 Watching for file changes with StatReloader
+INFO 2025-09-05 17:55:52,712 autoreload 8688 2300 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:34,137 autoreload 13480 8128 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:34,208 autoreload 8688 2300 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:34,509 autoreload 2540 11328 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:34,989 autoreload 13880 3680 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:35,110 autoreload 8244 7284 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:35,199 autoreload 8396 12776 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:35,504 autoreload 12820 8948 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:36,041 autoreload 4160 5024 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:49,259 autoreload 4160 5024 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:49,532 autoreload 8244 7284 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:49,628 autoreload 8396 12776 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:49,690 autoreload 12820 8948 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:56:50,277 autoreload 13924 8152 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:50,521 autoreload 1772 2060 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:50,659 autoreload 12664 12736 Watching for file changes with StatReloader
+INFO 2025-09-05 17:56:50,724 autoreload 10332 9332 Watching for file changes with StatReloader
+INFO 2025-09-05 17:57:04,625 autoreload 13924 8152 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:57:04,881 autoreload 1772 2060 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:57:04,891 autoreload 10332 9332 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:57:05,036 autoreload 12664 12736 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 17:57:05,593 autoreload 6976 8672 Watching for file changes with StatReloader
+INFO 2025-09-05 17:57:05,874 autoreload 9700 9312 Watching for file changes with StatReloader
+INFO 2025-09-05 17:57:05,877 autoreload 8800 12940 Watching for file changes with StatReloader
+INFO 2025-09-05 17:57:05,981 autoreload 5356 8776 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:32,194 autoreload 5356 8776 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:32,304 autoreload 8800 12940 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:32,309 autoreload 6976 8672 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:32,687 autoreload 9700 9312 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:33,207 autoreload 11280 5400 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:33,380 autoreload 8552 2300 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:33,381 autoreload 13160 9720 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:33,739 autoreload 5812 4180 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:47,544 autoreload 11280 5400 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:47,787 autoreload 13160 9720 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:47,795 autoreload 8552 2300 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:47,854 autoreload 5812 4180 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:02:48,569 autoreload 11416 9472 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:48,848 autoreload 3860 9816 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:48,853 autoreload 2972 10996 Watching for file changes with StatReloader
+INFO 2025-09-05 18:02:48,869 autoreload 6944 13668 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:19,578 autoreload 6944 13668 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:19,852 autoreload 2972 10996 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:20,047 autoreload 11416 9472 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:20,417 autoreload 3860 9816 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:20,683 autoreload 9508 976 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:20,960 autoreload 2540 12640 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:21,152 autoreload 8764 10232 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:21,542 autoreload 2992 9520 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:34,331 autoreload 2540 12640 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:34,506 autoreload 8764 10232 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:34,846 autoreload 2992 9520 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:34,934 autoreload 9508 976 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:44:35,460 autoreload 8464 8084 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:35,586 autoreload 10592 13956 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:35,993 autoreload 9464 13772 Watching for file changes with StatReloader
+INFO 2025-09-05 18:44:36,038 autoreload 11636 9524 Watching for file changes with StatReloader
+INFO 2025-09-05 18:48:52,127 autoreload 11636 9524 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:48:52,172 autoreload 10592 13956 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:48:52,541 autoreload 9464 13772 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:48:52,661 autoreload 8464 8084 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:48:53,199 autoreload 5652 5564 Watching for file changes with StatReloader
+INFO 2025-09-05 18:48:53,259 autoreload 8864 8384 Watching for file changes with StatReloader
+INFO 2025-09-05 18:48:53,577 autoreload 9308 10552 Watching for file changes with StatReloader
+INFO 2025-09-05 18:48:53,722 autoreload 8112 9360 Watching for file changes with StatReloader
+INFO 2025-09-05 18:49:26,412 autoreload 8864 8384 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:49:26,773 autoreload 9308 10552 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:49:26,857 autoreload 8112 9360 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:49:27,070 autoreload 5652 5564 D:\Projekt\Veles_Sklad\veles_sklad\settings.py changed, reloading.
+INFO 2025-09-05 18:49:27,501 autoreload 11984 1640 Watching for file changes with StatReloader
+INFO 2025-09-05 18:49:27,862 autoreload 6248 5256 Watching for file changes with StatReloader
+INFO 2025-09-05 18:49:27,930 autoreload 6832 5264 Watching for file changes with StatReloader
+INFO 2025-09-05 18:49:28,114 autoreload 5716 10436 Watching for file changes with StatReloader
