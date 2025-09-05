@@ -119,12 +119,6 @@ export class SborkaModule {
 
             <!-- Кнопки фильтров -->
             <div class="filter-actions mb-4">
-                <button class="btn btn-success d-flex align-items-center px-3 me-2"
-                        onclick="window.app.getModule('sborka').applyFilters()"
-                        style="min-height: 40px; font-size: 14px; font-weight: bold;">
-                    <i class="fas fa-check me-2" style="font-size: 18px;"></i>
-                    <span>Применить фильтры</span>
-                </button>
                 <button class="btn btn-secondary d-flex align-items-center px-3"
                         onclick="window.app.getModule('sborka').resetFilters()"
                         style="min-height: 40px; font-size: 14px; font-weight: bold;">
@@ -268,7 +262,6 @@ export class SborkaModule {
             row.style.display = (columnMatches && globalMatches) ? '' : 'none';
         });
 
-        this.services.notification.success('Фильтры применены');
     }
 
     /**
