@@ -219,6 +219,9 @@ export class SkladModule {
      * Настройка обработчиков событий
      */
     setupEventListeners() {
+        // Синхронизация ширины фильтров с колонками таблицы
+        this.syncFilterWidths();
+
         // Глобальный поиск
         const globalSearch = document.getElementById('sklad-global-search');
         if (globalSearch) {
@@ -237,6 +240,31 @@ export class SkladModule {
                 }, CONFIG.UI.DEBOUNCE_DELAY));
             }
         });
+
+        // Пересинхронизация ширины при изменении размера окна
+        window.addEventListener('resize', () => {
+            setTimeout(() => this.syncFilterWidths(), 100);
+        });
+    }
+
+    /**
+     * Синхронизация ширины фильтров с колонками таблицы
+     */
+    syncFilterWidths() {
+        const tableHeaders = document.querySelectorAll('.table-header-fixed th');
+        const filterCells = document.querySelectorAll('.filter-cell');
+
+        if (tableHeaders.length === filterCells.length) {
+            tableHeaders.forEach((header, index) => {
+                const filterCell = filterCells[index];
+                if (filterCell) {
+                    const headerWidth = header.offsetWidth;
+                    filterCell.style.width = headerWidth + 'px';
+                    filterCell.style.minWidth = headerWidth + 'px';
+                    filterCell.style.maxWidth = headerWidth + 'px';
+                }
+            });
+        }
     }
 
     /**

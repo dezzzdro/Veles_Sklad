@@ -183,27 +183,22 @@ header {
     background: var(--card-bg);
 }
 
-/* Фильтры - абсолютно совпадают с колонками таблицы */
+/* Фильтры - совпадают с колонками таблицы */
 .column-filters {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--border-color);
-    margin-bottom: 0;
-    border-radius: 6px 6px 0 0;
-    overflow: hidden;
+    display: flex;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
     width: 100%;
 }
 
 .filter-cell {
-    background: var(--bg-color);
-    padding: 6px 8px; /* Padding для высоты 36px */
-    display: flex;
-    align-items: center;
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--card-bg);
     border-right: 1px solid var(--border-color);
-    min-width: 0; /* Предотвращает сжатие */
-    height: 36px; /* Согласно правилам ТЗ */
-    box-sizing: border-box; /* Учитывает padding в высоте */
+    min-width: 0;
+    height: 36px;
+    box-sizing: border-box;
 }
 
 .filter-cell:last-child {
@@ -231,16 +226,12 @@ header {
     box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
 }
 
-/* Фиксированная шапка таблицы - абсолютное совпадение с фильтрами */
+/* Фиксированная шапка таблицы */
 .table-header-fixed {
     position: sticky;
     top: 0;
     z-index: 10;
     background: var(--table-header) !important;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: 1px;
-    width: 100%;
 }
 
 .table-header-fixed th {
@@ -251,16 +242,9 @@ header {
     font-weight: bold;
     height: 45px;
     vertical-align: middle;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-/* Скроллируемое тело таблицы - абсолютное совпадение с фильтрами */
+/* Скроллируемое тело таблицы */
 .table-body-scroll {
     max-height: 400px;
     overflow-y: auto;
@@ -268,27 +252,11 @@ header {
 
 .table-body-scroll tr {
     height: 40px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: 1px;
-    width: 100%;
 }
 
 .table-body-scroll td {
     vertical-align: middle;
     padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background: var(--card-bg);
-    border-right: 1px solid var(--border-color);
-}
-
-.table-body-scroll td:last-child {
-    border-right: none;
 }
 
 /* Общее поле поиска */
