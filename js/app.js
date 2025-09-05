@@ -203,220 +203,165 @@ async function loadOtladka() {
     const content = document.getElementById('otladka-content');
 
     const html = `
-        <!-- System Overview -->
-        <div class="system-overview mb-4">
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <div class="metric-icon">
-                            <i class="fas fa-database"></i>
-                        </div>
-                        <div class="metric-content">
-                            <div class="metric-value" id="total-records">-</div>
-                            <div class="metric-label">Всего записей</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <div class="metric-icon">
-                            <i class="fas fa-table"></i>
-                        </div>
-                        <div class="metric-content">
-                            <div class="metric-value" id="active-tables">-</div>
-                            <div class="metric-label">Активных таблиц</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <div class="metric-icon">
-                            <i class="fas fa-tachometer-alt"></i>
-                        </div>
-                        <div class="metric-content">
-                            <div class="metric-value" id="db-response-time">-</div>
-                            <div class="metric-label">Время ответа (мс)</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <div class="metric-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="metric-content">
-                            <div class="metric-value" id="last-activity">-</div>
-                            <div class="metric-label">Последняя активность</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- Connection & Database Testing -->
-            <div class="col-lg-4 mb-4">
-                <div class="debug-section">
-                    <div class="section-header">
+        <!-- Main Action Panel -->
+        <div class="debug-main-panel mb-4">
+            <div class="action-panel">
+                <div class="action-group">
+                    <button class="btn btn-success btn-main-action" onclick="checkConnection()">
                         <i class="fas fa-plug"></i>
-                        <h5>Соединение с БД</h5>
-                    </div>
-                    <div class="section-content">
-                        <div class="action-buttons mb-3">
-                            <button class="btn btn-success btn-action" onclick="testConnection()">
-                                <i class="fas fa-play"></i>
-                                <span>Тест соединения</span>
-                            </button>
-                            <button class="btn btn-info btn-action" onclick="testConnectionAdvanced()">
-                                <i class="fas fa-cogs"></i>
-                                <span>Расширенный тест</span>
-                            </button>
-                        </div>
-                        <div id="connection-status" class="status-display">
-                            <div class="status-item">
-                                <span class="status-label">Статус:</span>
-                                <span class="status-value" id="connection-state">Не проверено</span>
-                            </div>
-                            <div class="status-item">
-                                <span class="status-label">Время ответа:</span>
-                                <span class="status-value" id="response-time">-</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="debug-section">
-                    <div class="section-header">
-                        <i class="fas fa-table"></i>
-                        <h5>Тестирование таблиц</h5>
-                    </div>
-                    <div class="section-content">
-                        <div class="mb-3">
-                            <select id="table-select" class="form-select">
-                                <option value="склад">📦 Склад</option>
-                                <option value="сборка">🔧 Сборка</option>
-                                <option value="приход">📥 Приход</option>
-                                <option value="выданное">📤 Выданное</option>
-                                <option value="контрагенты">👥 Контрагенты</option>
-                                <option value="ответственные_лица">👤 Ответственные лица</option>
-                                <option value="настройки">⚙️ Настройки</option>
-                                <option value="уведомления">🔔 Уведомления</option>
-                                <option value="операции">📋 Операции</option>
-                            </select>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-action" onclick="testTable()">
-                                <i class="fas fa-search"></i>
-                                <span>Тест таблицы</span>
-                            </button>
-                            <button class="btn btn-outline-secondary btn-action" onclick="testAllTables()">
-                                <i class="fas fa-list"></i>
-                                <span>Все таблицы</span>
-                            </button>
-                            <button class="btn btn-warning btn-action" onclick="analyzeTable()">
-                                <i class="fas fa-chart-bar"></i>
-                                <span>Анализ</span>
-                            </button>
-                        </div>
-                        <div id="table-test-result" class="test-result mt-3"></div>
-                    </div>
+                        <span>Проверить подключение</span>
+                    </button>
+                    <button class="btn btn-primary btn-main-action" onclick="testWrite()">
+                        <i class="fas fa-plus"></i>
+                        <span>Тест записи</span>
+                    </button>
+                    <button class="btn btn-info btn-main-action" onclick="testRead()">
+                        <i class="fas fa-search"></i>
+                        <span>Тест чтения</span>
+                    </button>
+                    <button class="btn btn-warning btn-main-action" onclick="runStressTest()">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Стресс-тест</span>
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <!-- Activity Log -->
-            <div class="col-lg-8 mb-4">
-                <div class="debug-section">
-                    <div class="section-header">
-                        <i class="fas fa-terminal"></i>
-                        <h5>Журнал активности</h5>
-                        <div class="header-actions">
-                            <small class="text-muted" id="log-count">0 записей</small>
+        <!-- Connection Status -->
+        <div class="debug-section mb-4">
+            <div class="section-header">
+                <i class="fas fa-signal"></i>
+                <h5>Статус подключения</h5>
+            </div>
+            <div class="section-content">
+                <div id="connection-status-panel" class="connection-status-panel">
+                    <div class="status-indicator">
+                        <div class="status-light" id="status-light"></div>
+                        <div class="status-text">
+                            <span id="status-text">Не проверено</span>
                         </div>
                     </div>
-                    <div class="section-content">
-                        <div class="log-container">
-                            <textarea id="log-area" class="log-textarea" readonly></textarea>
+                    <div class="status-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Время отклика:</span>
+                            <span class="detail-value" id="response-time">-</span>
                         </div>
-                        <div class="log-actions mt-3">
-                            <div class="row g-2">
-                                <div class="col-4">
-                                    <button class="btn btn-outline-primary btn-log-action" onclick="copyLog()">
-                                        <i class="fas fa-copy"></i>
-                                        <span>Копировать</span>
-                                    </button>
-                                </div>
-                                <div class="col-4">
-                                    <button class="btn btn-outline-danger btn-log-action" onclick="clearLog()">
-                                        <i class="fas fa-trash"></i>
-                                        <span>Очистить</span>
-                                    </button>
-                                </div>
-                                <div class="col-4">
-                                    <button class="btn btn-outline-success btn-log-action" onclick="exportLog()">
-                                        <i class="fas fa-file-export"></i>
-                                        <span>Экспорт</span>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Последняя проверка:</span>
+                            <span class="detail-value" id="last-check">-</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Actions & System Info -->
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="debug-section">
-                    <div class="section-header">
-                        <i class="fas fa-bolt"></i>
-                        <h5>Быстрые действия</h5>
-                    </div>
-                    <div class="section-content">
-                        <div class="quick-actions">
-                            <button class="btn btn-danger btn-quick-action" onclick="clearAllData()">
-                                <i class="fas fa-trash-alt"></i>
-                                <span>Очистить все данные</span>
-                            </button>
-                            <button class="btn btn-warning btn-quick-action" onclick="resetSettings()">
-                                <i class="fas fa-undo"></i>
-                                <span>Сброс настроек</span>
-                            </button>
-                            <button class="btn btn-info btn-quick-action" onclick="generateTestData()">
-                                <i class="fas fa-magic"></i>
-                                <span>Тестовые данные</span>
-                            </button>
-                        </div>
+        <!-- Test Results -->
+        <div class="debug-section mb-4">
+            <div class="section-header">
+                <i class="fas fa-flask"></i>
+                <h5>Результаты тестирования</h5>
+            </div>
+            <div class="section-content">
+                <div id="test-results-panel" class="test-results-panel">
+                    <div class="no-results">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Выполните тест для просмотра результатов</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-6 mb-4">
-                <div class="debug-section">
-                    <div class="section-header">
-                        <i class="fas fa-info-circle"></i>
-                        <h5>Системная информация</h5>
+        <!-- Stress Test Settings -->
+        <div class="debug-section mb-4">
+            <div class="section-header">
+                <i class="fas fa-sliders-h"></i>
+                <h5>Настройки стресс-теста</h5>
+            </div>
+            <div class="section-content">
+                <div class="stress-test-settings">
+                    <div class="setting-row">
+                        <label for="stress-requests" class="setting-label">Количество запросов:</label>
+                        <input type="number" id="stress-requests" class="form-control setting-input" value="10" min="1" max="100">
                     </div>
-                    <div class="section-content">
-                        <div class="system-info">
-                            <div class="info-row">
-                                <span class="info-label">Supabase URL:</span>
-                                <code class="info-value">tqwagbbppfklqgmyyrwj.supabase.co</code>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Версия приложения:</span>
-                                <span class="info-value">1.0.0</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Локальное время:</span>
-                                <span class="info-value" id="local-time">-</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Статус БД:</span>
-                                <span class="info-value">
-                                    <span id="db-status" class="badge bg-secondary">Неизвестно</span>
-                                </span>
-                            </div>
+                    <div class="setting-row">
+                        <label for="stress-type" class="setting-label">Тип запроса:</label>
+                        <select id="stress-type" class="form-select setting-input">
+                            <option value="write">Запись</option>
+                            <option value="read">Чтение</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="debug-section">
+            <div class="section-header">
+                <i class="fas fa-list"></i>
+                <h5>Журнал операций</h5>
+                <div class="header-actions">
+                    <small class="text-muted" id="log-count">0 записей</small>
+                </div>
+            </div>
+            <div class="section-content">
+                <!-- Log Filters -->
+                <div class="log-filters mb-3">
+                    <div class="filter-group">
+                        <select id="log-type-filter" class="form-select form-select-sm">
+                            <option value="">Все типы</option>
+                            <option value="connection">Подключение</option>
+                            <option value="write">Запись</option>
+                            <option value="read">Чтение</option>
+                            <option value="stress">Стресс-тест</option>
+                            <option value="error">Ошибка</option>
+                        </select>
+                        <select id="log-status-filter" class="form-select form-select-sm">
+                            <option value="">Все статусы</option>
+                            <option value="success">Успех</option>
+                            <option value="warning">Предупреждение</option>
+                            <option value="error">Ошибка</option>
+                        </select>
+                        <input type="text" id="log-search" class="form-control form-control-sm" placeholder="Поиск...">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="clearLogFilters()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Log Table -->
+                <div class="log-table-container">
+                    <table class="table table-sm log-table" id="log-table">
+                        <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>Тип</th>
+                                <th>Статус</th>
+                                <th>Описание</th>
+                                <th>Время (мс)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="log-table-body">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    <i class="fas fa-info-circle me-2"></i>Журнал пуст
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Log Actions -->
+                <div class="log-actions mt-3">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-outline-primary w-100" onclick="copyLog()">
+                                <i class="fas fa-copy me-1"></i>Копировать лог
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-outline-danger w-100" onclick="clearLog()">
+                                <i class="fas fa-trash me-1"></i>Очистить лог
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -425,6 +370,9 @@ async function loadOtladka() {
     `;
 
     content.innerHTML = html;
+
+    // Initialize debug system
+    initializeDebugSystem();
 
     // Update local time
     updateLocalTime();
@@ -2487,6 +2435,558 @@ function exportLog() {
     URL.revokeObjectURL(url);
     logMessage(`📤 Лог экспортирован в файл: ${filename}`);
     showNotification(`Лог экспортирован: ${filename}`, 'success');
+}
+
+// Debug System Variables
+let debugLog = [];
+const MAX_LOG_ENTRIES = 100;
+
+// Error Codes and Messages
+const ERROR_CODES = {
+    DB_CONN_001: {
+        message: 'Ошибка подключения к базе данных',
+        recommendation: 'Проверьте Project URL и API Key в настройках приложения'
+    },
+    DB_AUTH_002: {
+        message: 'Ошибка авторизации',
+        recommendation: 'Обновите anon-ключ в настройках Supabase'
+    },
+    DB_TABLE_003: {
+        message: 'Таблица не найдена',
+        recommendation: 'Проверьте структуру базы данных, возможно требуется миграция'
+    },
+    DB_QUERY_004: {
+        message: 'Ошибка выполнения запроса',
+        recommendation: 'Проверьте синтаксис запроса и структуру таблицы'
+    }
+};
+
+// Initialize Debug System
+async function initializeDebugSystem() {
+    // Load log from localStorage
+    const savedLog = localStorage.getItem('debugLog');
+    if (savedLog) {
+        debugLog = JSON.parse(savedLog);
+        updateLogDisplay();
+    }
+
+    // Create debug test table if not exists
+    await createDebugTable();
+
+    logOperation('system', 'info', 'Система отладки инициализирована');
+}
+
+// Create Debug Test Table
+async function createDebugTable() {
+    try {
+        const { error } = await supabase.rpc('create_debug_table');
+        if (error && !error.message.includes('already exists')) {
+            console.warn('Debug table creation warning:', error);
+        }
+    } catch (error) {
+        // Try direct table creation
+        try {
+            const { error: createError } = await supabase
+                .from('debug_test')
+                .select('id')
+                .limit(1);
+
+            if (createError && createError.code === 'PGRST116') {
+                // Table doesn't exist, we'll handle this in individual operations
+                console.log('Debug table will be created on first use');
+            }
+        } catch (e) {
+            console.log('Debug table check completed');
+        }
+    }
+}
+
+// Log Operation
+function logOperation(type, status, description, executionTime = null, errorCode = null) {
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        type: type,
+        status: status,
+        description: description,
+        executionTime: executionTime,
+        errorCode: errorCode
+    };
+
+    debugLog.unshift(logEntry);
+
+    // Keep only last 100 entries
+    if (debugLog.length > MAX_LOG_ENTRIES) {
+        debugLog = debugLog.slice(0, MAX_LOG_ENTRIES);
+    }
+
+    // Save to localStorage
+    localStorage.setItem('debugLog', JSON.stringify(debugLog));
+
+    updateLogDisplay();
+}
+
+// Update Log Display
+function updateLogDisplay() {
+    const tbody = document.getElementById('log-table-body');
+    const count = document.getElementById('log-count');
+
+    if (!tbody || !count) return;
+
+    count.textContent = `${debugLog.length} записей`;
+
+    if (debugLog.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center text-muted">
+                    <i class="fas fa-info-circle me-2"></i>Журнал пуст
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = debugLog.map(entry => {
+        const time = new Date(entry.timestamp).toLocaleString('ru-RU');
+        const statusClass = getStatusClass(entry.status);
+        const statusIcon = getStatusIcon(entry.status);
+
+        return `
+            <tr class="${statusClass}" title="${entry.errorCode ? ERROR_CODES[entry.errorCode]?.recommendation || '' : ''}">
+                <td>${time}</td>
+                <td><span class="badge bg-secondary">${entry.type}</span></td>
+                <td>${statusIcon} ${entry.status}</td>
+                <td>${entry.description}</td>
+                <td>${entry.executionTime ? entry.executionTime + 'ms' : '-'}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// Get Status Class for Table Row
+function getStatusClass(status) {
+    switch (status) {
+        case 'success': return 'table-success';
+        case 'warning': return 'table-warning';
+        case 'error': return 'table-danger';
+        default: return '';
+    }
+}
+
+// Get Status Icon
+function getStatusIcon(status) {
+    switch (status) {
+        case 'success': return '<i class="fas fa-check-circle text-success"></i>';
+        case 'warning': return '<i class="fas fa-exclamation-triangle text-warning"></i>';
+        case 'error': return '<i class="fas fa-times-circle text-danger"></i>';
+        default: return '<i class="fas fa-info-circle text-info"></i>';
+    }
+}
+
+// Check Connection
+async function checkConnection() {
+    const startTime = Date.now();
+    const statusPanel = document.getElementById('connection-status-panel');
+    const statusLight = document.getElementById('status-light');
+    const statusText = document.getElementById('status-text');
+    const responseTime = document.getElementById('response-time');
+    const lastCheck = document.getElementById('last-check');
+
+    // Set checking state
+    statusLight.className = 'status-light checking';
+    statusText.textContent = 'Проверка...';
+    responseTime.textContent = '-';
+
+    try {
+        // Test connection with a simple query
+        const { data, error } = await supabase
+            .from('склад')
+            .select('count', { count: 'exact', head: true });
+
+        const executionTime = Date.now() - startTime;
+
+        if (error) {
+            throw error;
+        }
+
+        // Determine status based on response time
+        let status, statusClass, statusMessage;
+        if (executionTime < 500) {
+            status = 'success';
+            statusClass = 'success';
+            statusMessage = 'Подключение успешно';
+        } else {
+            status = 'warning';
+            statusClass = 'warning';
+            statusMessage = 'Подключение медленное';
+        }
+
+        statusLight.className = `status-light ${statusClass}`;
+        statusText.textContent = statusMessage;
+        responseTime.textContent = `${executionTime}ms`;
+        lastCheck.textContent = new Date().toLocaleTimeString('ru-RU');
+
+        logOperation('connection', status, statusMessage, executionTime);
+
+    } catch (error) {
+        const executionTime = Date.now() - startTime;
+
+        statusLight.className = 'status-light error';
+        statusText.textContent = 'Ошибка подключения';
+        responseTime.textContent = `${executionTime}ms`;
+        lastCheck.textContent = new Date().toLocaleTimeString('ru-RU');
+
+        const errorCode = getErrorCode(error);
+        logOperation('connection', 'error', ERROR_CODES[errorCode].message, executionTime, errorCode);
+    }
+}
+
+// Test Write Operation
+async function testWrite() {
+    const startTime = Date.now();
+    const resultsPanel = document.getElementById('test-results-panel');
+
+    try {
+        const testValue = `Тестовая запись от ${new Date().toLocaleString('ru-RU')}`;
+
+        const { data, error } = await supabase
+            .from('debug_test')
+            .insert({
+                test_value: testValue
+            })
+            .select();
+
+        if (error) {
+            throw error;
+        }
+
+        const executionTime = Date.now() - startTime;
+        const recordId = data[0]?.id;
+
+        resultsPanel.innerHTML = `
+            <div class="test-result success">
+                <div class="result-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h6>Тест записи выполнен успешно</h6>
+                </div>
+                <div class="result-details">
+                    <div class="detail-item">
+                        <span class="detail-label">ID записи:</span>
+                        <span class="detail-value">${recordId}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Значение:</span>
+                        <span class="detail-value">${testValue}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Время выполнения:</span>
+                        <span class="detail-value">${executionTime}ms</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        logOperation('write', 'success', `Создана запись с ID ${recordId}`, executionTime);
+
+    } catch (error) {
+        const executionTime = Date.now() - startTime;
+        const errorCode = getErrorCode(error);
+
+        resultsPanel.innerHTML = `
+            <div class="test-result error">
+                <div class="result-header">
+                    <i class="fas fa-times-circle"></i>
+                    <h6>Ошибка при записи данных</h6>
+                </div>
+                <div class="result-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Код ошибки:</span>
+                        <span class="detail-value">${errorCode}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Сообщение:</span>
+                        <span class="detail-value">${ERROR_CODES[errorCode].message}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Рекомендация:</span>
+                        <span class="detail-value">${ERROR_CODES[errorCode].recommendation}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Время выполнения:</span>
+                        <span class="detail-value">${executionTime}ms</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        logOperation('write', 'error', ERROR_CODES[errorCode].message, executionTime, errorCode);
+    }
+}
+
+// Test Read Operation
+async function testRead() {
+    const startTime = Date.now();
+    const resultsPanel = document.getElementById('test-results-panel');
+
+    try {
+        const { data, error } = await supabase
+            .from('debug_test')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(5);
+
+        if (error) {
+            throw error;
+        }
+
+        const executionTime = Date.now() - startTime;
+
+        let recordsHtml = '';
+        if (data && data.length > 0) {
+            recordsHtml = data.map(record => `
+                <tr>
+                    <td>${record.id}</td>
+                    <td>${new Date(record.created_at).toLocaleString('ru-RU')}</td>
+                    <td>${record.test_value}</td>
+                </tr>
+            `).join('');
+        } else {
+            recordsHtml = `
+                <tr>
+                    <td colspan="3" class="text-center text-muted">Нет записей для отображения</td>
+                </tr>
+            `;
+        }
+
+        resultsPanel.innerHTML = `
+            <div class="test-result success">
+                <div class="result-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h6>Тест чтения выполнен успешно</h6>
+                </div>
+                <div class="result-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Найдено записей:</span>
+                        <span class="detail-value">${data?.length || 0}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Время выполнения:</span>
+                        <span class="detail-value">${executionTime}ms</span>
+                    </div>
+                </div>
+                <div class="records-table">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Дата создания</th>
+                                <th>Значение</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${recordsHtml}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+
+        logOperation('read', 'success', `Прочитано ${data?.length || 0} записей`, executionTime);
+
+    } catch (error) {
+        const executionTime = Date.now() - startTime;
+        const errorCode = getErrorCode(error);
+
+        resultsPanel.innerHTML = `
+            <div class="test-result error">
+                <div class="result-header">
+                    <i class="fas fa-times-circle"></i>
+                    <h6>Ошибка при чтении данных</h6>
+                </div>
+                <div class="result-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Код ошибки:</span>
+                        <span class="detail-value">${errorCode}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Сообщение:</span>
+                        <span class="detail-value">${ERROR_CODES[errorCode].message}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Рекомендация:</span>
+                        <span class="detail-value">${ERROR_CODES[errorCode].recommendation}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Время выполнения:</span>
+                        <span class="detail-value">${executionTime}ms</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        logOperation('read', 'error', ERROR_CODES[errorCode].message, executionTime, errorCode);
+    }
+}
+
+// Run Stress Test
+async function runStressTest() {
+    const requestsCount = parseInt(document.getElementById('stress-requests').value) || 10;
+    const requestType = document.getElementById('stress-type').value;
+    const resultsPanel = document.getElementById('test-results-panel');
+
+    resultsPanel.innerHTML = `
+        <div class="test-result info">
+            <div class="result-header">
+                <i class="fas fa-spinner fa-spin"></i>
+                <h6>Выполняется стресс-тест...</h6>
+            </div>
+            <div class="result-details">
+                <div class="detail-item">
+                    <span class="detail-label">Запросов:</span>
+                    <span class="detail-value">${requestsCount}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Тип:</span>
+                    <span class="detail-value">${requestType === 'write' ? 'Запись' : 'Чтение'}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const startTime = Date.now();
+    const responseTimes = [];
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (let i = 0; i < requestsCount; i++) {
+        const requestStart = Date.now();
+
+        try {
+            if (requestType === 'write') {
+                const testValue = `Стресс-тест ${i + 1} от ${new Date().toLocaleString('ru-RU')}`;
+                const { error } = await supabase
+                    .from('debug_test')
+                    .insert({ test_value: testValue });
+
+                if (error) throw error;
+            } else {
+                const { error } = await supabase
+                    .from('debug_test')
+                    .select('id')
+                    .limit(1);
+
+                if (error) throw error;
+            }
+
+            successCount++;
+            responseTimes.push(Date.now() - requestStart);
+
+        } catch (error) {
+            errorCount++;
+            responseTimes.push(Date.now() - requestStart);
+        }
+
+        // Update progress
+        const progress = Math.round((i + 1) / requestsCount * 100);
+        resultsPanel.innerHTML = `
+            <div class="test-result info">
+                <div class="result-header">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h6>Выполняется стресс-тест... ${progress}%</h6>
+                </div>
+                <div class="result-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Выполнено:</span>
+                        <span class="detail-value">${i + 1}/${requestsCount}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Успешно:</span>
+                        <span class="detail-value">${successCount}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Ошибок:</span>
+                        <span class="detail-value">${errorCount}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    const totalTime = Date.now() - startTime;
+    const avgTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+
+    resultsPanel.innerHTML = `
+        <div class="test-result ${errorCount === 0 ? 'success' : 'warning'}">
+            <div class="result-header">
+                <i class="fas fa-${errorCount === 0 ? 'check-circle' : 'exclamation-triangle'}"></i>
+                <h6>Стресс-тест завершен</h6>
+            </div>
+            <div class="result-details">
+                <div class="detail-item">
+                    <span class="detail-label">Общее время:</span>
+                    <span class="detail-value">${totalTime}ms</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Среднее время:</span>
+                    <span class="detail-value">${Math.round(avgTime)}ms</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Успешных запросов:</span>
+                    <span class="detail-value">${successCount}/${requestsCount}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Ошибок:</span>
+                    <span class="detail-value">${errorCount}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    logOperation('stress', errorCount === 0 ? 'success' : 'warning',
+        `Стресс-тест: ${successCount}/${requestsCount} успешных, среднее время ${Math.round(avgTime)}ms`,
+        totalTime);
+}
+
+// Get Error Code from Error
+function getErrorCode(error) {
+    if (error.message.includes('JWT') || error.message.includes('auth')) {
+        return 'DB_AUTH_002';
+    }
+    if (error.message.includes('relation') || error.message.includes('does not exist')) {
+        return 'DB_TABLE_003';
+    }
+    if (error.code === 'PGRST116' || error.message.includes('connection')) {
+        return 'DB_CONN_001';
+    }
+    return 'DB_QUERY_004';
+}
+
+// Clear Log Filters
+function clearLogFilters() {
+    document.getElementById('log-type-filter').value = '';
+    document.getElementById('log-status-filter').value = '';
+    document.getElementById('log-search').value = '';
+    updateLogDisplay();
+}
+
+// Copy Log
+function copyLog() {
+    const logText = debugLog.map(entry =>
+        `${new Date(entry.timestamp).toLocaleString('ru-RU')} [${entry.type}] ${entry.status}: ${entry.description}`
+    ).join('\n');
+
+    navigator.clipboard.writeText(logText).then(() => {
+        showNotification('Лог скопирован в буфер обмена', 'success');
+    });
+}
+
+// Clear Log
+function clearLog() {
+    if (confirm('Очистить журнал операций?')) {
+        debugLog = [];
+        localStorage.removeItem('debugLog');
+        updateLogDisplay();
+        logOperation('system', 'info', 'Журнал очищен');
+    }
 }
 
 // Initialize
