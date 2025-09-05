@@ -97,47 +97,45 @@ export class SborkaModule {
                 </div>
             </div>
 
-            <!-- Блок 2: Фильтрация данных -->
-            <div class="column-filters mb-3">
-                <div class="filter-cell">
-                    <input type="text" id="sborka-filter-id" placeholder="ID"
-                           style="height: 36px; width: 100%; padding: 8px 12px; border: 1px solid #d1d9e0; border-radius: 4px;">
-                </div>
-                <div class="filter-cell">
-                    <input type="text" id="sborka-filter-наименование" placeholder="Наименование"
-                           style="height: 36px; width: 100%; padding: 8px 12px; border: 1px solid #d1d9e0; border-radius: 4px;">
-                </div>
-                <div class="filter-cell">
-                    <input type="text" id="sborka-filter-ед_изм" placeholder="Ед.изм."
-                           style="height: 36px; width: 100%; padding: 8px 12px; border: 1px solid #d1d9e0; border-radius: 4px;">
-                </div>
-                <div class="filter-cell">
-                    <input type="text" id="sborka-filter-количество" placeholder="Количество"
-                           style="height: 36px; width: 100%; padding: 8px 12px; border: 1px solid #d1d9e0; border-radius: 4px;">
-                </div>
-            </div>
-
-            <!-- Кнопки фильтров -->
-            <div class="filter-actions mb-4">
-                <button class="btn btn-secondary d-flex align-items-center px-3"
-                        onclick="window.app.getModule('sborka').resetFilters()"
-                        style="min-height: 40px; font-size: 14px; font-weight: bold;">
-                    <i class="fas fa-times me-2" style="font-size: 18px;"></i>
-                    <span>Сбросить фильтры</span>
-                </button>
-            </div>
-
-            <!-- Заголовок таблицы -->
+            <!-- Таблица с интегрированными фильтрами -->
             <div class="table-fixed-header-container">
                 <div class="table-header-fixed">
                     <table class="table table-striped table-hover mb-0">
-                        <thead style="background-color: #f8f9fa; height: 45px;">
-                            <tr>
+                        <thead>
+                            <!-- Заголовки -->
+                            <tr style="background-color: #f8f9fa; height: 45px;">
                                 <th style="font-weight: bold; vertical-align: middle;">ID</th>
                                 <th style="font-weight: bold; vertical-align: middle;">Наименование</th>
                                 <th style="font-weight: bold; vertical-align: middle;">Ед.изм.</th>
                                 <th style="font-weight: bold; vertical-align: middle;">Количество</th>
                                 <th style="font-weight: bold; vertical-align: middle;">Действия</th>
+                            </tr>
+                            <!-- Фильтры -->
+                            <tr class="filter-row" style="background-color: var(--bg-color); border-bottom: 1px solid var(--border-color);">
+                                <th style="padding: 8px 12px; vertical-align: middle;">
+                                    <input type="text" id="sborka-filter-id" placeholder="ID"
+                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
+                                </th>
+                                <th style="padding: 8px 12px; vertical-align: middle;">
+                                    <input type="text" id="sborka-filter-наименование" placeholder="Наименование"
+                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
+                                </th>
+                                <th style="padding: 8px 12px; vertical-align: middle;">
+                                    <input type="text" id="sborka-filter-ед_изм" placeholder="Ед.изм."
+                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
+                                </th>
+                                <th style="padding: 8px 12px; vertical-align: middle;">
+                                    <input type="text" id="sborka-filter-количество" placeholder="Количество"
+                                           style="width: 100%; height: 32px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 14px;">
+                                </th>
+                                <th style="padding: 8px 12px; vertical-align: middle;">
+                                    <button class="btn btn-secondary btn-sm d-flex align-items-center"
+                                            onclick="window.app.getModule('sborka').resetFilters()"
+                                            style="width: 100%; height: 32px; font-size: 12px; padding: 4px 8px;">
+                                        <i class="fas fa-times me-1"></i>
+                                        <span>Сброс</span>
+                                    </button>
+                                </th>
                             </tr>
                         </thead>
                     </table>
@@ -240,19 +238,17 @@ export class SborkaModule {
      */
     syncFilterWidths() {
         const tableHeaders = document.querySelectorAll('.table-header-fixed th');
-        const filterCells = document.querySelectorAll('.filter-cell');
+        const filterInputs = document.querySelectorAll('.filter-row input');
 
-        if (tableHeaders.length === filterCells.length) {
-            tableHeaders.forEach((header, index) => {
-                const filterCell = filterCells[index];
-                if (filterCell) {
-                    const headerWidth = header.offsetWidth;
-                    filterCell.style.width = headerWidth + 'px';
-                    filterCell.style.minWidth = headerWidth + 'px';
-                    filterCell.style.maxWidth = headerWidth + 'px';
-                }
-            });
-        }
+        tableHeaders.forEach((header, index) => {
+            const filterInput = filterInputs[index];
+            if (filterInput && header.textContent.trim() !== 'Действия') {
+                const headerWidth = header.offsetWidth;
+                filterInput.style.width = (headerWidth - 24) + 'px'; // Учитываем padding
+                filterInput.style.minWidth = (headerWidth - 24) + 'px';
+                filterInput.style.maxWidth = (headerWidth - 24) + 'px';
+            }
+        });
     }
 
     /**

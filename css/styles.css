@@ -205,6 +205,32 @@ header {
     border-right: none;
 }
 
+/* Интегрированные фильтры в заголовке таблицы */
+.filter-row {
+    background: var(--bg-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.filter-row th {
+    padding: 8px 12px !important;
+    border-bottom: none !important;
+    background: var(--bg-color) !important;
+}
+
+.filter-row input {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    transition: border-color 0.2s ease !important;
+}
+
+.filter-row input:focus {
+    outline: none !important;
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25) !important;
+}
+
 .filter-cell input,
 .filter-cell select {
     width: 100%;
