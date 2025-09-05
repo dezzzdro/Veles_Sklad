@@ -113,7 +113,7 @@ export class SborkaModule {
                             <th><input type="text" id="sborka-filter-наименование" placeholder="Наименование"></th>
                             <th><input type="text" id="sborka-filter-ед_изм" placeholder="Ед.изм."></th>
                             <th><input type="text" id="sborka-filter-количество" placeholder="Количество"></th>
-                            <th><button class="btn btn-secondary btn-sm" onclick="window.app.getModule('sborka').resetFilters()"><i class="fas fa-times"></i> Сброс</button></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="sborka-table-body" class="table-body-scroll">

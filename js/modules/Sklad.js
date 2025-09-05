@@ -69,25 +69,34 @@ export class SkladModule {
                 </h2>
             </div>
 
-            <!-- Блок 1: Основные действия (в правой части) -->
-            <div class="d-flex justify-content-end mb-4">
+            <!-- Основные действия -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="section-info">
+                    <h2 class="section-title mb-0">
+                        <i class="fas fa-warehouse me-3 text-primary"></i>
+                        Склад
+                    </h2>
+                    <p class="section-subtitle text-muted mb-0 mt-1">Управление товарами на складе</p>
+                </div>
                 <div class="btn-group" role="group">
                     <button class="btn btn-primary d-flex align-items-center px-3"
-                            onclick="window.app.getModule('sklad').refresh()"
-                            style="min-height: 40px; font-size: 14px; font-weight: bold;">
-                        <i class="fas fa-sync-alt me-2" style="font-size: 18px;"></i>
+                            onclick="window.app.getModule('sklad').refresh()">
+                        <i class="fas fa-sync-alt me-2"></i>
                         <span>Обновить</span>
                     </button>
                     <button class="btn btn-success d-flex align-items-center px-3"
-                            onclick="window.app.getModule('sklad').addItem()"
-                            style="min-height: 40px; font-size: 14px; font-weight: bold;">
-                        <i class="fas fa-plus me-2" style="font-size: 18px;"></i>
+                            onclick="window.app.getModule('sklad').addItem()">
+                        <i class="fas fa-plus me-2"></i>
                         <span>Добавить</span>
                     </button>
                     <button class="btn btn-secondary d-flex align-items-center px-3"
-                            onclick="window.app.getModule('sklad').exportData()"
-                            style="min-height: 40px; font-size: 14px; font-weight: bold;">
-                        <i class="fas fa-file-excel me-2" style="font-size: 18px;"></i>
+                            onclick="window.app.getModule('sklad').resetFilters()">
+                        <i class="fas fa-times me-2"></i>
+                        <span>Сбросить фильтры</span>
+                    </button>
+                    <button class="btn btn-info d-flex align-items-center px-3"
+                            onclick="window.app.getModule('sklad').exportData()">
+                        <i class="fas fa-file-excel me-2"></i>
                         <span>Экспорт</span>
                     </button>
                 </div>
@@ -123,7 +132,7 @@ export class SkladModule {
                             <th><input type="text" id="sklad-filter-числится" placeholder="Числится"></th>
                             <th><input type="text" id="sklad-filter-на_складе" placeholder="На складе"></th>
                             <th><input type="text" id="sklad-filter-выдано" placeholder="Выдано"></th>
-                            <th><button class="btn btn-secondary btn-sm" onclick="window.app.getModule('sklad').resetFilters()"><i class="fas fa-times"></i> Сброс</button></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="sklad-table-body" class="table-body-scroll">
