@@ -102,15 +102,13 @@ export class SborkaModule {
                 <div class="table-header-fixed">
                     <table class="table table-striped table-hover mb-0">
                         <thead>
-                            <!-- Заголовки -->
-                            <tr style="background-color: #f8f9fa; height: 45px;">
-                                <th style="font-weight: bold; vertical-align: middle;">ID</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Наименование</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Ед.изм.</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Количество</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Действия</th>
+                            <tr>
+                                <th>ID</th>
+                                <th>Наименование</th>
+                                <th>Ед.изм.</th>
+                                <th>Количество</th>
+                                <th>Действия</th>
                             </tr>
-                            <!-- Фильтры -->
                             <tr class="filter-row">
                                 <th><input type="text" id="sborka-filter-id" placeholder="ID"></th>
                                 <th><input type="text" id="sborka-filter-наименование" placeholder="Наименование"></th>

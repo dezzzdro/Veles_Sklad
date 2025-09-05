@@ -205,18 +205,54 @@ header {
     border-right: none;
 }
 
-/* Абсолютное совпадение фильтров с заголовками таблицы */
+/* Идеальное совпадение: заголовки + фильтры + содержимое */
+.table-fixed-header-container {
+    position: relative;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--card-bg);
+}
+
+.table-header-fixed thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--table-header);
+}
+
+.table-header-fixed th {
+    position: relative;
+    background: var(--table-header) !important;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: bold;
+    height: 45px;
+    vertical-align: middle;
+    padding: 12px 16px;
+    border-right: 1px solid var(--border-color) !important;
+}
+
+.table-header-fixed th:last-child {
+    border-right: none !important;
+}
+
+/* Фильтры */
 .filter-row {
     background: var(--bg-color) !important;
     border-bottom: 1px solid var(--border-color) !important;
 }
 
 .filter-row th {
-    padding: 6px 12px !important;
+    padding: 8px 16px !important;
     border-bottom: none !important;
     background: var(--bg-color) !important;
     vertical-align: middle !important;
     height: 40px !important;
+    border-right: 1px solid var(--border-color) !important;
+}
+
+.filter-row th:last-child {
+    border-right: none !important;
 }
 
 .filter-row input,
@@ -231,45 +267,21 @@ header {
     padding: 2px 6px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
-    transition: border-color 0.2s ease !important;
 }
 
-.filter-row input:focus {
-    outline: none !important;
-    border-color: var(--accent-color) !important;
-    box-shadow: 0 0 0 1px var(--accent-color) !important;
+/* Тело таблицы */
+.table-body-scroll td {
+    vertical-align: middle;
+    padding: 12px 16px;
+    border-right: 1px solid var(--border-color) !important;
 }
 
-.filter-row button {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 11px !important;
-    padding: 2px 4px !important;
-    min-height: 28px !important;
+.table-body-scroll td:last-child {
+    border-right: none !important;
 }
 
-.filter-row button i {
-    font-size: 10px !important;
-    margin-right: 2px !important;
-}
-
-/* Абсолютная синхронизация ширины */
-.table-header-fixed thead tr:first-child th,
-.table-header-fixed thead tr.filter-row th {
-    position: relative;
-}
-
-.table-header-fixed thead tr:first-child th::after,
-.table-header-fixed thead tr.filter-row th::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 1px;
-    background: var(--border-color);
-    pointer-events: none;
+.table-body-scroll tr {
+    border-bottom: 1px solid var(--border-light);
 }
 
 .filter-cell input,

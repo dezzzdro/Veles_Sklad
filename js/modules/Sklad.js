@@ -108,17 +108,15 @@ export class SkladModule {
                 <div class="table-header-fixed">
                     <table class="table table-striped table-hover mb-0">
                         <thead>
-                            <!-- Заголовки -->
-                            <tr style="background-color: #f8f9fa; height: 45px;">
-                                <th style="font-weight: bold; vertical-align: middle;">ID</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Наименование</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Ед.изм.</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Числится</th>
-                                <th style="font-weight: bold; vertical-align: middle;">На складе</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Выдано</th>
-                                <th style="font-weight: bold; vertical-align: middle;">Действия</th>
+                            <tr>
+                                <th>ID</th>
+                                <th>Наименование</th>
+                                <th>Ед.изм.</th>
+                                <th>Числится</th>
+                                <th>На складе</th>
+                                <th>Выдано</th>
+                                <th>Действия</th>
                             </tr>
-                            <!-- Фильтры -->
                             <tr class="filter-row">
                                 <th><input type="text" id="sklad-filter-id" placeholder="ID"></th>
                                 <th><input type="text" id="sklad-filter-наименование" placeholder="Наименование"></th>
