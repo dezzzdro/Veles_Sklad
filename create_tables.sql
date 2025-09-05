@@ -1,15 +1,4 @@
--- Зачистка СУБД
-DROP TABLE IF EXISTS операции CASCADE;
-DROP TABLE IF EXISTS уведомления CASCADE;
-DROP TABLE IF EXISTS настройки CASCADE;
-DROP TABLE IF EXISTS ответственные_лица CASCADE;
-DROP TABLE IF EXISTS контрагенты CASCADE;
-DROP TABLE IF EXISTS выданное CASCADE;
-DROP TABLE IF EXISTS приход CASCADE;
-DROP TABLE IF EXISTS сборка CASCADE;
-DROP TABLE IF EXISTS склад CASCADE;
-
--- Создание таблиц для Велес Склад с русскими названиями
+-- Создание таблиц для Велес Склад
 
 -- Таблица Склад
 CREATE TABLE IF NOT EXISTS склад (
@@ -87,4 +76,11 @@ CREATE TABLE IF NOT EXISTS операции (
     дата TIMESTAMP DEFAULT NOW(),
     тип_операции VARCHAR(100) NOT NULL,
     детали TEXT
+);
+
+-- Тестовая таблица для отладки
+CREATE TABLE IF NOT EXISTS debug_test (
+    id SERIAL PRIMARY KEY,
+    test_value TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
 );
