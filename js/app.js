@@ -374,18 +374,10 @@ async function loadOtladka() {
     // Initialize debug system
     initializeDebugSystem();
 
-    // Update local time
-    updateLocalTime();
-    setInterval(updateLocalTime, 1000);
-
     // Load initial metrics
     loadDebugMetrics();
 }
 
-function updateLocalTime() {
-    const now = new Date();
-    document.getElementById('local-time').textContent = now.toLocaleString('ru-RU');
-}
 
 async function loadDebugMetrics() {
     try {
@@ -2479,25 +2471,18 @@ async function initializeDebugSystem() {
 // Create Debug Test Table
 async function createDebugTable() {
     try {
-        const { error } = await supabase.rpc('create_debug_table');
-        if (error && !error.message.includes('already exists')) {
-            console.warn('Debug table creation warning:', error);
-        }
-    } catch (error) {
-        // Try direct table creation
-        try {
-            const { error: createError } = await supabase
-                .from('debug_test')
-                .select('id')
-                .limit(1);
+        // Check if debug_test table exists
+        const { error } = await supabase
+            .from('debug_test')
+            .select('id')
+            .limit(1);
 
-            if (createError && createError.code === 'PGRST116') {
-                // Table doesn't exist, we'll handle this in individual operations
-                console.log('Debug table will be created on first use');
-            }
-        } catch (e) {
-            console.log('Debug table check completed');
+        if (error && error.code === 'PGRST116') {
+            // Table doesn't exist, we'll handle this in individual operations
+            console.log('Debug table will be created on first use');
         }
+    } catch (e) {
+        console.log('Debug table check completed');
     }
 }
 
@@ -2530,7 +2515,10 @@ function updateLogDisplay() {
     const tbody = document.getElementById('log-table-body');
     const count = document.getElementById('log-count');
 
-    if (!tbody || !count) return;
+    if (!tbody || !count) {
+        console.log('Log display elements not found, skipping update');
+        return;
+    }
 
     count.textContent = `${debugLog.length} записей`;
 
@@ -2591,6 +2579,11 @@ async function checkConnection() {
     const responseTime = document.getElementById('response-time');
     const lastCheck = document.getElementById('last-check');
 
+    if (!statusPanel || !statusLight || !statusText || !responseTime || !lastCheck) {
+        console.error('Connection status elements not found');
+        return;
+    }
+
     // Set checking state
     statusLight.className = 'status-light checking';
     statusText.textContent = 'Проверка...';
@@ -2644,6 +2637,11 @@ async function checkConnection() {
 async function testWrite() {
     const startTime = Date.now();
     const resultsPanel = document.getElementById('test-results-panel');
+
+    if (!resultsPanel) {
+        console.error('Test results panel not found');
+        return;
+    }
 
     try {
         const testValue = `Тестовая запись от ${new Date().toLocaleString('ru-RU')}`;
@@ -2726,6 +2724,11 @@ async function testWrite() {
 async function testRead() {
     const startTime = Date.now();
     const resultsPanel = document.getElementById('test-results-panel');
+
+    if (!resultsPanel) {
+        console.error('Test results panel not found');
+        return;
+    }
 
     try {
         const { data, error } = await supabase
@@ -2832,6 +2835,11 @@ async function runStressTest() {
     const requestsCount = parseInt(document.getElementById('stress-requests').value) || 10;
     const requestType = document.getElementById('stress-type').value;
     const resultsPanel = document.getElementById('test-results-panel');
+
+    if (!resultsPanel) {
+        console.error('Test results panel not found');
+        return;
+    }
 
     resultsPanel.innerHTML = `
         <div class="test-result info">
