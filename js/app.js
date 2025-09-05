@@ -203,137 +203,160 @@ async function loadOtladka() {
     const content = document.getElementById('otladka-content');
 
     const html = `
-        <!-- Debug Metrics Dashboard -->
-        <div class="debug-panel mb-4">
-            <h5 class="mb-3">
-                <i class="fas fa-chart-line me-2"></i>Метрики системы
-            </h5>
-            <div class="debug-metrics">
-                <div class="metric-card">
-                    <div class="metric-value" id="total-records">-</div>
-                    <div class="metric-label">Всего записей</div>
+        <!-- System Overview -->
+        <div class="system-overview mb-4">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="total-records">-</div>
+                            <div class="metric-label">Всего записей</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="active-tables">-</div>
-                    <div class="metric-label">Активных таблиц</div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-table"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="active-tables">-</div>
+                            <div class="metric-label">Активных таблиц</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="db-response-time">-</div>
-                    <div class="metric-label">Время ответа БД (мс)</div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="db-response-time">-</div>
+                            <div class="metric-label">Время ответа (мс)</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="last-activity">-</div>
-                    <div class="metric-label">Последняя активность</div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value" id="last-activity">-</div>
+                            <div class="metric-label">Последняя активность</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6">
-                <!-- Тестирование соединения -->
-                <div class="debug-panel mb-4">
-                    <h5 class="mb-3">
-                        <i class="fas fa-plug me-2"></i>Тестирование соединения с СУБД
-                    </h5>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-success btn-square me-2" onclick="testConnection()" title="Тест соединения">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="btn btn-info btn-square" onclick="testConnectionAdvanced()" title="Расширенный тест">
-                            <i class="fas fa-cogs"></i>
-                        </button>
+            <!-- Connection & Database Testing -->
+            <div class="col-lg-4 mb-4">
+                <div class="debug-section">
+                    <div class="section-header">
+                        <i class="fas fa-plug"></i>
+                        <h5>Соединение с БД</h5>
                     </div>
-                    <div id="connection-status" class="mt-3">
-                        <div class="alert alert-secondary">
-                            <i class="fas fa-info-circle me-2"></i>Нажмите кнопку для тестирования
+                    <div class="section-content">
+                        <div class="action-buttons mb-3">
+                            <button class="btn btn-success btn-action" onclick="testConnection()">
+                                <i class="fas fa-play"></i>
+                                <span>Тест соединения</span>
+                            </button>
+                            <button class="btn btn-info btn-action" onclick="testConnectionAdvanced()">
+                                <i class="fas fa-cogs"></i>
+                                <span>Расширенный тест</span>
+                            </button>
+                        </div>
+                        <div id="connection-status" class="status-display">
+                            <div class="status-item">
+                                <span class="status-label">Статус:</span>
+                                <span class="status-value" id="connection-state">Не проверено</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Время ответа:</span>
+                                <span class="status-value" id="response-time">-</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Выбор таблицы для тестирования -->
-                <div class="debug-panel mb-4">
-                    <h5 class="mb-3">
-                        <i class="fas fa-table me-2"></i>Выбор таблицы для тестирования
-                    </h5>
-                    <div class="mb-3">
-                        <label for="table-select" class="form-label">Выберите таблицу:</label>
-                        <select id="table-select" class="form-select">
-                            <option value="склад">Склад</option>
-                            <option value="сборка">Сборка</option>
-                            <option value="приход">Приход</option>
-                            <option value="выданное">Выданное</option>
-                            <option value="контрагенты">Контрагенты</option>
-                            <option value="ответственные_лица">Ответственные лица</option>
-                            <option value="настройки">Настройки</option>
-                            <option value="уведомления">Уведомления</option>
-                            <option value="операции">Операции</option>
-                        </select>
+                <div class="debug-section">
+                    <div class="section-header">
+                        <i class="fas fa-table"></i>
+                        <h5>Тестирование таблиц</h5>
                     </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-square me-2" onclick="testTable()" title="Тест таблицы">
-                            <i class="fas fa-search"></i>
-                        </button>
-                        <button class="btn btn-outline-secondary btn-square" onclick="testAllTables()" title="Тест всех таблиц">
-                            <i class="fas fa-list"></i>
-                        </button>
-                        <button class="btn btn-warning btn-square" onclick="analyzeTable()" title="Анализ таблицы">
-                            <i class="fas fa-chart-bar"></i>
-                        </button>
-                    </div>
-                    <div id="table-test-result" class="mt-3"></div>
-                </div>
-
-                <!-- Быстрые действия -->
-                <div class="debug-panel">
-                    <h5 class="mb-3">
-                        <i class="fas fa-bolt me-2"></i>Быстрые действия
-                    </h5>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-danger btn-square" onclick="clearAllData()" title="Очистить все данные">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button class="btn btn-warning btn-square" onclick="resetSettings()" title="Сброс настроек">
-                            <i class="fas fa-undo"></i>
-                        </button>
-                        <button class="btn btn-info btn-square" onclick="generateTestData()" title="Создать тестовые данные">
-                            <i class="fas fa-magic"></i>
-                        </button>
+                    <div class="section-content">
+                        <div class="mb-3">
+                            <select id="table-select" class="form-select">
+                                <option value="склад">📦 Склад</option>
+                                <option value="сборка">🔧 Сборка</option>
+                                <option value="приход">📥 Приход</option>
+                                <option value="выданное">📤 Выданное</option>
+                                <option value="контрагенты">👥 Контрагенты</option>
+                                <option value="ответственные_лица">👤 Ответственные лица</option>
+                                <option value="настройки">⚙️ Настройки</option>
+                                <option value="уведомления">🔔 Уведомления</option>
+                                <option value="операции">📋 Операции</option>
+                            </select>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-action" onclick="testTable()">
+                                <i class="fas fa-search"></i>
+                                <span>Тест таблицы</span>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-action" onclick="testAllTables()">
+                                <i class="fas fa-list"></i>
+                                <span>Все таблицы</span>
+                            </button>
+                            <button class="btn btn-warning btn-action" onclick="analyzeTable()">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Анализ</span>
+                            </button>
+                        </div>
+                        <div id="table-test-result" class="test-result mt-3"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <!-- Лог запросов -->
-                <div class="debug-panel">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">
-                            <i class="fas fa-terminal me-2"></i>Лог запросов и ответов
-                        </h5>
-                        <small class="text-muted">Коды ошибок с расшифровкой</small>
-                    </div>
-                    <div class="position-relative">
-                        <textarea id="log-area" class="form-control border-0" rows="12" readonly
-                            style="resize: none; font-family: 'Courier New', monospace; font-size: 11px; background-color: var(--card-bg); color: var(--text-color);"></textarea>
-                        <div class="position-absolute top-0 end-0 p-2">
+            <!-- Activity Log -->
+            <div class="col-lg-8 mb-4">
+                <div class="debug-section">
+                    <div class="section-header">
+                        <i class="fas fa-terminal"></i>
+                        <h5>Журнал активности</h5>
+                        <div class="header-actions">
                             <small class="text-muted" id="log-count">0 записей</small>
                         </div>
                     </div>
-                    <div class="mt-3">
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <button class="btn btn-outline-primary btn-square w-100" onclick="copyLog()" title="Копировать">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-outline-danger btn-square w-100" onclick="clearLog()" title="Очистить">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-outline-success btn-square w-100" onclick="exportLog()" title="Экспорт">
-                                    <i class="fas fa-file-export"></i>
-                                </button>
+                    <div class="section-content">
+                        <div class="log-container">
+                            <textarea id="log-area" class="log-textarea" readonly></textarea>
+                        </div>
+                        <div class="log-actions mt-3">
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <button class="btn btn-outline-primary btn-log-action" onclick="copyLog()">
+                                        <i class="fas fa-copy"></i>
+                                        <span>Копировать</span>
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-danger btn-log-action" onclick="clearLog()">
+                                        <i class="fas fa-trash"></i>
+                                        <span>Очистить</span>
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-success btn-log-action" onclick="exportLog()">
+                                        <i class="fas fa-file-export"></i>
+                                        <span>Экспорт</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -341,21 +364,61 @@ async function loadOtladka() {
             </div>
         </div>
 
-        <!-- Системная информация -->
-        <div class="debug-panel mt-4">
-            <h5 class="mb-3">
-                <i class="fas fa-info-circle me-2"></i>Информация о системе
-            </h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Supabase URL:</strong> <code>https://tqwagbbppfklqgmyyrwj.supabase.co</code></p>
-                    <p><strong>Время последнего теста:</strong> <span id="last-test-time">-</span></p>
-                    <p><strong>Локальное время:</strong> <span id="local-time">-</span></p>
+        <!-- Quick Actions & System Info -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="debug-section">
+                    <div class="section-header">
+                        <i class="fas fa-bolt"></i>
+                        <h5>Быстрые действия</h5>
+                    </div>
+                    <div class="section-content">
+                        <div class="quick-actions">
+                            <button class="btn btn-danger btn-quick-action" onclick="clearAllData()">
+                                <i class="fas fa-trash-alt"></i>
+                                <span>Очистить все данные</span>
+                            </button>
+                            <button class="btn btn-warning btn-quick-action" onclick="resetSettings()">
+                                <i class="fas fa-undo"></i>
+                                <span>Сброс настроек</span>
+                            </button>
+                            <button class="btn btn-info btn-quick-action" onclick="generateTestData()">
+                                <i class="fas fa-magic"></i>
+                                <span>Тестовые данные</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Версия приложения:</strong> 1.0.0</p>
-                    <p><strong>Статус БД:</strong> <span id="db-status" class="badge bg-secondary">Неизвестно</span></p>
-                    <p><strong>Размер БД:</strong> <span id="db-size">-</span></p>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="debug-section">
+                    <div class="section-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h5>Системная информация</h5>
+                    </div>
+                    <div class="section-content">
+                        <div class="system-info">
+                            <div class="info-row">
+                                <span class="info-label">Supabase URL:</span>
+                                <code class="info-value">tqwagbbppfklqgmyyrwj.supabase.co</code>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Версия приложения:</span>
+                                <span class="info-value">1.0.0</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Локальное время:</span>
+                                <span class="info-value" id="local-time">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Статус БД:</span>
+                                <span class="info-value">
+                                    <span id="db-status" class="badge bg-secondary">Неизвестно</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
