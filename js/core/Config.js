@@ -17,7 +17,7 @@ export const CONFIG = {
         KONTRAGENTY: 'kontragenty',
         NASTROYKI: 'nastroyki',
         UVEDOMLENIYA: 'uvedomleniya',
-        OTLAДKA: 'otladka'
+        OTLADKA: 'otladka'
     },
 
     // Названия разделов
