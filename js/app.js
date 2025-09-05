@@ -203,157 +203,447 @@ async function loadOtladka() {
     const content = document.getElementById('otladka-content');
 
     const html = `
+        <!-- Debug Metrics Dashboard -->
+        <div class="debug-panel mb-4">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-line me-2"></i>Метрики системы
+            </h5>
+            <div class="debug-metrics">
+                <div class="metric-card">
+                    <div class="metric-value" id="total-records">-</div>
+                    <div class="metric-label">Всего записей</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="active-tables">-</div>
+                    <div class="metric-label">Активных таблиц</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="db-response-time">-</div>
+                    <div class="metric-label">Время ответа БД (мс)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="last-activity">-</div>
+                    <div class="metric-label">Последняя активность</div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-6">
                 <!-- Тестирование соединения -->
-                <div class="card mb-4">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-plug me-2"></i>Тестирование соединения с СУБД
-                        </h5>
+                <div class="debug-panel mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-plug me-2"></i>Тестирование соединения с СУБД
+                    </h5>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success btn-square me-2" onclick="testConnection()" title="Тест соединения">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn btn-info btn-square" onclick="testConnectionAdvanced()" title="Расширенный тест">
+                            <i class="fas fa-cogs"></i>
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-success" onclick="testConnection()">
-                                <i class="fas fa-play me-2"></i>Тест соединения
-                            </button>
-                        </div>
-                        <div id="connection-status" class="mt-3">
-                            <div class="alert alert-secondary">
-                                <i class="fas fa-info-circle me-2"></i>Нажмите кнопку для тестирования
-                            </div>
+                    <div id="connection-status" class="mt-3">
+                        <div class="alert alert-secondary">
+                            <i class="fas fa-info-circle me-2"></i>Нажмите кнопку для тестирования
                         </div>
                     </div>
                 </div>
 
                 <!-- Выбор таблицы для тестирования -->
-                <div class="card mb-4">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0">
-                            <i class="fas fa-table me-2"></i>Выбор таблицы для тестирования
-                        </h5>
+                <div class="debug-panel mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-table me-2"></i>Выбор таблицы для тестирования
+                    </h5>
+                    <div class="mb-3">
+                        <label for="table-select" class="form-label">Выберите таблицу:</label>
+                        <select id="table-select" class="form-select">
+                            <option value="склад">Склад</option>
+                            <option value="сборка">Сборка</option>
+                            <option value="приход">Приход</option>
+                            <option value="выданное">Выданное</option>
+                            <option value="контрагенты">Контрагенты</option>
+                            <option value="ответственные_лица">Ответственные лица</option>
+                            <option value="настройки">Настройки</option>
+                            <option value="уведомления">Уведомления</option>
+                            <option value="операции">Операции</option>
+                        </select>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="table-select" class="form-label">Выберите таблицу:</label>
-                            <select id="table-select" class="form-select">
-                                <option value="склад">Склад</option>
-                                <option value="сборка">Сборка</option>
-                                <option value="приход">Приход</option>
-                                <option value="выданное">Выданное</option>
-                                <option value="контрагенты">Контрагенты</option>
-                                <option value="ответственные_лица">Ответственные лица</option>
-                                <option value="настройки">Настройки</option>
-                                <option value="уведомления">Уведомления</option>
-                                <option value="операции">Операции</option>
-                            </select>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" onclick="testTable()">
-                                <i class="fas fa-search me-2"></i>Тест таблицы
-                            </button>
-                            <button class="btn btn-outline-secondary" onclick="testAllTables()">
-                                <i class="fas fa-list me-2"></i>Тест всех таблиц
-                            </button>
-                        </div>
-                        <div id="table-test-result" class="mt-3"></div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-square me-2" onclick="testTable()" title="Тест таблицы">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary btn-square" onclick="testAllTables()" title="Тест всех таблиц">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button class="btn btn-warning btn-square" onclick="analyzeTable()" title="Анализ таблицы">
+                            <i class="fas fa-chart-bar"></i>
+                        </button>
+                    </div>
+                    <div id="table-test-result" class="mt-3"></div>
+                </div>
+
+                <!-- Быстрые действия -->
+                <div class="debug-panel">
+                    <h5 class="mb-3">
+                        <i class="fas fa-bolt me-2"></i>Быстрые действия
+                    </h5>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-danger btn-square" onclick="clearAllData()" title="Очистить все данные">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button class="btn btn-warning btn-square" onclick="resetSettings()" title="Сброс настроек">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="btn btn-info btn-square" onclick="generateTestData()" title="Создать тестовые данные">
+                            <i class="fas fa-magic"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <!-- Лог запросов -->
-                <div class="card">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <div class="debug-panel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-0">
                             <i class="fas fa-terminal me-2"></i>Лог запросов и ответов
                         </h5>
-                        <small class="text-light">Коды ошибок с расшифровкой</small>
+                        <small class="text-muted">Коды ошибок с расшифровкой</small>
                     </div>
-                    <div class="card-body p-0">
-                        <textarea id="log-area" class="form-control border-0" rows="15" readonly
-                            style="resize: none; font-family: 'Courier New', monospace; font-size: 12px;"></textarea>
-                    </div>
-                    <div class="card-footer">
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <button class="btn btn-outline-primary w-100" onclick="copyLog()">
-                                    <i class="fas fa-copy me-1"></i>Копировать лог
-                                </button>
-                            </div>
-                            <div class="col-6">
-                                <button class="btn btn-outline-danger w-100" onclick="clearLog()">
-                                    <i class="fas fa-trash me-1"></i>Очистить лог
-                                </button>
-                            </div>
+                    <div class="position-relative">
+                        <textarea id="log-area" class="form-control border-0" rows="12" readonly
+                            style="resize: none; font-family: 'Courier New', monospace; font-size: 11px; background-color: var(--card-bg); color: var(--text-color);"></textarea>
+                        <div class="position-absolute top-0 end-0 p-2">
+                            <small class="text-muted" id="log-count">0 записей</small>
                         </div>
-                        <div class="mt-2">
-                            <button class="btn btn-outline-success w-100" onclick="exportLog()">
-                                <i class="fas fa-file-export me-1"></i>Экспорт в txt
-                            </button>
+                    </div>
+                    <div class="mt-3">
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <button class="btn btn-outline-primary btn-square w-100" onclick="copyLog()" title="Копировать">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-outline-danger btn-square w-100" onclick="clearLog()" title="Очистить">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-outline-success btn-square w-100" onclick="exportLog()" title="Экспорт">
+                                    <i class="fas fa-file-export"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Дополнительная информация -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i>Информация о системе
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Supabase URL:</strong> <code>https://tqwagbbppfklqgmyyrwj.supabase.co</code></p>
-                                <p><strong>Время последнего теста:</strong> <span id="last-test-time">-</span></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Версия приложения:</strong> 1.0.0</p>
-                                <p><strong>Статус БД:</strong> <span id="db-status" class="badge bg-secondary">Неизвестно</span></p>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Системная информация -->
+        <div class="debug-panel mt-4">
+            <h5 class="mb-3">
+                <i class="fas fa-info-circle me-2"></i>Информация о системе
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Supabase URL:</strong> <code>https://tqwagbbppfklqgmyyrwj.supabase.co</code></p>
+                    <p><strong>Время последнего теста:</strong> <span id="last-test-time">-</span></p>
+                    <p><strong>Локальное время:</strong> <span id="local-time">-</span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Версия приложения:</strong> 1.0.0</p>
+                    <p><strong>Статус БД:</strong> <span id="db-status" class="badge bg-secondary">Неизвестно</span></p>
+                    <p><strong>Размер БД:</strong> <span id="db-size">-</span></p>
                 </div>
             </div>
         </div>
     `;
 
     content.innerHTML = html;
+
+    // Update local time
+    updateLocalTime();
+    setInterval(updateLocalTime, 1000);
+
+    // Load initial metrics
+    loadDebugMetrics();
+}
+
+function updateLocalTime() {
+    const now = new Date();
+    document.getElementById('local-time').textContent = now.toLocaleString('ru-RU');
+}
+
+async function loadDebugMetrics() {
+    try {
+        // Get total records count
+        const tables = ['склад', 'сборка', 'приход', 'выданное', 'контрагенты', 'уведомления'];
+        let totalRecords = 0;
+        let activeTables = 0;
+
+        for (const table of tables) {
+            try {
+                const { count, error } = await supabase
+                    .from(table)
+                    .select('*', { count: 'exact', head: true });
+
+                if (!error) {
+                    totalRecords += count || 0;
+                    activeTables++;
+                }
+            } catch (e) {
+                // Table might not exist
+            }
+        }
+
+        document.getElementById('total-records').textContent = totalRecords;
+        document.getElementById('active-tables').textContent = activeTables;
+        document.getElementById('last-activity').textContent = new Date().toLocaleTimeString('ru-RU');
+
+    } catch (error) {
+        console.error('Error loading debug metrics:', error);
+    }
+}
+
+async function testConnectionAdvanced() {
+    const status = document.getElementById('connection-status');
+    const startTime = Date.now();
+
+    status.innerHTML = `
+        <div class="alert alert-info">
+            <i class="fas fa-spinner fa-spin me-2"></i>Выполняется расширенное тестирование...
+        </div>
+    `;
+
+    try {
+        // Test basic connection
+        const { data: basicData, error: basicError } = await supabase.from('склад').select('count', { count: 'exact' }).limit(1);
+        if (basicError) throw basicError;
+
+        // Test write operation (if table is empty)
+        const testRecord = { наименование: 'Тестовый товар', ед_изм: 'шт', числится: 0, на_складе: 0, выдано: 0 };
+        const { error: insertError } = await supabase.from('склад').insert(testRecord);
+        let writeTest = 'Успешно';
+        if (insertError) {
+            writeTest = `Ошибка: ${insertError.message}`;
+        } else {
+            // Clean up test record
+            await supabase.from('склад').delete().eq('наименование', 'Тестовый товар');
+        }
+
+        const responseTime = Date.now() - startTime;
+
+        status.innerHTML = `
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>Расширенное тестирование завершено!
+                <br><small>Время ответа: ${responseTime}ms</small>
+                <br><small>Чтение: Успешно</small>
+                <br><small>Запись: ${writeTest}</small>
+            </div>
+        `;
+
+        document.getElementById('db-response-time').textContent = responseTime;
+        document.getElementById('db-status').className = 'badge bg-success';
+        document.getElementById('db-status').textContent = 'Подключено';
+        document.getElementById('last-test-time').textContent = new Date().toLocaleTimeString('ru-RU');
+
+        logMessage(`✅ Расширенное тестирование: ${responseTime}ms`);
+        logMessage(`📊 Чтение: Успешно, Запись: ${writeTest}`);
+
+    } catch (error) {
+        const responseTime = Date.now() - startTime;
+
+        status.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>Ошибка расширенного тестирования!
+                <br><small>Код ошибки: ${error.code || 'Неизвестен'}</small>
+                <br><small>Время ответа: ${responseTime}ms</small>
+                <br><small>Сообщение: ${error.message}</small>
+            </div>
+        `;
+
+        document.getElementById('db-status').className = 'badge bg-danger';
+        document.getElementById('db-status').textContent = 'Ошибка';
+
+        logMessage(`❌ Расширенное тестирование (${responseTime}ms)`);
+        logMessage(`🔍 Код ошибки: ${error.code || 'Неизвестен'}`);
+        logMessage(`📝 Сообщение: ${error.message}`);
+    }
+}
+
+async function analyzeTable() {
+    const table = document.getElementById('table-select').value;
+    const resultDiv = document.getElementById('table-test-result');
+
+    resultDiv.innerHTML = `
+        <div class="alert alert-info">
+            <i class="fas fa-spinner fa-spin me-2"></i>Анализ таблицы ${table}...
+        </div>
+    `;
+
+    try {
+        const { data, error, count } = await supabase
+            .from(table)
+            .select('*', { count: 'exact' });
+
+        if (error) throw error;
+
+        let analysis = `
+            <div class="alert alert-info">
+                <h6>Анализ таблицы "${table}"</h6>
+                <p><strong>Всего записей:</strong> ${count}</p>
+        `;
+
+        if (data && data.length > 0) {
+            // Analyze data types and ranges
+            const sample = data[0];
+            analysis += `<p><strong>Колонки:</strong> ${Object.keys(sample).join(', ')}</p>`;
+
+            // Basic statistics for numeric fields
+            const numericFields = Object.keys(sample).filter(key =>
+                typeof sample[key] === 'number' && !isNaN(sample[key])
+            );
+
+            if (numericFields.length > 0) {
+                analysis += `<p><strong>Числовые поля:</strong> ${numericFields.join(', ')}</p>`;
+            }
+        }
+
+        analysis += `</div>`;
+
+        resultDiv.innerHTML = analysis;
+
+        logMessage(`📊 Анализ таблицы ${table}: ${count} записей`);
+
+    } catch (error) {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>Ошибка анализа таблицы ${table}
+                <br><small>Сообщение: ${error.message}</small>
+            </div>
+        `;
+
+        logMessage(`❌ Ошибка анализа таблицы ${table}: ${error.message}`);
+    }
+}
+
+async function clearAllData() {
+    if (!confirm('ВНИМАНИЕ! Это действие удалит ВСЕ данные из ВСЕХ таблиц. Продолжить?')) return;
+
+    const tables = ['склад', 'сборка', 'приход', 'выданное', 'контрагенты', 'ответственные_лица', 'уведомления', 'операции'];
+    let cleared = 0;
+
+    for (const table of tables) {
+        try {
+            const { error } = await supabase.from(table).delete().neq('id', 0);
+            if (!error) {
+                cleared++;
+                logMessage(`🗑️ Очищена таблица: ${table}`);
+            }
+        } catch (error) {
+            logMessage(`❌ Ошибка очистки таблицы ${table}: ${error.message}`);
+        }
+    }
+
+    showNotification(`Очищено ${cleared} из ${tables.length} таблиц`, cleared === tables.length ? 'success' : 'warning');
+    loadDebugMetrics();
+}
+
+async function resetSettings() {
+    if (!confirm('Сбросить все настройки к значениям по умолчанию?')) return;
+
+    try {
+        const { error } = await supabase.from('настройки').upsert({ id: 1, тема: 'light' });
+        if (error) throw error;
+
+        setTheme('light');
+        localStorage.setItem('theme', 'light');
+
+        showNotification('Настройки сброшены', 'success');
+        logMessage('🔄 Настройки сброшены к значениям по умолчанию');
+
+    } catch (error) {
+        showNotification('Ошибка сброса настроек: ' + error.message, 'error');
+        logMessage(`❌ Ошибка сброса настроек: ${error.message}`);
+    }
+}
+
+async function generateTestData() {
+    if (!confirm('Создать тестовые данные во всех таблицах?')) return;
+
+    try {
+        // Generate test data for each table
+        const testItems = [
+            { наименование: 'Ноутбук Lenovo', ед_изм: 'шт', числится: 10, на_складе: 8, выдано: 2 },
+            { наименование: 'Монитор Dell', ед_изм: 'шт', числится: 5, на_складе: 5, выдано: 0 },
+            { наименование: 'Клавиатура Logitech', ед_изм: 'шт', числится: 15, на_складе: 12, выдано: 3 }
+        ];
+
+        for (const item of testItems) {
+            await supabase.from('склад').insert(item);
+        }
+
+        showNotification('Тестовые данные созданы', 'success');
+        logMessage('🎲 Созданы тестовые данные');
+        loadDebugMetrics();
+
+    } catch (error) {
+        showNotification('Ошибка создания тестовых данных: ' + error.message, 'error');
+        logMessage(`❌ Ошибка создания тестовых данных: ${error.message}`);
+    }
 }
 
 // Render Sklad table
 function renderSkladTable(data) {
     const content = document.getElementById('sklad-content');
     let html = `
-        <div class="mb-3">
-            <div class="row g-2">
-                <div class="col-md-2">
-                    <input type="text" id="sklad-filter-id" class="form-control" placeholder="ID">
+        <!-- Action buttons above table -->
+        <div class="table-actions mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <button class="btn btn-primary btn-square me-2" onclick="refreshSklad()" title="Обновить">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="btn btn-success btn-square" onclick="addSklad()" title="Добавить товар">
+                        <i class="fas fa-plus"></i>
+                    </button>
                 </div>
-                <div class="col-md-3">
-                    <input type="text" id="sklad-filter-name" class="form-control" placeholder="Наименование">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="sklad-filter-unit" class="form-control" placeholder="Ед.изм.">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="sklad-filter-accounted" class="form-control" placeholder="Числится">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="sklad-filter-stock" class="form-control" placeholder="На складе">
-                </div>
-                <div class="col-md-1">
-                    <input type="text" id="sklad-filter-issued" class="form-control" placeholder="Выдано">
+                <div class="text-muted">
+                    Всего записей: ${data.length}
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
+
+        <!-- Table container with enhanced borders -->
+        <div class="table-container">
+            <!-- Column filters above headers -->
+            <div class="column-filters">
+                <div class="filter-cell">
+                    <input type="text" id="sklad-filter-id" placeholder="ID">
+                </div>
+                <div class="filter-cell">
+                    <input type="text" id="sklad-filter-name" placeholder="Наименование">
+                </div>
+                <div class="filter-cell">
+                    <input type="text" id="sklad-filter-unit" placeholder="Ед.изм.">
+                </div>
+                <div class="filter-cell">
+                    <input type="text" id="sklad-filter-accounted" placeholder="Числится">
+                </div>
+                <div class="filter-cell">
+                    <input type="text" id="sklad-filter-stock" placeholder="На складе">
+                </div>
+                <div class="filter-cell">
+                    <input type="text" id="sklad-filter-issued" placeholder="Выдано">
+                </div>
+                <div class="filter-cell">
+                    <!-- Actions column - no filter -->
+                </div>
+            </div>
+
+            <table class="table table-striped table-hover mb-0">
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
@@ -378,13 +668,13 @@ function renderSkladTable(data) {
                 <td>${item.выдано}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-outline-primary" onclick="editSklad(${item.id})" title="Редактировать">
+                        <button class="btn btn-square btn-outline-primary btn-sm" onclick="editSklad(${item.id})" title="Редактировать">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSklad(${item.id})" title="Удалить">
+                        <button class="btn btn-square btn-outline-danger btn-sm" onclick="deleteSklad(${item.id})" title="Удалить">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-success" onclick="transferToSborka(${item.id})" title="Передать в сборку">
+                        <button class="btn btn-square btn-outline-success btn-sm" onclick="transferToSborka(${item.id})" title="Передать в сборку">
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -396,18 +686,18 @@ function renderSkladTable(data) {
                 </tbody>
             </table>
         </div>
-        <div class="mt-3">
-            <button class="btn btn-primary" onclick="addSklad()">
-                <i class="fas fa-plus me-2"></i>Добавить товар
-            </button>
-        </div>
     `;
     content.innerHTML = html;
 
-    // Add filter listeners for all columns
+    // Add filter listeners
     ['id', 'name', 'unit', 'accounted', 'stock', 'issued'].forEach(field => {
         document.getElementById(`sklad-filter-${field}`).addEventListener('input', filterSklad);
     });
+}
+
+function refreshSklad() {
+    loadSklad();
+    showNotification('Данные склада обновлены', 'success');
 }
 
 function filterSklad() {
@@ -1644,23 +1934,52 @@ async function resetTheme() {
 }
 
 function showNotification(message, type = 'info') {
-    // Создать временное уведомление
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed`;
-    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-    notification.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    const toastContainer = document.getElementById('toast-container');
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type} fade show`;
+    toast.innerHTML = `
+        <div class="toast-header">
+            <strong class="me-auto">
+                <i class="fas fa-${getNotificationIcon(type)} me-2"></i>
+                ${getNotificationTitle(type)}
+            </strong>
+            <button type="button" class="close" onclick="this.parentElement.parentElement.remove()">
+                <span>&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            ${message}
+        </div>
     `;
 
-    document.body.appendChild(notification);
+    toastContainer.appendChild(toast);
 
     // Автоматически удалить через 5 секунд
     setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
+        if (toast.parentNode) {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
         }
     }, 5000);
+}
+
+function getNotificationIcon(type) {
+    switch(type) {
+        case 'success': return 'check-circle';
+        case 'error': return 'exclamation-triangle';
+        case 'warning': return 'exclamation-circle';
+        default: return 'info-circle';
+    }
+}
+
+function getNotificationTitle(type) {
+    switch(type) {
+        case 'success': return 'Успех';
+        case 'error': return 'Ошибка';
+        case 'warning': return 'Предупреждение';
+        default: return 'Информация';
+    }
 }
 
 function renderUvedomleniya(data) {
