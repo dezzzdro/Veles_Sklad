@@ -57,44 +57,60 @@ loadTheme();
 
 // Load data for each section
 async function loadSectionData(sectionId) {
-    switch(sectionId) {
-        case 'sklad':
-            await loadSklad();
-            break;
-        case 'sborka':
-            await loadSborka();
-            break;
-        case 'prihod':
-            await loadPrihod();
-            break;
-        case 'vydannoe':
-            await loadVydannoe();
-            break;
-        case 'kontragenty':
-            await loadKontragenty();
-            break;
-        case 'nastroyki':
-            await loadNastroyki();
-            break;
-        case 'uvedomleniya':
-            await loadUvedomleniya();
-            break;
-        case 'otladka':
-            await loadOtladka();
-            break;
+    try {
+        switch(sectionId) {
+            case 'sklad':
+                await loadSklad();
+                break;
+            case 'sborka':
+                await loadSborka();
+                break;
+            case 'prihod':
+                await loadPrihod();
+                break;
+            case 'vydannoe':
+                await loadVydannoe();
+                break;
+            case 'kontragenty':
+                await loadKontragenty();
+                break;
+            case 'nastroyki':
+                await loadNastroyki();
+                break;
+            case 'uvedomleniya':
+                await loadUvedomleniya();
+                break;
+            case 'otladka':
+                await loadOtladka();
+                break;
+        }
+    } catch (error) {
+        console.error('Error loading section:', error);
+        showError(sectionId, error.message);
     }
 }
 
-// Placeholder functions for loading data
+function showError(sectionId, message) {
+    const content = document.getElementById(`${sectionId}-content`);
+    content.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Ошибка загрузки данных: ${message}
+        </div>
+    `;
+}
+
+// Load Sklad data
 async function loadSklad() {
     const content = document.getElementById('sklad-content');
-    content.innerHTML = '<p>Загрузка данных склада...</p>';
+    content.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Загрузка данных склада...</p></div>';
+
     try {
         const { data, error } = await supabase.from('склад').select('*');
         if (error) throw error;
-        renderSkladTable(data);
+        renderSkladTable(data || []);
     } catch (error) {
-        content.innerHTML = '<p>Ошибка загрузки: ' + error.message + '</p>';
+        showError('sklad', error.message);
     }
 }
 
@@ -198,17 +214,35 @@ async function loadOtladka() {
     content.innerHTML = html;
 }
 
-// Render functions
+// Render Sklad table
 function renderSkladTable(data) {
     const content = document.getElementById('sklad-content');
     let html = `
         <div class="mb-3">
-            <input type="text" id="sklad-filter-name" class="form-control d-inline-block w-auto me-2" placeholder="Фильтр по наименованию">
-            <input type="text" id="sklad-filter-unit" class="form-control d-inline-block w-auto" placeholder="Фильтр по ед.изм.">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <input type="text" id="sklad-filter-id" class="form-control" placeholder="ID">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" id="sklad-filter-name" class="form-control" placeholder="Наименование">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="sklad-filter-unit" class="form-control" placeholder="Ед.изм.">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="sklad-filter-accounted" class="form-control" placeholder="Числится">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="sklad-filter-stock" class="form-control" placeholder="На складе">
+                </div>
+                <div class="col-md-1">
+                    <input type="text" id="sklad-filter-issued" class="form-control" placeholder="Выдано">
+                </div>
+            </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
                     <tr>
                         <th>ID</th>
                         <th>Наименование</th>
@@ -231,9 +265,17 @@ function renderSkladTable(data) {
                 <td>${item.на_складе}</td>
                 <td>${item.выдано}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editSklad(${item.id})"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-outline-danger me-1" onclick="deleteSklad(${item.id})"><i class="fas fa-trash"></i></button>
-                    <button class="btn btn-sm btn-outline-success" onclick="transferToSborka(${item.id})"><i class="fas fa-arrow-right"></i></button>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editSklad(${item.id})" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSklad(${item.id})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="transferToSborka(${item.id})" title="Передать в сборку">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `;
@@ -242,23 +284,68 @@ function renderSkladTable(data) {
                 </tbody>
             </table>
         </div>
-        <button class="btn btn-primary" onclick="addSklad()"><i class="fas fa-plus"></i> Добавить</button>
+        <div class="mt-3">
+            <button class="btn btn-primary" onclick="addSklad()">
+                <i class="fas fa-plus me-2"></i>Добавить товар
+            </button>
+        </div>
     `;
     content.innerHTML = html;
-    // Add filter listeners
-    document.getElementById('sklad-filter-name').addEventListener('input', filterSklad);
-    document.getElementById('sklad-filter-unit').addEventListener('input', filterSklad);
+
+    // Add filter listeners for all columns
+    ['id', 'name', 'unit', 'accounted', 'stock', 'issued'].forEach(field => {
+        document.getElementById(`sklad-filter-${field}`).addEventListener('input', filterSklad);
+    });
 }
 
 function filterSklad() {
-    const nameFilter = document.getElementById('sklad-filter-name').value.toLowerCase();
-    const unitFilter = document.getElementById('sklad-filter-unit').value.toLowerCase();
+    const filters = {
+        id: document.getElementById('sklad-filter-id').value.toLowerCase(),
+        name: document.getElementById('sklad-filter-name').value.toLowerCase(),
+        unit: document.getElementById('sklad-filter-unit').value.toLowerCase(),
+        accounted: document.getElementById('sklad-filter-accounted').value.toLowerCase(),
+        stock: document.getElementById('sklad-filter-stock').value.toLowerCase(),
+        issued: document.getElementById('sklad-filter-issued').value.toLowerCase()
+    };
+
     const rows = document.querySelectorAll('#sklad-content tbody tr');
     rows.forEach(row => {
-        const name = row.cells[1].textContent.toLowerCase();
-        const unit = row.cells[2].textContent.toLowerCase();
-        row.style.display = name.includes(nameFilter) && unit.includes(unitFilter) ? '' : 'none';
+        const cells = row.cells;
+        const matches =
+            cells[0].textContent.toLowerCase().includes(filters.id) &&
+            cells[1].textContent.toLowerCase().includes(filters.name) &&
+            cells[2].textContent.toLowerCase().includes(filters.unit) &&
+            cells[3].textContent.toLowerCase().includes(filters.accounted) &&
+            cells[4].textContent.toLowerCase().includes(filters.stock) &&
+            cells[5].textContent.toLowerCase().includes(filters.issued);
+
+        row.style.display = matches ? '' : 'none';
     });
+}
+
+function filterSborka() {
+    const filters = {
+        id: document.getElementById('sborka-filter-id').value.toLowerCase(),
+        name: document.getElementById('sborka-filter-name').value.toLowerCase(),
+        unit: document.getElementById('sborka-filter-unit').value.toLowerCase(),
+        quantity: document.getElementById('sborka-filter-quantity').value.toLowerCase()
+    };
+
+    const rows = document.querySelectorAll('#sborka-content tbody tr');
+    rows.forEach(row => {
+        const cells = row.cells;
+        const matches =
+            cells[0].textContent.toLowerCase().includes(filters.id) &&
+            cells[1].textContent.toLowerCase().includes(filters.name) &&
+            cells[2].textContent.toLowerCase().includes(filters.unit) &&
+            cells[3].textContent.toLowerCase().includes(filters.quantity);
+
+        row.style.display = matches ? '' : 'none';
+    });
+}
+
+async function refreshSborka() {
+    await loadSborka();
 }
 
 // Placeholder CRUD functions
@@ -352,17 +439,47 @@ async function addSklad() {
 function renderSborkaTable(data) {
     const content = document.getElementById('sborka-content');
     let html = `
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Наименование</th>
-                    <th>Ед.изм.</th>
-                    <th>Количество</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
+        <!-- Кнопки управления -->
+        <div class="mb-3">
+            <button class="btn btn-outline-primary me-2" onclick="refreshSborka()">
+                <i class="fas fa-sync-alt me-1"></i>Обновить
+            </button>
+            <button class="btn btn-primary" onclick="addSborka()">
+                <i class="fas fa-plus me-1"></i>Добавить
+            </button>
+        </div>
+
+        <!-- Фильтры -->
+        <div class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" id="sborka-filter-id" class="form-control" placeholder="ID">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="sborka-filter-name" class="form-control" placeholder="Наименование">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" id="sborka-filter-unit" class="form-control" placeholder="Ед.изм.">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" id="sborka-filter-quantity" class="form-control" placeholder="Количество">
+                </div>
+            </div>
+        </div>
+
+        <!-- Таблица -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Наименование</th>
+                        <th>Ед.изм.</th>
+                        <th>Количество</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
     data.forEach(item => {
         html += `
@@ -372,23 +489,100 @@ function renderSborkaTable(data) {
                 <td>${item.ед_изм}</td>
                 <td>${item.количество}</td>
                 <td>
-                    <button onclick="editSborka(${item.id})">Редактировать</button>
-                    <button onclick="deleteSborka(${item.id})">Удалить</button>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editSborka(${item.id})" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSborka(${item.id})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="transferToSborkaFromSborka(${item.id})" title="Передать в сборку">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `;
     });
     html += `
-            </tbody>
-        </table>
-        <button onclick="addSborka()">Добавить</button>
+                </tbody>
+            </table>
+        </div>
     `;
     content.innerHTML = html;
+
+    // Add filter listeners
+    ['id', 'name', 'unit', 'quantity'].forEach(field => {
+        document.getElementById(`sborka-filter-${field}`).addEventListener('input', filterSborka);
+    });
 }
 
-function editSborka(id) { alert('Редактировать ' + id); }
-function deleteSborka(id) { alert('Удалить ' + id); }
-function addSborka() { alert('Добавить'); }
+async function editSborka(id) {
+    const { data, error } = await supabase.from('сборка').select('*').eq('id', id).single();
+    if (error) { alert('Ошибка: ' + error.message); return; }
+
+    const name = prompt('Наименование:', data.наименование);
+    const unit = prompt('Ед.изм.:', data.ед_изм);
+    const quantity = prompt('Количество:', data.количество);
+
+    if (name && unit) {
+        try {
+            const { error } = await supabase.from('сборка').update({
+                наименование: name,
+                ед_изм: unit,
+                количество: parseFloat(quantity) || 0
+            }).eq('id', id);
+            if (error) throw error;
+            loadSborka();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function deleteSborka(id) {
+    if (confirm('Удалить запись?')) {
+        try {
+            const { error } = await supabase.from('сборка').delete().eq('id', id);
+            if (error) throw error;
+            loadSborka();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function addSborka() {
+    const name = prompt('Наименование:');
+    const unit = prompt('Ед.изм.:');
+    const quantity = prompt('Количество:');
+
+    if (name && unit) {
+        try {
+            const { error } = await supabase.from('сборка').insert({
+                наименование: name,
+                ед_изм: unit,
+                количество: parseFloat(quantity) || 0
+            });
+            if (error) throw error;
+            loadSborka();
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
+
+async function transferToSborkaFromSborka(id) {
+    // Модальное окно для передачи в сборку
+    const { data: item, error } = await supabase.from('сборка').select('*').eq('id', id).single();
+    if (error) { alert('Ошибка: ' + error.message); return; }
+
+    const quantity = prompt(`Количество для передачи (доступно: ${item.количество}):`);
+    if (quantity && parseFloat(quantity) > 0) {
+        // Здесь можно добавить логику передачи в производство
+        alert(`Передано в сборку: ${quantity} ${item.ед_изм} ${item.наименование}`);
+    }
+}
 
 function renderPrihodTable(data) {
     const content = document.getElementById('prihod-content');
