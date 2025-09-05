@@ -8,22 +8,52 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentSection = 'sklad';
 
 // Navigation
-document.querySelectorAll('nav a').forEach(link => {
+document.querySelectorAll('#sidebar a').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        const sectionId = e.target.getAttribute('href').substring(1);
+        const sectionId = e.target.closest('a').getAttribute('href').substring(1);
         showSection(sectionId);
     });
 });
 
 function showSection(sectionId) {
-    document.querySelectorAll('section').forEach(section => {
-        section.style.display = 'none';
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
     });
-    document.getElementById(sectionId).style.display = 'block';
+    document.getElementById(sectionId).classList.add('active');
     currentSection = sectionId;
     loadSectionData(sectionId);
 }
+
+// Clock and date
+function updateDateTime() {
+    const now = new Date();
+    const datetime = now.toLocaleString('ru-RU', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    document.getElementById('datetime').textContent = datetime;
+}
+
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// Theme management
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+}
+
+loadTheme();
 
 // Load data for each section
 async function loadSectionData(sectionId) {
@@ -172,23 +202,24 @@ async function loadOtladka() {
 function renderSkladTable(data) {
     const content = document.getElementById('sklad-content');
     let html = `
-        <div>
-            <input type="text" id="sklad-filter-name" placeholder="Фильтр по наименованию">
-            <input type="text" id="sklad-filter-unit" placeholder="Фильтр по ед.изм.">
+        <div class="mb-3">
+            <input type="text" id="sklad-filter-name" class="form-control d-inline-block w-auto me-2" placeholder="Фильтр по наименованию">
+            <input type="text" id="sklad-filter-unit" class="form-control d-inline-block w-auto" placeholder="Фильтр по ед.изм.">
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Наименование</th>
-                    <th>Ед.изм.</th>
-                    <th>Числится</th>
-                    <th>На складе</th>
-                    <th>Выдано</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Наименование</th>
+                        <th>Ед.изм.</th>
+                        <th>Числится</th>
+                        <th>На складе</th>
+                        <th>Выдано</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
     data.forEach(item => {
         html += `
@@ -200,17 +231,18 @@ function renderSkladTable(data) {
                 <td>${item.на_складе}</td>
                 <td>${item.выдано}</td>
                 <td>
-                    <button onclick="editSklad(${item.id})">Редактировать</button>
-                    <button onclick="deleteSklad(${item.id})">Удалить</button>
-                    <button onclick="transferToSborka(${item.id})">Передать в сборку</button>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editSklad(${item.id})"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-outline-danger me-1" onclick="deleteSklad(${item.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-sm btn-outline-success" onclick="transferToSborka(${item.id})"><i class="fas fa-arrow-right"></i></button>
                 </td>
             </tr>
         `;
     });
     html += `
-            </tbody>
-        </table>
-        <button onclick="addSklad()">Добавить</button>
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-primary" onclick="addSklad()"><i class="fas fa-plus"></i> Добавить</button>
     `;
     content.innerHTML = html;
     // Add filter listeners
