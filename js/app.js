@@ -7,6 +7,19 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Global variables
 let currentSection = 'sklad';
 
+// Debounce function for real-time filtering
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Navigation
 document.querySelectorAll('#sidebar a').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -598,78 +611,168 @@ async function generateTestData() {
     }
 }
 
-// Render Sklad table
-function renderSkladTable(data) {
-    const content = document.getElementById('sklad-content');
+// Unified table rendering function
+function renderUnifiedTable(sectionId, data, config) {
+    const content = document.getElementById(`${sectionId}-content`);
+
+    // Section title
     let html = `
-        <!-- Action buttons above table -->
-        <div class="table-actions mb-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <button class="btn btn-primary btn-square me-2" onclick="refreshSklad()" title="Обновить">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <button class="btn btn-success btn-square" onclick="addSklad()" title="Добавить товар">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-                <div class="text-muted">
-                    Всего записей: ${data.length}
-                </div>
+        <div class="section-title mb-4">
+            <h2 class="h4 mb-0">
+                <i class="fas fa-${config.icon} me-2"></i>
+                ${config.title}
+            </h2>
+        </div>
+    `;
+
+    // Action buttons
+    html += `
+        <div class="table-actions-primary mb-4">
+            <button class="btn btn-primary" onclick="${config.refreshFunction}()" title="Обновить">
+                <i class="fas fa-sync-alt"></i>
+                <span>Обновить</span>
+            </button>
+            <button class="btn btn-success" onclick="${config.addFunction}()" title="Добавить запись">
+                <i class="fas fa-plus"></i>
+                <span>Добавить запись</span>
+            </button>
+            <button class="btn btn-secondary" onclick="${config.exportFunction}()" title="Экспорт в XLSX">
+                <i class="fas fa-file-excel"></i>
+                <span>Экспорт в XLSX</span>
+            </button>
+        </div>
+    `;
+
+    // Global search
+    html += `
+        <div class="global-search mb-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" id="${sectionId}-global-search" class="form-control" placeholder="Поиск по всем колонкам...">
             </div>
         </div>
+    `;
 
-        <!-- Table container with enhanced borders -->
-        <div class="table-container">
-            <!-- Column filters above headers -->
-            <div class="column-filters">
+    // Column filters
+    html += `<div class="column-filters mb-3">`;
+    config.columns.forEach(column => {
+        if (column.filterable !== false) {
+            html += `
                 <div class="filter-cell">
-                    <input type="text" id="sklad-filter-id" placeholder="ID">
+                    <input type="text" id="${sectionId}-filter-${column.key}" placeholder="${column.placeholder || column.title}">
                 </div>
-                <div class="filter-cell">
-                    <input type="text" id="sklad-filter-name" placeholder="Наименование">
-                </div>
-                <div class="filter-cell">
-                    <input type="text" id="sklad-filter-unit" placeholder="Ед.изм.">
-                </div>
-                <div class="filter-cell">
-                    <input type="text" id="sklad-filter-accounted" placeholder="Числится">
-                </div>
-                <div class="filter-cell">
-                    <input type="text" id="sklad-filter-stock" placeholder="На складе">
-                </div>
-                <div class="filter-cell">
-                    <input type="text" id="sklad-filter-issued" placeholder="Выдано">
-                </div>
-                <div class="filter-cell">
-                    <!-- Actions column - no filter -->
-                </div>
-            </div>
+            `;
+        } else {
+            html += `<div class="filter-cell"><!-- ${column.title} - no filter --></div>`;
+        }
+    });
+    html += `</div>`;
 
+    // Filter actions
+    html += `
+        <div class="filter-actions mb-4">
+            <button class="btn btn-success" onclick="${config.applyFiltersFunction}()">
+                <i class="fas fa-check"></i>
+                <span>Применить фильтры</span>
+            </button>
+            <button class="btn btn-secondary" onclick="${config.resetFiltersFunction}()">
+                <i class="fas fa-times"></i>
+                <span>Сбросить фильтры</span>
+            </button>
+        </div>
+    `;
+
+    // Fixed header container
+    html += `<div class="table-fixed-header-container">`;
+
+    // Table header
+    html += `
+        <div class="table-header-fixed">
             <table class="table table-striped table-hover mb-0">
                 <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>Наименование</th>
-                        <th>Ед.изм.</th>
-                        <th>Числится</th>
-                        <th>На складе</th>
-                        <th>Выдано</th>
-                        <th>Действия</th>
+    `;
+    config.columns.forEach(column => {
+        html += `<th>${column.title}</th>`;
+    });
+    html += `
                     </tr>
                 </thead>
+            </table>
+        </div>
+    `;
+
+    // Table body
+    html += `
+        <div class="table-body-scroll">
+            <table class="table table-striped table-hover mb-0">
                 <tbody>
     `;
     data.forEach(item => {
-        html += `
-            <tr>
-                <td>${item.id}</td>
-                <td>${item.наименование}</td>
-                <td>${item.ед_изм}</td>
-                <td>${item.числится}</td>
-                <td>${item.на_складе}</td>
-                <td>${item.выдано}</td>
-                <td>
+        html += `<tr>`;
+        config.columns.forEach(column => {
+            if (column.key === 'actions') {
+                html += `<td>${config.renderActions(item)}</td>`;
+            } else {
+                let value = item[column.key] || '';
+                if (column.format) {
+                    value = column.format(value, item);
+                }
+                html += `<td>${value}</td>`;
+            }
+        });
+        html += `</tr>`;
+    });
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    html += `</div>`;
+
+    content.innerHTML = html;
+
+    // Add filter listeners with debounce
+    config.columns.forEach(column => {
+        if (column.filterable !== false) {
+            const element = document.getElementById(`${sectionId}-filter-${column.key}`);
+            if (element) {
+                element.addEventListener('input', debounce(config.filterFunction, 300));
+            }
+        }
+    });
+
+    // Add global search listener
+    const globalSearch = document.getElementById(`${sectionId}-global-search`);
+    if (globalSearch) {
+        globalSearch.addEventListener('input', debounce(config.filterFunction, 300));
+    }
+}
+
+// Render Sklad table
+function renderSkladTable(data) {
+    const config = {
+        icon: 'warehouse',
+        title: 'Склад',
+        refreshFunction: 'refreshSklad',
+        addFunction: 'addSklad',
+        exportFunction: 'exportSklad',
+        applyFiltersFunction: 'applySkladFilters',
+        resetFiltersFunction: 'resetSkladFilters',
+        filterFunction: filterSklad,
+        columns: [
+            { key: 'id', title: 'ID', placeholder: 'ID' },
+            { key: 'наименование', title: 'Наименование', placeholder: 'Наименование' },
+            { key: 'ед_изм', title: 'Ед.изм.', placeholder: 'Ед.изм.' },
+            { key: 'числится', title: 'Числится', placeholder: 'Числится' },
+            { key: 'на_складе', title: 'На складе', placeholder: 'На складе' },
+            { key: 'выдано', title: 'Выдано', placeholder: 'Выдано' },
+            {
+                key: 'actions',
+                title: 'Действия',
+                filterable: false,
+                renderActions: (item) => `
                     <div class="btn-group" role="group">
                         <button class="btn btn-square btn-outline-primary btn-sm" onclick="editSklad(${item.id})" title="Редактировать">
                             <i class="fas fa-edit"></i>
@@ -681,21 +784,12 @@ function renderSkladTable(data) {
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
-                </td>
-            </tr>
-        `;
-    });
-    html += `
-                </tbody>
-            </table>
-        </div>
-    `;
-    content.innerHTML = html;
+                `
+            }
+        ]
+    };
 
-    // Add filter listeners
-    ['id', 'name', 'unit', 'accounted', 'stock', 'issued'].forEach(field => {
-        document.getElementById(`sklad-filter-${field}`).addEventListener('input', filterSklad);
-    });
+    renderUnifiedTable('sklad', data, config);
 }
 
 function refreshSklad() {
@@ -703,75 +797,204 @@ function refreshSklad() {
     showNotification('Данные склада обновлены', 'success');
 }
 
+async function exportSklad() {
+    try {
+        const { data, error } = await supabase.from('склад').select('*');
+        if (error) throw error;
+
+        const exportData = data.map(item => ({
+            'ID': item.id,
+            'Наименование': item.наименование || '',
+            'Ед.изм.': item.ед_изм || '',
+            'Числится': item.числится || 0,
+            'На складе': item.на_складе || 0,
+            'Выдано': item.выдано || 0
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Склад');
+
+        const fileName = 'Склад_' + new Date().toISOString().split('T')[0] + '.xlsx';
+        XLSX.writeFile(wb, fileName);
+
+        alert(`Файл ${fileName} успешно экспортирован`);
+    } catch (error) {
+        alert('Ошибка экспорта: ' + error.message);
+    }
+}
+
 function filterSklad() {
     const filters = {
-        id: document.getElementById('sklad-filter-id').value.toLowerCase(),
-        name: document.getElementById('sklad-filter-name').value.toLowerCase(),
-        unit: document.getElementById('sklad-filter-unit').value.toLowerCase(),
-        accounted: document.getElementById('sklad-filter-accounted').value.toLowerCase(),
-        stock: document.getElementById('sklad-filter-stock').value.toLowerCase(),
-        issued: document.getElementById('sklad-filter-issued').value.toLowerCase()
+        id: document.getElementById('sklad-filter-id')?.value.toLowerCase() || '',
+        наименование: document.getElementById('sklad-filter-наименование')?.value.toLowerCase() || '',
+        ед_изм: document.getElementById('sklad-filter-ед_изм')?.value.toLowerCase() || '',
+        числится: document.getElementById('sklad-filter-числится')?.value.toLowerCase() || '',
+        на_складе: document.getElementById('sklad-filter-на_складе')?.value.toLowerCase() || '',
+        выдано: document.getElementById('sklad-filter-выдано')?.value.toLowerCase() || ''
     };
 
-    const rows = document.querySelectorAll('#sklad-content tbody tr');
+    const globalSearch = document.getElementById('sklad-global-search')?.value.toLowerCase() || '';
+
+    const rows = document.querySelectorAll('#sklad-content .table-body-scroll tbody tr');
     rows.forEach(row => {
         const cells = row.cells;
-        const matches =
-            cells[0].textContent.toLowerCase().includes(filters.id) &&
-            cells[1].textContent.toLowerCase().includes(filters.name) &&
-            cells[2].textContent.toLowerCase().includes(filters.unit) &&
-            cells[3].textContent.toLowerCase().includes(filters.accounted) &&
-            cells[4].textContent.toLowerCase().includes(filters.stock) &&
-            cells[5].textContent.toLowerCase().includes(filters.issued);
 
-        row.style.display = matches ? '' : 'none';
+        // Check column filters
+        const columnMatches =
+            cells[0].textContent.toLowerCase().includes(filters.id) &&
+            cells[1].textContent.toLowerCase().includes(filters.наименование) &&
+            cells[2].textContent.toLowerCase().includes(filters.ед_изм) &&
+            cells[3].textContent.toLowerCase().includes(filters.числится) &&
+            cells[4].textContent.toLowerCase().includes(filters.на_складе) &&
+            cells[5].textContent.toLowerCase().includes(filters.выдано);
+
+        // Check global search
+        const globalMatches = globalSearch === '' || Array.from(cells).slice(0, -1).some(cell =>
+            cell.textContent.toLowerCase().includes(globalSearch)
+        );
+
+        row.style.display = (columnMatches && globalMatches) ? '' : 'none';
     });
+}
+
+function applySkladFilters() {
+    filterSklad();
+    showNotification('Фильтры применены', 'success');
+}
+
+function resetSkladFilters() {
+    // Clear all filter inputs
+    const filterIds = ['id', 'наименование', 'ед_изм', 'числится', 'на_складе', 'выдано'];
+    filterIds.forEach(id => {
+        const element = document.getElementById(`sklad-filter-${id}`);
+        if (element) element.value = '';
+    });
+
+    const globalSearch = document.getElementById('sklad-global-search');
+    if (globalSearch) globalSearch.value = '';
+
+    // Show all rows
+    const rows = document.querySelectorAll('#sklad-content .table-body-scroll tbody tr');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+
+    showNotification('Фильтры сброшены', 'info');
 }
 
 function filterSborka() {
     const filters = {
-        id: document.getElementById('sborka-filter-id').value.toLowerCase(),
-        name: document.getElementById('sborka-filter-name').value.toLowerCase(),
-        unit: document.getElementById('sborka-filter-unit').value.toLowerCase(),
-        quantity: document.getElementById('sborka-filter-quantity').value.toLowerCase()
+        id: document.getElementById('sborka-filter-id')?.value.toLowerCase() || '',
+        наименование: document.getElementById('sborka-filter-наименование')?.value.toLowerCase() || '',
+        ед_изм: document.getElementById('sborka-filter-ед_изм')?.value.toLowerCase() || '',
+        количество: document.getElementById('sborka-filter-количество')?.value.toLowerCase() || ''
     };
 
-    const rows = document.querySelectorAll('#sborka-content tbody tr');
+    const globalSearch = document.getElementById('sborka-global-search')?.value.toLowerCase() || '';
+
+    const rows = document.querySelectorAll('#sborka-content .table-body-scroll tbody tr');
     rows.forEach(row => {
         const cells = row.cells;
-        const matches =
-            cells[0].textContent.toLowerCase().includes(filters.id) &&
-            cells[1].textContent.toLowerCase().includes(filters.name) &&
-            cells[2].textContent.toLowerCase().includes(filters.unit) &&
-            cells[3].textContent.toLowerCase().includes(filters.quantity);
 
-        row.style.display = matches ? '' : 'none';
+        // Check column filters
+        const columnMatches =
+            cells[0].textContent.toLowerCase().includes(filters.id) &&
+            cells[1].textContent.toLowerCase().includes(filters.наименование) &&
+            cells[2].textContent.toLowerCase().includes(filters.ед_изм) &&
+            cells[3].textContent.toLowerCase().includes(filters.количество);
+
+        // Check global search
+        const globalMatches = globalSearch === '' || Array.from(cells).slice(0, -1).some(cell =>
+            cell.textContent.toLowerCase().includes(globalSearch)
+        );
+
+        row.style.display = (columnMatches && globalMatches) ? '' : 'none';
     });
+}
+
+function applySborkaFilters() {
+    filterSborka();
+    showNotification('Фильтры применены', 'success');
+}
+
+function resetSborkaFilters() {
+    // Clear all filter inputs
+    const filterIds = ['id', 'наименование', 'ед_изм', 'количество'];
+    filterIds.forEach(id => {
+        const element = document.getElementById(`sborka-filter-${id}`);
+        if (element) element.value = '';
+    });
+
+    const globalSearch = document.getElementById('sborka-global-search');
+    if (globalSearch) globalSearch.value = '';
+
+    // Show all rows
+    const rows = document.querySelectorAll('#sborka-content .table-body-scroll tbody tr');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+
+    showNotification('Фильтры сброшены', 'info');
 }
 
 function filterPrihod() {
     const filters = {
-        date: document.getElementById('prihod-filter-date').value.toLowerCase(),
-        name: document.getElementById('prihod-filter-name').value.toLowerCase(),
-        unit: document.getElementById('prihod-filter-unit').value.toLowerCase(),
-        quantity: document.getElementById('prihod-filter-quantity').value.toLowerCase(),
-        registry: document.getElementById('prihod-filter-registry').value.toLowerCase(),
-        upd: document.getElementById('prihod-filter-upd').value.toLowerCase()
+        дата: document.getElementById('prihod-filter-дата')?.value.toLowerCase() || '',
+        наименование: document.getElementById('prihod-filter-наименование')?.value.toLowerCase() || '',
+        ед_изм: document.getElementById('prihod-filter-ед_изм')?.value.toLowerCase() || '',
+        количество: document.getElementById('prihod-filter-количество')?.value.toLowerCase() || '',
+        реестровый_номер: document.getElementById('prihod-filter-реестровый_номер')?.value.toLowerCase() || '',
+        upd: document.getElementById('prihod-filter-upd')?.value.toLowerCase() || ''
     };
 
-    const rows = document.querySelectorAll('#prihod-content tbody tr');
+    const globalSearch = document.getElementById('prihod-global-search')?.value.toLowerCase() || '';
+
+    const rows = document.querySelectorAll('#prihod-content .table-body-scroll tbody tr');
     rows.forEach(row => {
         const cells = row.cells;
-        const matches =
-            cells[0].textContent.toLowerCase().includes(filters.date) &&
-            cells[1].textContent.toLowerCase().includes(filters.name) &&
-            cells[2].textContent.toLowerCase().includes(filters.unit) &&
-            cells[3].textContent.toLowerCase().includes(filters.quantity) &&
-            cells[4].textContent.toLowerCase().includes(filters.registry) &&
+
+        // Check column filters
+        const columnMatches =
+            cells[0].textContent.toLowerCase().includes(filters.дата) &&
+            cells[1].textContent.toLowerCase().includes(filters.наименование) &&
+            cells[2].textContent.toLowerCase().includes(filters.ед_изм) &&
+            cells[3].textContent.toLowerCase().includes(filters.количество) &&
+            cells[4].textContent.toLowerCase().includes(filters.реестровый_номер) &&
             cells[5].textContent.toLowerCase().includes(filters.upd);
 
-        row.style.display = matches ? '' : 'none';
+        // Check global search
+        const globalMatches = globalSearch === '' || Array.from(cells).slice(0, -1).some(cell =>
+            cell.textContent.toLowerCase().includes(globalSearch)
+        );
+
+        row.style.display = (columnMatches && globalMatches) ? '' : 'none';
     });
+}
+
+function applyPrihodFilters() {
+    filterPrihod();
+    showNotification('Фильтры применены', 'success');
+}
+
+function resetPrihodFilters() {
+    // Clear all filter inputs
+    const filterIds = ['дата', 'наименование', 'ед_изм', 'количество', 'реестровый_номер', 'upd'];
+    filterIds.forEach(id => {
+        const element = document.getElementById(`prihod-filter-${id}`);
+        if (element) element.value = '';
+    });
+
+    const globalSearch = document.getElementById('prihod-global-search');
+    if (globalSearch) globalSearch.value = '';
+
+    // Show all rows
+    const rows = document.querySelectorAll('#prihod-content .table-body-scroll tbody tr');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+
+    showNotification('Фильтры сброшены', 'info');
 }
 
 function filterVydannoe() {
@@ -779,26 +1002,104 @@ function filterVydannoe() {
         date: document.getElementById('vydannoe-filter-date').value.toLowerCase(),
         id: document.getElementById('vydannoe-filter-id').value.toLowerCase(),
         name: document.getElementById('vydannoe-filter-name').value.toLowerCase(),
-        registry: document.getElementById('vydannoe-filter-registry').value.toLowerCase(),
-        upd: document.getElementById('vydannoe-filter-upd').value.toLowerCase(),
+        unit: document.getElementById('vydannoe-filter-unit').value.toLowerCase(),
+        quantity: document.getElementById('vydannoe-filter-quantity').value.toLowerCase(),
         contractor: document.getElementById('vydannoe-filter-contractor').value,
-        responsible: document.getElementById('vydannoe-filter-responsible').value
+        responsible: document.getElementById('vydannoe-filter-responsible').value,
+        registry: document.getElementById('vydannoe-filter-registry').value.toLowerCase(),
+        upd: document.getElementById('vydannoe-filter-upd').value.toLowerCase()
     };
+
+    const globalSearch = document.getElementById('vydannoe-global-search').value.toLowerCase();
 
     const rows = document.querySelectorAll('#vydannoe-content tbody tr');
     rows.forEach(row => {
         const cells = row.cells;
-        const matches =
+
+        // Check column filters
+        const columnMatches =
             cells[0].textContent.toLowerCase().includes(filters.date) &&
             cells[1].textContent.toLowerCase().includes(filters.id) &&
             cells[2].textContent.toLowerCase().includes(filters.name) &&
-            cells[7].textContent.toLowerCase().includes(filters.registry) &&
-            cells[8].textContent.toLowerCase().includes(filters.upd) &&
+            cells[3].textContent.toLowerCase().includes(filters.unit) &&
+            cells[4].textContent.toLowerCase().includes(filters.quantity) &&
             (filters.contractor === '' || cells[5].textContent.includes(filters.contractor)) &&
-            (filters.responsible === '' || cells[6].textContent.includes(filters.responsible));
+            (filters.responsible === '' || cells[6].textContent.includes(filters.responsible)) &&
+            cells[7].textContent.toLowerCase().includes(filters.registry) &&
+            cells[8].textContent.toLowerCase().includes(filters.upd);
 
-        row.style.display = matches ? '' : 'none';
+        // Check global search
+        const globalMatches = globalSearch === '' || Array.from(cells).slice(0, -1).some(cell =>
+            cell.textContent.toLowerCase().includes(globalSearch)
+        );
+
+        row.style.display = (columnMatches && globalMatches) ? '' : 'none';
     });
+}
+
+function filterVydannoe() {
+    const filters = {
+        дата: document.getElementById('vydannoe-filter-дата')?.value.toLowerCase() || '',
+        id: document.getElementById('vydannoe-filter-id')?.value.toLowerCase() || '',
+        наименование: document.getElementById('vydannoe-filter-наименование')?.value.toLowerCase() || '',
+        ед_изм: document.getElementById('vydannoe-filter-ед_изм')?.value.toLowerCase() || '',
+        количество: document.getElementById('vydannoe-filter-количество')?.value.toLowerCase() || '',
+        контрагент: document.getElementById('vydannoe-filter-контрагент')?.value || '',
+        ответственный: document.getElementById('vydannoe-filter-ответственный')?.value || '',
+        реестровый_номер: document.getElementById('vydannoe-filter-реестровый_номер')?.value.toLowerCase() || '',
+        upd: document.getElementById('vydannoe-filter-upd')?.value.toLowerCase() || ''
+    };
+
+    const globalSearch = document.getElementById('vydannoe-global-search')?.value.toLowerCase() || '';
+
+    const rows = document.querySelectorAll('#vydannoe-content .table-body-scroll tbody tr');
+    rows.forEach(row => {
+        const cells = row.cells;
+
+        // Check column filters
+        const columnMatches =
+            cells[0].textContent.toLowerCase().includes(filters.дата) &&
+            cells[1].textContent.toLowerCase().includes(filters.id) &&
+            cells[2].textContent.toLowerCase().includes(filters.наименование) &&
+            cells[3].textContent.toLowerCase().includes(filters.ед_изм) &&
+            cells[4].textContent.toLowerCase().includes(filters.количество) &&
+            (filters.контрагент === '' || cells[5].textContent.includes(filters.контрагент)) &&
+            (filters.ответственный === '' || cells[6].textContent.includes(filters.ответственный)) &&
+            cells[7].textContent.toLowerCase().includes(filters.реестровый_номер) &&
+            cells[8].textContent.toLowerCase().includes(filters.upd);
+
+        // Check global search
+        const globalMatches = globalSearch === '' || Array.from(cells).slice(0, -1).some(cell =>
+            cell.textContent.toLowerCase().includes(globalSearch)
+        );
+
+        row.style.display = (columnMatches && globalMatches) ? '' : 'none';
+    });
+}
+
+function applyVydannoeFilters() {
+    filterVydannoe();
+    showNotification('Фильтры применены', 'success');
+}
+
+function resetVydannoeFilters() {
+    // Clear all filter inputs
+    const filterIds = ['дата', 'id', 'наименование', 'ед_изм', 'количество', 'контрагент', 'ответственный', 'реестровый_номер', 'upd'];
+    filterIds.forEach(id => {
+        const element = document.getElementById(`vydannoe-filter-${id}`);
+        if (element) element.value = '';
+    });
+
+    const globalSearch = document.getElementById('vydannoe-global-search');
+    if (globalSearch) globalSearch.value = '';
+
+    // Show all rows
+    const rows = document.querySelectorAll('#vydannoe-content .table-body-scroll tbody tr');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+
+    showNotification('Фильтры сброшены', 'info');
 }
 
 async function refreshSborka() {
@@ -893,85 +1194,44 @@ async function addSklad() {
     }
 }
 
+// Render Sborka table
 function renderSborkaTable(data) {
-    const content = document.getElementById('sborka-content');
-    let html = `
-        <!-- Кнопки управления -->
-        <div class="mb-3">
-            <button class="btn btn-outline-primary me-2" onclick="refreshSborka()">
-                <i class="fas fa-sync-alt me-1"></i>Обновить
-            </button>
-            <button class="btn btn-primary" onclick="addSborka()">
-                <i class="fas fa-plus me-1"></i>Добавить
-            </button>
-        </div>
-
-        <!-- Фильтры -->
-        <div class="mb-3">
-            <div class="row g-2">
-                <div class="col-md-3">
-                    <input type="text" id="sborka-filter-id" class="form-control" placeholder="ID">
-                </div>
-                <div class="col-md-4">
-                    <input type="text" id="sborka-filter-name" class="form-control" placeholder="Наименование">
-                </div>
-                <div class="col-md-3">
-                    <input type="text" id="sborka-filter-unit" class="form-control" placeholder="Ед.изм.">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="sborka-filter-quantity" class="form-control" placeholder="Количество">
-                </div>
-            </div>
-        </div>
-
-        <!-- Таблица -->
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Наименование</th>
-                        <th>Ед.изм.</th>
-                        <th>Количество</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-    data.forEach(item => {
-        html += `
-            <tr>
-                <td>${item.id}</td>
-                <td>${item.наименование}</td>
-                <td>${item.ед_изм}</td>
-                <td>${item.количество}</td>
-                <td>
+    const config = {
+        icon: 'cogs',
+        title: 'Сборка',
+        refreshFunction: 'refreshSborka',
+        addFunction: 'addSborka',
+        exportFunction: 'exportSborka',
+        applyFiltersFunction: 'applySborkaFilters',
+        resetFiltersFunction: 'resetSborkaFilters',
+        filterFunction: filterSborka,
+        columns: [
+            { key: 'id', title: 'ID', placeholder: 'ID' },
+            { key: 'наименование', title: 'Наименование', placeholder: 'Наименование' },
+            { key: 'ед_изм', title: 'Ед.изм.', placeholder: 'Ед.изм.' },
+            { key: 'количество', title: 'Количество', placeholder: 'Количество' },
+            {
+                key: 'actions',
+                title: 'Действия',
+                filterable: false,
+                renderActions: (item) => `
                     <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-outline-primary" onclick="editSborka(${item.id})" title="Редактировать">
+                        <button class="btn btn-square btn-outline-primary btn-sm" onclick="editSborka(${item.id})" title="Редактировать">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSborka(${item.id})" title="Удалить">
+                        <button class="btn btn-square btn-outline-danger btn-sm" onclick="deleteSborka(${item.id})" title="Удалить">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-success" onclick="transferToSborkaFromSborka(${item.id})" title="Передать в сборку">
+                        <button class="btn btn-square btn-outline-success btn-sm" onclick="transferToSborkaFromSborka(${item.id})" title="Передать в сборку">
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
-                </td>
-            </tr>
-        `;
-    });
-    html += `
-                </tbody>
-            </table>
-        </div>
-    `;
-    content.innerHTML = html;
+                `
+            }
+        ]
+    };
 
-    // Add filter listeners
-    ['id', 'name', 'unit', 'quantity'].forEach(field => {
-        document.getElementById(`sborka-filter-${field}`).addEventListener('input', filterSborka);
-    });
+    renderUnifiedTable('sborka', data, config);
 }
 
 async function editSborka(id) {
@@ -1041,162 +1301,267 @@ async function transferToSborkaFromSborka(id) {
     }
 }
 
+async function exportSborka() {
+    try {
+        const { data, error } = await supabase.from('сборка').select('*');
+        if (error) throw error;
+
+        const exportData = data.map(item => ({
+            'ID': item.id,
+            'Наименование': item.наименование || '',
+            'Ед.изм.': item.ед_изм || '',
+            'Количество': item.количество || 0
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Сборка');
+
+        const fileName = 'Сборка_' + new Date().toISOString().split('T')[0] + '.xlsx';
+        XLSX.writeFile(wb, fileName);
+
+        alert(`Файл ${fileName} успешно экспортирован`);
+    } catch (error) {
+        alert('Ошибка экспорта: ' + error.message);
+    }
+}
+
+// Render Prihod table
 function renderPrihodTable(data) {
     const content = document.getElementById('prihod-content');
 
-    // Фильтры
+    // Section title
     let html = `
-        <div class="mb-3">
-            <div class="row g-2">
-                <div class="col-md-2">
-                    <input type="text" id="prihod-filter-date" class="form-control" placeholder="Дата">
-                </div>
-                <div class="col-md-3">
-                    <input type="text" id="prihod-filter-name" class="form-control" placeholder="Наименование">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="prihod-filter-unit" class="form-control" placeholder="Ед.изм.">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="prihod-filter-quantity" class="form-control" placeholder="Количество">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="prihod-filter-registry" class="form-control" placeholder="Реестровый номер">
-                </div>
-                <div class="col-md-1">
-                    <input type="text" id="prihod-filter-upd" class="form-control" placeholder="УПД">
-                </div>
-            </div>
+        <div class="section-title mb-4">
+            <h2 class="h4 mb-0">
+                <i class="fas fa-truck me-2"></i>
+                Приход
+            </h2>
         </div>
-
-        <!-- Секция 1: Принятие прихода -->
-        <div class="card mb-3">
-            <div class="card-header">
-                <h5 class="mb-0">Принятие прихода</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-2">
-                    <div class="col-md-3">
-                        <button class="btn btn-outline-primary w-100" onclick="pasteFromClipboard()">
-                            <i class="fas fa-paste me-1"></i>Вставить из буфера обмена
-                        </button>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-outline-success w-100" onclick="importPrihod()">
-                            <i class="fas fa-file-excel me-1"></i>Импорт из xlsx
-                        </button>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-outline-info w-100" onclick="addPrihod()">
-                            <i class="fas fa-plus me-1"></i>Добавить строку
-                        </button>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-success w-100" onclick="acceptPrihod()">
-                            <i class="fas fa-check me-1"></i>Принять
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Секция 2: Документы прихода -->
-        <div class="card mb-3">
-            <div class="card-header">
-                <h5 class="mb-0">Документы прихода</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-2">
-                    <div class="col-md-5">
-                        <input type="text" id="registry-number" class="form-control" placeholder="Реестровый номер заявки">
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-outline-secondary w-100" onclick="applyRegistryNumber()">
-                            <i class="fas fa-arrow-right me-1"></i>Применить
-                        </button>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="text" id="upd-number" class="form-control" placeholder="УПД">
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-outline-secondary w-100" onclick="applyUPD()">
-                            <i class="fas fa-arrow-right me-1"></i>Применить
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Секция 3: Редактирование -->
-        <div class="card mb-3">
-            <div class="card-header">
-                <h5 class="mb-0">Редактирование</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-2">
-                    <div class="col-md-6">
-                        <button class="btn btn-outline-danger w-100" onclick="clearPrihod()">
-                            <i class="fas fa-trash me-1"></i>Очистить приход
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <button class="btn btn-outline-primary w-100" onclick="exportPrihod()">
-                            <i class="fas fa-file-export me-1"></i>Экспорт в xlsx
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Таблица -->
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Дата</th>
-                        <th>Наименование</th>
-                        <th>Ед.изм.</th>
-                        <th>Количество</th>
-                        <th>Реестровый номер</th>
-                        <th>УПД</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
     `;
-    data.forEach(item => {
-        html += `
-            <tr>
-                <td>${new Date(item.дата).toLocaleDateString('ru-RU')}</td>
-                <td>${item.наименование || ''}</td>
-                <td>${item.ед_изм || ''}</td>
-                <td>${item.количество || ''}</td>
-                <td>${item.реестровый_номер || ''}</td>
-                <td>${item.upd || ''}</td>
-                <td>
+
+    // Action buttons
+    html += `
+        <div class="table-actions-primary mb-4">
+            <button class="btn btn-primary" onclick="refreshPrihod()" title="Обновить">
+                <i class="fas fa-sync-alt"></i>
+                <span>Обновить</span>
+            </button>
+            <button class="btn btn-success" onclick="addPrihod()" title="Добавить запись">
+                <i class="fas fa-plus"></i>
+                <span>Добавить запись</span>
+            </button>
+            <button class="btn btn-secondary" onclick="exportPrihod()" title="Экспорт в XLSX">
+                <i class="fas fa-file-excel"></i>
+                <span>Экспорт в XLSX</span>
+            </button>
+        </div>
+    `;
+
+    // Global search
+    html += `
+        <div class="global-search mb-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" id="prihod-global-search" class="form-control" placeholder="Поиск по всем колонкам...">
+            </div>
+        </div>
+    `;
+
+    // Column filters
+    html += `
+        <div class="column-filters mb-3">
+            <div class="filter-cell">
+                <input type="text" id="prihod-filter-дата" placeholder="Дата">
+            </div>
+            <div class="filter-cell">
+                <input type="text" id="prihod-filter-наименование" placeholder="Наименование">
+            </div>
+            <div class="filter-cell">
+                <input type="text" id="prihod-filter-ед_изм" placeholder="Ед.изм.">
+            </div>
+            <div class="filter-cell">
+                <input type="text" id="prihod-filter-количество" placeholder="Количество">
+            </div>
+            <div class="filter-cell">
+                <input type="text" id="prihod-filter-реестровый_номер" placeholder="Реестровый номер">
+            </div>
+            <div class="filter-cell">
+                <input type="text" id="prihod-filter-upd" placeholder="УПД">
+            </div>
+            <div class="filter-cell"><!-- Actions - no filter --></div>
+        </div>
+    `;
+
+    // Filter actions
+    html += `
+        <div class="filter-actions mb-4">
+            <button class="btn btn-success" onclick="applyPrihodFilters()">
+                <i class="fas fa-check"></i>
+                <span>Применить фильтры</span>
+            </button>
+            <button class="btn btn-secondary" onclick="resetPrihodFilters()">
+                <i class="fas fa-times"></i>
+                <span>Сбросить фильтры</span>
+            </button>
+        </div>
+    `;
+
+    // Specific tools for Prihod section
+    html += `
+        <div class="mb-4">
+            <!-- Acceptance section -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Принятие прихода</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-primary w-100" onclick="pasteFromClipboard()">
+                                <i class="fas fa-paste me-1"></i>Вставить из буфера обмена
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-success w-100" onclick="importPrihod()">
+                                <i class="fas fa-file-excel me-1"></i>Импорт из xlsx
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="addPrihod()">
+                                <i class="fas fa-plus me-1"></i>Добавить строку
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-success w-100" onclick="acceptPrihod()">
+                                <i class="fas fa-check me-1"></i>Принять
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents section -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Документы прихода</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-5">
+                            <input type="text" id="registry-number" class="form-control" placeholder="Реестровый номер заявки">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" onclick="applyRegistryNumber()">
+                                <i class="fas fa-arrow-right me-1"></i>Применить
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="upd-number" class="form-control" placeholder="УПД">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" onclick="applyUPD()">
+                                <i class="fas fa-arrow-right me-1"></i>Применить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editing section -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Редактирование</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <button class="btn btn-outline-danger w-100" onclick="clearPrihod()">
+                                <i class="fas fa-trash me-1"></i>Очистить приход
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-outline-primary w-100" onclick="exportPrihod()">
+                                <i class="fas fa-file-export me-1"></i>Экспорт в xlsx
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Use unified table rendering
+    const config = {
+        icon: 'truck',
+        title: 'Приход',
+        refreshFunction: 'refreshPrihod',
+        addFunction: 'addPrihod',
+        exportFunction: 'exportPrihod',
+        applyFiltersFunction: 'applyPrihodFilters',
+        resetFiltersFunction: 'resetPrihodFilters',
+        filterFunction: filterPrihod,
+        columns: [
+            {
+                key: 'дата',
+                title: 'Дата',
+                placeholder: 'Дата',
+                format: (value) => new Date(value).toLocaleDateString('ru-RU')
+            },
+            { key: 'наименование', title: 'Наименование', placeholder: 'Наименование' },
+            { key: 'ед_изм', title: 'Ед.изм.', placeholder: 'Ед.изм.' },
+            { key: 'количество', title: 'Количество', placeholder: 'Количество' },
+            { key: 'реестровый_номер', title: 'Реестровый номер', placeholder: 'Реестровый номер' },
+            { key: 'upd', title: 'УПД', placeholder: 'УПД' },
+            {
+                key: 'actions',
+                title: 'Действия',
+                filterable: false,
+                renderActions: (item) => `
                     <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-outline-primary" onclick="editPrihod(${item.id})" title="Редактировать">
+                        <button class="btn btn-square btn-outline-primary btn-sm" onclick="editPrihod(${item.id})" title="Редактировать">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deletePrihod(${item.id})" title="Удалить">
+                        <button class="btn btn-square btn-outline-danger btn-sm" onclick="deletePrihod(${item.id})" title="Удалить">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
-                </td>
-            </tr>
-        `;
-    });
-    html += `
-                </tbody>
-            </table>
-        </div>
-    `;
+                `
+            }
+        ]
+    };
+
+    // Create a temporary container for unified table
+    const tempContainer = document.createElement('div');
+    tempContainer.id = 'prihod-temp';
+    document.body.appendChild(tempContainer);
+
+    // Use unified table rendering
+    renderUnifiedTable('prihod-temp', data, config);
+
+    // Get the table HTML and add it to main HTML
+    html += tempContainer.innerHTML;
+
+    // Remove temporary container
+    document.body.removeChild(tempContainer);
+
     content.innerHTML = html;
 
-    // Add filter listeners
-    ['date', 'name', 'unit', 'quantity', 'registry', 'upd'].forEach(field => {
-        document.getElementById(`prihod-filter-${field}`).addEventListener('input', filterPrihod);
+    // Add filter listeners with debounce
+    config.columns.forEach(column => {
+        if (column.filterable !== false && column.key !== 'actions') {
+            const element = document.getElementById(`prihod-filter-${column.key}`);
+            if (element) {
+                element.addEventListener('input', debounce(filterPrihod, 300));
+            }
+        }
     });
+
+    // Add global search listener
+    const globalSearch = document.getElementById('prihod-global-search');
+    if (globalSearch) {
+        globalSearch.addEventListener('input', debounce(filterPrihod, 300));
+    }
 }
 
 async function editPrihod(id) {
@@ -1439,10 +1804,16 @@ async function applyUPD() {
     }
 }
 
+async function refreshPrihod() {
+    await loadPrihod();
+    showNotification('Данные прихода обновлены', 'success');
+}
+
+// Render Vydannoe table
 function renderVydannoeTable(data, kontragenty, persons) {
     const content = document.getElementById('vydannoe-content');
 
-    // Создать карты для быстрого поиска
+    // Create maps for quick lookup
     const kontrMap = {};
     kontragenty.forEach(k => kontrMap[k.id] = k.организация);
 
@@ -1452,116 +1823,186 @@ function renderVydannoeTable(data, kontragenty, persons) {
         personsMap[p.id_контрагента].push(p.имя);
     });
 
+    // Section title
     let html = `
-        <!-- Фильтры -->
-        <div class="mb-3">
-            <div class="row g-2">
-                <div class="col-md-2">
-                    <input type="text" id="vydannoe-filter-date" class="form-control" placeholder="Дата">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="vydannoe-filter-id" class="form-control" placeholder="ID">
-                </div>
-                <div class="col-md-3">
-                    <input type="text" id="vydannoe-filter-name" class="form-control" placeholder="Наименование">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="vydannoe-filter-registry" class="form-control" placeholder="Реестровый номер">
-                </div>
-                <div class="col-md-2">
-                    <input type="text" id="vydannoe-filter-upd" class="form-control" placeholder="УПД">
-                </div>
+        <div class="section-title mb-4">
+            <h2 class="h4 mb-0">
+                <i class="fas fa-hand-holding me-2"></i>
+                Выданное
+            </h2>
+        </div>
+    `;
+
+    // Action buttons
+    html += `
+        <div class="table-actions-primary mb-4">
+            <button class="btn btn-primary" onclick="refreshVydannoe()" title="Обновить">
+                <i class="fas fa-sync-alt"></i>
+                <span>Обновить</span>
+            </button>
+            <button class="btn btn-success" onclick="addVydannoe()" title="Добавить запись">
+                <i class="fas fa-plus"></i>
+                <span>Добавить запись</span>
+            </button>
+            <button class="btn btn-secondary" onclick="exportVydannoe()" title="Экспорт в XLSX">
+                <i class="fas fa-file-excel"></i>
+                <span>Экспорт в XLSX</span>
+            </button>
+        </div>
+    `;
+
+    // Global search
+    html += `
+        <div class="global-search mb-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" id="vydannoe-global-search" class="form-control" placeholder="Поиск по всем колонкам...">
             </div>
-            <div class="row g-2 mt-2">
-                <div class="col-md-4">
-                    <select id="vydannoe-filter-contractor" class="form-select">
-                        <option value="">Все контрагенты</option>
+        </div>
+    `;
+
+    // Column filters
+    html += `<div class="column-filters mb-3">`;
+    html += `
+        <div class="filter-cell">
+            <input type="text" id="vydannoe-filter-дата" placeholder="Дата">
+        </div>
+        <div class="filter-cell">
+            <input type="text" id="vydannoe-filter-id" placeholder="ID">
+        </div>
+        <div class="filter-cell">
+            <input type="text" id="vydannoe-filter-наименование" placeholder="Наименование">
+        </div>
+        <div class="filter-cell">
+            <input type="text" id="vydannoe-filter-ед_изм" placeholder="Ед.изм.">
+        </div>
+        <div class="filter-cell">
+            <input type="text" id="vydannoe-filter-количество" placeholder="Количество">
+        </div>
+        <div class="filter-cell">
+            <select id="vydannoe-filter-контрагент">
+                <option value="">Контрагент</option>
     `;
     kontragenty.forEach(k => {
         html += `<option value="${k.id}">${k.организация}</option>`;
     });
     html += `
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <select id="vydannoe-filter-responsible" class="form-select">
-                        <option value="">Все ответственные</option>
+            </select>
+        </div>
+        <div class="filter-cell">
+            <select id="vydannoe-filter-ответственный">
+                <option value="">Ответственный</option>
     `;
-    // Соберем уникальных ответственных
+    // Collect unique responsible persons
     const uniquePersons = [...new Set(persons.map(p => p.имя))];
     uniquePersons.forEach(name => {
         html += `<option value="${name}">${name}</option>`;
     });
     html += `
-                    </select>
-                </div>
-            </div>
+            </select>
         </div>
-
-        <!-- Таблица -->
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Дата</th>
-                        <th>ID</th>
-                        <th>Наименование</th>
-                        <th>Ед.изм.</th>
-                        <th>Количество</th>
-                        <th>Контрагент</th>
-                        <th>Ответственный</th>
-                        <th>Реестровый номер</th>
-                        <th>УПД</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="filter-cell">
+            <input type="text" id="vydannoe-filter-реестровый_номер" placeholder="Реестровый номер">
+        </div>
+        <div class="filter-cell">
+            <input type="text" id="vydannoe-filter-upd" placeholder="УПД">
+        </div>
+        <div class="filter-cell"><!-- Actions - no filter --></div>
     `;
-    data.forEach(item => {
-        html += `
-            <tr>
-                <td>${new Date(item.дата).toLocaleDateString('ru-RU')}</td>
-                <td>${item.id}</td>
-                <td>${item.наименование || ''}</td>
-                <td>${item.ед_изм || ''}</td>
-                <td>${item.количество || ''}</td>
-                <td>${item.контрагент || ''}</td>
-                <td>${item.ответственный || ''}</td>
-                <td>${item.реестровый_номер || ''}</td>
-                <td>${item.upd || ''}</td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-outline-primary" onclick="editVydannoe(${item.id})" title="Редактировать">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteVydannoe(${item.id})" title="Удалить">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    });
-    html += `
-                </tbody>
-            </table>
-        </div>
+    html += `</div>`;
 
-        <!-- Кнопка добавления -->
-        <div class="mt-3">
-            <button class="btn btn-primary" onclick="addVydannoe()">
-                <i class="fas fa-plus me-1"></i>Добавить выдачу
+    // Filter actions
+    html += `
+        <div class="filter-actions mb-4">
+            <button class="btn btn-success" onclick="applyVydannoeFilters()">
+                <i class="fas fa-check"></i>
+                <span>Применить фильтры</span>
+            </button>
+            <button class="btn btn-secondary" onclick="resetVydannoeFilters()">
+                <i class="fas fa-times"></i>
+                <span>Сбросить фильтры</span>
             </button>
         </div>
     `;
+
+    // Use unified table rendering
+    const config = {
+        icon: 'hand-holding',
+        title: 'Выданное',
+        refreshFunction: 'refreshVydannoe',
+        addFunction: 'addVydannoe',
+        exportFunction: 'exportVydannoe',
+        applyFiltersFunction: 'applyVydannoeFilters',
+        resetFiltersFunction: 'resetVydannoeFilters',
+        filterFunction: filterVydannoe,
+        columns: [
+            {
+                key: 'дата',
+                title: 'Дата',
+                placeholder: 'Дата',
+                format: (value) => new Date(value).toLocaleDateString('ru-RU')
+            },
+            { key: 'id', title: 'ID', placeholder: 'ID' },
+            { key: 'наименование', title: 'Наименование', placeholder: 'Наименование' },
+            { key: 'ед_изм', title: 'Ед.изм.', placeholder: 'Ед.изм.' },
+            { key: 'количество', title: 'Количество', placeholder: 'Количество' },
+            { key: 'контрагент', title: 'Контрагент', placeholder: 'Контрагент' },
+            { key: 'ответственный', title: 'Ответственный', placeholder: 'Ответственный' },
+            { key: 'реестровый_номер', title: 'Реестровый номер', placeholder: 'Реестровый номер' },
+            { key: 'upd', title: 'УПД', placeholder: 'УПД' },
+            {
+                key: 'actions',
+                title: 'Действия',
+                filterable: false,
+                renderActions: (item) => `
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-square btn-outline-primary btn-sm" onclick="editVydannoe(${item.id})" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-square btn-outline-danger btn-sm" onclick="deleteVydannoe(${item.id})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `
+            }
+        ]
+    };
+
+    // Create a temporary container for unified table
+    const tempContainer = document.createElement('div');
+    tempContainer.id = 'vydannoe-temp';
+    document.body.appendChild(tempContainer);
+
+    // Use unified table rendering
+    renderUnifiedTable('vydannoe-temp', data, config);
+
+    // Get the table HTML and add it to main HTML
+    html += tempContainer.innerHTML;
+
+    // Remove temporary container
+    document.body.removeChild(tempContainer);
+
     content.innerHTML = html;
 
-    // Add filter listeners
-    ['date', 'id', 'name', 'registry', 'upd'].forEach(field => {
-        document.getElementById(`vydannoe-filter-${field}`).addEventListener('input', filterVydannoe);
+    // Add filter listeners with debounce
+    config.columns.forEach(column => {
+        if (column.filterable !== false && column.key !== 'actions') {
+            const element = document.getElementById(`vydannoe-filter-${column.key}`);
+            if (element) {
+                if (element.tagName === 'SELECT') {
+                    element.addEventListener('change', debounce(filterVydannoe, 300));
+                } else {
+                    element.addEventListener('input', debounce(filterVydannoe, 300));
+                }
+            }
+        }
     });
-    document.getElementById('vydannoe-filter-contractor').addEventListener('change', filterVydannoe);
-    document.getElementById('vydannoe-filter-responsible').addEventListener('change', filterVydannoe);
+
+    // Add global search listener
+    const globalSearch = document.getElementById('vydannoe-global-search');
+    if (globalSearch) {
+        globalSearch.addEventListener('input', debounce(filterVydannoe, 300));
+    }
 }
 
 async function editVydannoe(id) {
@@ -1632,6 +2073,41 @@ async function addVydannoe() {
         } catch (error) {
             alert('Ошибка: ' + error.message);
         }
+    }
+}
+
+async function refreshVydannoe() {
+    await loadVydannoe();
+    showNotification('Данные выданного обновлены', 'success');
+}
+
+async function exportVydannoe() {
+    try {
+        const { data, error } = await supabase.from('выданное').select('*');
+        if (error) throw error;
+
+        const exportData = data.map(item => ({
+            'Дата': new Date(item.дата).toLocaleDateString('ru-RU'),
+            'ID': item.id,
+            'Наименование': item.наименование || '',
+            'Ед.изм.': item.ед_изм || '',
+            'Количество': item.количество || 0,
+            'Контрагент': item.контрагент || '',
+            'Ответственный': item.ответственный || '',
+            'Реестровый номер': item.реестровый_номер || '',
+            'УПД': item.upd || ''
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Выданное');
+
+        const fileName = 'Выданное_' + new Date().toISOString().split('T')[0] + '.xlsx';
+        XLSX.writeFile(wb, fileName);
+
+        alert(`Файл ${fileName} успешно экспортирован`);
+    } catch (error) {
+        alert('Ошибка экспорта: ' + error.message);
     }
 }
 
