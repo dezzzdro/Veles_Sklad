@@ -11,62 +11,118 @@
 <body>
     <div class="d-flex">
         <!-- Sidebar -->
-        <nav id="sidebar" class="bg-dark text-white">
-            <ul class="nav flex-column h-100">
-                <li class="nav-item">
-                    <a class="nav-link text-white active" href="#sklad">
-                        <i class="fas fa-warehouse me-3"></i> Склад
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#sborka">
-                        <i class="fas fa-cogs me-3"></i> Сборка
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#prihod">
-                        <i class="fas fa-truck me-3"></i> Приход
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#vydannoe">
-                        <i class="fas fa-box-open me-3"></i> Выданное
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#kontragenty">
-                        <i class="fas fa-users me-3"></i> Контрагенты
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#nastroyki">
-                        <i class="fas fa-cog me-3"></i> Настройки
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#uvedomleniya">
-                        <i class="fas fa-bell me-3"></i> Уведомления
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#otladka">
-                        <i class="fas fa-tools me-3"></i> Отладка
-                    </a>
-                </li>
-            </ul>
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <i class="fas fa-box"></i>
+                    <span>Велес Склад</span>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Управление</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#sklad">
+                                <i class="fas fa-warehouse"></i>
+                                <span>Склад</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sborka">
+                                <i class="fas fa-cogs"></i>
+                                <span>Сборка</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#prihod">
+                                <i class="fas fa-truck"></i>
+                                <span>Приход</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#vydannoe">
+                                <i class="fas fa-box-open"></i>
+                                <span>Выданное</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Справочники</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#kontragenty">
+                                <i class="fas fa-users"></i>
+                                <span>Контрагенты</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Система</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#nastroyki">
+                                <i class="fas fa-cog"></i>
+                                <span>Настройки</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#uvedomleniya">
+                                <i class="fas fa-bell"></i>
+                                <span>Уведомления</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#otladka">
+                                <i class="fas fa-tools"></i>
+                                <span>Отладка</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">Администратор</div>
+                        <div class="user-role">Склад</div>
+                    </div>
+                </div>
+            </div>
         </nav>
 
         <!-- Main content -->
         <div class="flex-grow-1">
             <!-- Header -->
-            <header class="bg-primary text-white p-3 d-flex justify-content-between align-items-center shadow">
-                <h1 class="h4 mb-0 fw-bold">
-                    <i class="fas fa-box me-2"></i>Велес Склад
-                </h1>
-                <div class="d-flex align-items-center">
-                    <div id="datetime" class="me-3 fw-semibold text-light"></div>
-                    <div id="theme-controls" class="theme-icons d-flex">
-                        <!-- Элементы управления темой будут созданы динамически -->
+            <header>
+                <div class="header-left">
+                    <div class="page-title">
+                        <i class="fas fa-box"></i>
+                        <span>Велес Склад</span>
+                    </div>
+                </div>
+
+                <div class="header-center">
+                    <!-- Search or breadcrumbs can go here -->
+                </div>
+
+                <div class="header-right">
+                    <div class="datetime-display">
+                        <i class="fas fa-clock me-2"></i>
+                        <span id="datetime">--:--</span>
+                    </div>
+
+                    <div id="theme-controls" class="theme-controls">
+                        <!-- Theme controls will be created dynamically -->
                     </div>
                 </div>
             </header>
@@ -75,11 +131,24 @@
             <main class="p-4 bg-transparent">
                 <div id="content">
                     <section id="sklad" class="content-section active">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2 class="mb-0"><i class="fas fa-warehouse text-primary me-3"></i> Склад</h2>
-                            <small class="text-muted">Управление товарами на складе</small>
+                        <div class="section-header">
+                            <div class="section-info">
+                                <h2 class="section-title">
+                                    <i class="fas fa-warehouse"></i>
+                                    Склад
+                                </h2>
+                                <p class="section-subtitle">Управление товарами на складе</p>
+                            </div>
+                            <div class="section-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Добавить товар
+                                </button>
+                            </div>
                         </div>
-                        <div id="sklad-content"></div>
+                        <div class="section-content">
+                            <div id="sklad-content"></div>
+                        </div>
                     </section>
                     <section id="sborka" class="content-section">
                         <div class="d-flex justify-content-between align-items-center mb-4">
