@@ -294,13 +294,22 @@ function Arrival() {
         </div>
       </div>
 
-      {/* Table */}
-      <DataTable
-        data={arrivalItems}
-        columns={columns}
-        loading={loading.arrival}
-        onRowClick={handleRowClick}
-      />
+      {/* Table Container with Independent Scrolling */}
+      <div className="card">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+            Элементы прихода
+          </h3>
+        </div>
+        <div className="table-container max-h-96 overflow-auto">
+          <DataTable
+            data={arrivalItems}
+            columns={columns}
+            loading={loading.arrival}
+            onRowClick={handleRowClick}
+          />
+        </div>
+      </div>
 
       {/* Error State */}
       {errors.arrival && (

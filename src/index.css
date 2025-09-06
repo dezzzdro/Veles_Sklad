@@ -68,3 +68,85 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-400 dark:bg-gray-500;
 }
+
+/* Table container with independent scrolling */
+.table-container {
+  @apply relative;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  @apply bg-gray-50 dark:bg-gray-800 rounded-lg;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-lg;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}
+
+.table-container::-webkit-scrollbar-corner {
+  @apply bg-gray-50 dark:bg-gray-800;
+}
+
+/* Mobile responsive table */
+@media (max-width: 768px) {
+  .table-container {
+    max-height: 60vh !important;
+  }
+
+  .table-container table {
+    font-size: 0.875rem;
+  }
+
+  .table-container th,
+  .table-container td {
+    padding: 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* Hide less important columns on mobile */
+  .table-container th:nth-child(6),
+  .table-container td:nth-child(6),
+  .table-container th:nth-child(7),
+  .table-container td:nth-child(7),
+  .table-container th:nth-child(8),
+  .table-container td:nth-child(8) {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .table-container {
+    max-height: 50vh !important;
+  }
+
+  .table-container table {
+    font-size: 0.75rem;
+  }
+
+  /* Hide more columns on very small screens */
+  .table-container th:nth-child(4),
+  .table-container td:nth-child(4),
+  .table-container th:nth-child(5),
+  .table-container td:nth-child(5) {
+    display: none;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .table-container tr:hover {
+    @apply bg-gray-50 dark:bg-gray-800;
+  }
+
+  .table-container tr:active {
+    @apply bg-blue-50 dark:bg-blue-900;
+  }
+}

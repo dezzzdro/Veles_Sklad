@@ -125,13 +125,20 @@ function Warehouse() {
         </Card>
       </div>
 
-      {/* Table */}
-      <DataTable
-        data={warehouseItems}
-        columns={columns}
-        loading={loading.warehouse}
-        onRowClick={handleRowClick}
-      />
+      {/* Table Container with Independent Scrolling */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Товары на складе</CardTitle>
+        </CardHeader>
+        <div className="table-container max-h-96 overflow-auto">
+          <DataTable
+            data={warehouseItems}
+            columns={columns}
+            loading={loading.warehouse}
+            onRowClick={handleRowClick}
+          />
+        </div>
+      </Card>
 
       {/* Error State */}
       {errors.warehouse && (
