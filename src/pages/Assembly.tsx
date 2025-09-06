@@ -155,52 +155,46 @@ function Assembly() {
           Таблица сборки
         </h3>
 
-        {/* 4. Поля ввода фильтра контента (над таблицей) */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-          <input
-            type="text"
-            placeholder="ID"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by ID
-              console.log('Filter ID:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Наименование"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by name
-              console.log('Filter Наименование:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Ед.изм."
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by unit
-              console.log('Filter Ед.изм.:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Количество"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by quantity
-              console.log('Filter Количество:', e.target.value)
-            }}
-          />
-        </div>
-
         {/* 5. Строки таблицы (прокручиваемые независимо) */}
         <DataTable
           data={assemblyItems || []}
           columns={columns}
           loading={isLoading}
           onRowClick={handleRowClick}
+          filters={[
+            {
+              type: 'text',
+              placeholder: 'ID',
+              onChange: (value) => {
+                // TODO: Implement filtering by ID
+                console.log('Filter ID:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Наименование',
+              onChange: (value) => {
+                // TODO: Implement filtering by name
+                console.log('Filter Наименование:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Ед.изм.',
+              onChange: (value) => {
+                // TODO: Implement filtering by unit
+                console.log('Filter Ед.изм.:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Количество',
+              onChange: (value) => {
+                // TODO: Implement filtering by quantity
+                console.log('Filter Количество:', value)
+              }
+            }
+          ]}
         />
 
         {/* Action Buttons for Selected Items */}

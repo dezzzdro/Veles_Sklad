@@ -69,70 +69,62 @@ function Warehouse() {
           Таблица товаров
         </h3>
 
-        {/* 4. Поля ввода фильтра контента (над таблицей) */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
-          <input
-            type="text"
-            placeholder="ID"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by ID
-              console.log('Filter ID:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Наименование"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by name
-              console.log('Filter Наименование:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Ед.изм."
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by unit
-              console.log('Filter Ед.изм.:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Числится"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by accounted
-              console.log('Filter Числится:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="На складе"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by in stock
-              console.log('Filter На складе:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Выдано"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by issued
-              console.log('Filter Выдано:', e.target.value)
-            }}
-          />
-        </div>
-
         {/* 5. Строки таблицы (прокручиваемые независимо) */}
         <DataTable
           data={warehouseItems}
           columns={columns}
           loading={loading.warehouse}
           onRowClick={handleRowClick}
+          filters={[
+            {
+              type: 'text',
+              placeholder: 'ID',
+              onChange: (value) => {
+                // TODO: Implement filtering by ID
+                console.log('Filter ID:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Наименование',
+              onChange: (value) => {
+                // TODO: Implement filtering by name
+                console.log('Filter Наименование:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Ед.изм.',
+              onChange: (value) => {
+                // TODO: Implement filtering by unit
+                console.log('Filter Ед.изм.:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Числится',
+              onChange: (value) => {
+                // TODO: Implement filtering by accounted
+                console.log('Filter Числится:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'На складе',
+              onChange: (value) => {
+                // TODO: Implement filtering by in stock
+                console.log('Filter На складе:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Выдано',
+              onChange: (value) => {
+                // TODO: Implement filtering by issued
+                console.log('Filter Выдано:', value)
+              }
+            }
+          ]}
         />
       </div>
 

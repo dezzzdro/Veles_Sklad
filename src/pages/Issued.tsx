@@ -67,42 +67,52 @@ function Issued() {
           Таблица выданного
         </h3>
 
-        {/* 4. Поля ввода фильтра контента (над таблицей) */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-          <select className="input">
-            <option value="">Все контрагенты</option>
-            {/* TODO: Implement filtering by counterparty */}
-          </select>
-          <select className="input">
-            <option value="">Все ответственные</option>
-            {/* TODO: Implement filtering by responsible person */}
-          </select>
-          <input
-            type="text"
-            placeholder="Реестровый номер"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by registry number
-              console.log('Filter Реестровый номер:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="УПД"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by UPD
-              console.log('Filter УПД:', e.target.value)
-            }}
-          />
-        </div>
-
         {/* 5. Строки таблицы (прокручиваемые независимо) */}
         <DataTable
           data={issuedItems}
           columns={columns}
           loading={loading.issued}
           onRowClick={handleRowClick}
+          filters={[
+            {
+              type: 'select',
+              placeholder: 'Все контрагенты',
+              options: [
+                // TODO: Populate with actual counterparties
+              ],
+              onChange: (value) => {
+                // TODO: Implement filtering by counterparty
+                console.log('Filter Контрагент:', value)
+              }
+            },
+            {
+              type: 'select',
+              placeholder: 'Все ответственные',
+              options: [
+                // TODO: Populate with actual persons
+              ],
+              onChange: (value) => {
+                // TODO: Implement filtering by responsible person
+                console.log('Filter Ответственный:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Реестровый номер',
+              onChange: (value) => {
+                // TODO: Implement filtering by registry number
+                console.log('Filter Реестровый номер:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'УПД',
+              onChange: (value) => {
+                // TODO: Implement filtering by UPD
+                console.log('Filter УПД:', value)
+              }
+            }
+          ]}
         />
       </div>
 

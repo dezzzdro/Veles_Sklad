@@ -166,8 +166,14 @@
 
 .table-body-scroll {
   @apply overflow-auto;
-  height: calc(100% - 57px); /* Subtract header height */
-  max-height: calc(100vh - 357px);
+  height: calc(100% - 89px); /* Subtract header + filter row height */
+  max-height: calc(100vh - 389px);
+}
+
+.table-filter-cell {
+  @apply border-b border-gray-200 dark:border-gray-600;
+  background: inherit;
+  padding: 0.5rem 1.5rem;
 }
 
 /* Ensure proper table layout */

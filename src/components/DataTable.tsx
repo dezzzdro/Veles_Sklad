@@ -1,12 +1,20 @@
 import { useState, useMemo } from 'react'
 import { TableColumn, TableFilters } from '@/types'
 
+interface FilterField {
+  type: 'text' | 'select'
+  placeholder?: string
+  options?: { value: string; label: string }[]
+  onChange?: (value: string) => void
+}
+
 interface DataTableProps<T> {
   data: T[]
   columns: TableColumn<T>[]
   loading?: boolean
   onRowClick?: (item: T) => void
   className?: string
+  filters?: FilterField[]
 }
 
 function DataTable<T extends Record<string, any>>({
@@ -14,7 +22,8 @@ function DataTable<T extends Record<string, any>>({
   columns,
   loading = false,
   onRowClick,
-  className = ''
+  className = '',
+  filters = []
 }: DataTableProps<T>) {
   const [sortConfig, setSortConfig] = useState<{
     key: keyof T | null
@@ -67,14 +76,15 @@ function DataTable<T extends Record<string, any>>({
     <div className={`card ${className}`}>
       {/* Table Container with Independent Scrolling */}
       <div className="table-scroll-container">
-        {/* Fixed Header */}
+        {/* Fixed Header with Filters */}
         <div className="table-header-sticky">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            {/* Header Row */}
             <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                {columns.map((column) => (
+                {columns.map((column, index) => (
                   <th
-                    key={String(column.key)}
+                    key={`header-${String(column.key)}`}
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider table-header-cell"
                     style={{ width: column.width }}
                   >
@@ -93,6 +103,49 @@ function DataTable<T extends Record<string, any>>({
                 ))}
               </tr>
             </thead>
+
+            {/* Filter Row */}
+            {filters.length > 0 && (
+              <tbody className="bg-gray-100 dark:bg-gray-700">
+                <tr>
+                  {columns.map((column, index) => {
+                    const filter = filters[index]
+                    return (
+                      <td
+                        key={`filter-${String(column.key)}`}
+                        className="px-6 py-2 table-filter-cell"
+                        style={{ width: column.width }}
+                      >
+                        {filter ? (
+                          filter.type === 'select' ? (
+                            <select
+                              className="input text-xs py-1 px-2 h-8"
+                              onChange={(e) => filter.onChange?.(e.target.value)}
+                            >
+                              <option value="">{filter.placeholder || 'Все'}</option>
+                              {filter.options?.map(option => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type="text"
+                              placeholder={filter.placeholder}
+                              className="input text-xs py-1 px-2 h-8"
+                              onChange={(e) => filter.onChange?.(e.target.value)}
+                            />
+                          )
+                        ) : (
+                          <div className="h-8"></div> // Empty space for alignment
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              </tbody>
+            )}
           </table>
         </div>
 

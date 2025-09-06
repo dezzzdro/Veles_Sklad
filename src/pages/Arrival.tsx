@@ -273,70 +273,62 @@ function Arrival() {
           </div>
         </div>
 
-        {/* 4. Поля ввода фильтра контента (над таблицей) */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
-          <input
-            type="text"
-            placeholder="Дата"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by date
-              console.log('Filter Дата:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Наименование"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by name
-              console.log('Filter Наименование:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Ед.изм."
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by unit
-              console.log('Filter Ед.изм.:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Количество"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by quantity
-              console.log('Filter Количество:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Реестровый номер"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by registry number
-              console.log('Filter Реестровый номер:', e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="УПД"
-            className="input"
-            onChange={(e) => {
-              // TODO: Implement filtering by UPD
-              console.log('Filter УПД:', e.target.value)
-            }}
-          />
-        </div>
-
         {/* 5. Строки таблицы (прокручиваемые независимо) */}
         <DataTable
           data={arrivalItems}
           columns={columns}
           loading={loading.arrival}
           onRowClick={handleRowClick}
+          filters={[
+            {
+              type: 'text',
+              placeholder: 'Дата',
+              onChange: (value) => {
+                // TODO: Implement filtering by date
+                console.log('Filter Дата:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Наименование',
+              onChange: (value) => {
+                // TODO: Implement filtering by name
+                console.log('Filter Наименование:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Ед.изм.',
+              onChange: (value) => {
+                // TODO: Implement filtering by unit
+                console.log('Filter Ед.изм.:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Количество',
+              onChange: (value) => {
+                // TODO: Implement filtering by quantity
+                console.log('Filter Количество:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'Реестровый номер',
+              onChange: (value) => {
+                // TODO: Implement filtering by registry number
+                console.log('Filter Реестровый номер:', value)
+              }
+            },
+            {
+              type: 'text',
+              placeholder: 'УПД',
+              onChange: (value) => {
+                // TODO: Implement filtering by UPD
+                console.log('Filter УПД:', value)
+              }
+            }
+          ]}
         />
       </div>
 
