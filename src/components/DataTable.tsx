@@ -65,65 +65,75 @@ function DataTable<T extends Record<string, any>>({
 
   return (
     <div className={`card ${className}`}>
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-800">
-            <tr>
-              {columns.map((column) => (
-                <th
-                  key={String(column.key)}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                  style={{ width: column.width }}
-                >
-                  {column.sortable ? (
-                    <button
-                      onClick={() => handleSort(column.key)}
-                      className="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-300"
-                    >
-                      <span>{column.label}</span>
-                      <i className={`${getSortIcon(column.key)} text-xs`}></i>
-                    </button>
-                  ) : (
-                    column.label
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-            {processedData.length === 0 ? (
+      {/* Table Container with Independent Scrolling */}
+      <div className="table-scroll-container">
+        {/* Fixed Header */}
+        <div className="table-header-sticky">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
-                >
-                  <i className="fas fa-inbox text-4xl mb-4 block"></i>
-                  Нет данных
-                </td>
+                {columns.map((column) => (
+                  <th
+                    key={String(column.key)}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider table-header-cell"
+                    style={{ width: column.width }}
+                  >
+                    {column.sortable ? (
+                      <button
+                        onClick={() => handleSort(column.key)}
+                        className="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-300"
+                      >
+                        <span>{column.label}</span>
+                        <i className={`${getSortIcon(column.key)} text-xs`}></i>
+                      </button>
+                    ) : (
+                      column.label
+                    )}
+                  </th>
+                ))}
               </tr>
-            ) : (
-              processedData.map((item, index) => (
-                <tr
-                  key={index}
-                  onClick={() => onRowClick?.(item)}
-                  className={`${
-                    onRowClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800' : ''
-                  } ${index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'}`}
-                >
-                  {columns.map((column) => (
-                    <td
-                      key={String(column.key)}
-                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
-                    >
-                      {String(item[column.key] ?? '')}
-                    </td>
-                  ))}
+            </thead>
+          </table>
+        </div>
+
+        {/* Scrollable Body */}
+        <div className="table-body-scroll">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+              {processedData.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={columns.length}
+                    className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
+                  >
+                    <i className="fas fa-inbox text-4xl mb-4 block"></i>
+                    Нет данных
+                  </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                processedData.map((item, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => onRowClick?.(item)}
+                    className={`${
+                      onRowClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800' : ''
+                    } ${index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'}`}
+                  >
+                    {columns.map((column) => (
+                      <td
+                        key={String(column.key)}
+                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 table-body-cell"
+                        style={{ width: column.width }}
+                      >
+                        {String(item[column.key] ?? '')}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Footer */}

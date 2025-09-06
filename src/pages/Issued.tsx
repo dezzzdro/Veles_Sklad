@@ -109,45 +109,45 @@ function Issued() {
         </Card>
       </div>
 
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <select className="input">
-          <option value="">Все контрагенты</option>
-          {/* TODO: Populate with actual counterparties */}
-        </select>
-        <select className="input">
-          <option value="">Все ответственные</option>
-          {/* TODO: Populate with actual persons */}
-        </select>
-        <input
-          type="text"
-          placeholder="Реестровый номер"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Реестровый номер:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="УПД"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter УПД:', e.target.value)
-          }}
-        />
+      {/* Filters above table */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700 p-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <select className="input">
+            <option value="">Все контрагенты</option>
+            {/* TODO: Populate with actual counterparties */}
+          </select>
+          <select className="input">
+            <option value="">Все ответственные</option>
+            {/* TODO: Populate with actual persons */}
+          </select>
+          <input
+            type="text"
+            placeholder="Реестровый номер"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Реестровый номер:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="УПД"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter УПД:', e.target.value)
+            }}
+          />
+        </div>
       </div>
 
-      {/* Table Container with Independent Scrolling */}
-      <div className="table-container max-h-96 overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700">
-        <DataTable
-          data={issuedItems}
-          columns={columns}
-          loading={loading.issued}
-          onRowClick={handleRowClick}
-        />
-      </div>
+      {/* Table with Independent Scrolling */}
+      <DataTable
+        data={issuedItems}
+        columns={columns}
+        loading={loading.issued}
+        onRowClick={handleRowClick}
+      />
 
       {/* Error State */}
       {errors.issued && (

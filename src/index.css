@@ -150,3 +150,85 @@
     @apply bg-blue-50 dark:bg-blue-900;
   }
 }
+
+/* Independent table scrolling with fixed header */
+.table-scroll-container {
+  @apply relative;
+  height: calc(100vh - 300px); /* Full height minus header, filters, and footer */
+  min-height: 400px;
+  max-height: calc(100vh - 200px);
+}
+
+.table-header-sticky {
+  @apply sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-body-scroll {
+  @apply overflow-auto;
+  height: calc(100% - 57px); /* Subtract header height */
+  max-height: calc(100vh - 357px);
+}
+
+.table-header-cell {
+  @apply border-b border-gray-200 dark:border-gray-700;
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 10;
+}
+
+.table-body-cell {
+  @apply border-b border-gray-200 dark:border-gray-700;
+}
+
+/* Ensure table layout is consistent */
+.table-scroll-container table {
+  @apply table-fixed;
+  width: 100%;
+}
+
+.table-scroll-container thead,
+.table-scroll-container tbody {
+  display: block;
+}
+
+.table-scroll-container tbody {
+  @apply overflow-y-auto overflow-x-hidden;
+}
+
+.table-scroll-container tr {
+  @apply flex;
+  width: 100%;
+}
+
+.table-scroll-container th,
+.table-scroll-container td {
+  @apply flex-shrink-0;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Responsive adjustments for table scrolling */
+@media (max-width: 768px) {
+  .table-scroll-container {
+    height: calc(100vh - 400px);
+    min-height: 300px;
+  }
+
+  .table-body-scroll {
+    height: calc(100% - 50px);
+  }
+}
+
+@media (max-width: 640px) {
+  .table-scroll-container {
+    height: calc(100vh - 450px);
+    min-height: 250px;
+  }
+
+  .table-body-scroll {
+    height: calc(100% - 45px);
+  }
+}

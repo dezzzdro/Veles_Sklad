@@ -294,73 +294,73 @@ function Arrival() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Дата"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Дата:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Наименование"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Наименование:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Ед.изм."
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Ед.изм.:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Количество"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Количество:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Реестровый номер"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Реестровый номер:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="УПД"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter УПД:', e.target.value)
-          }}
-        />
+      {/* Filters above table */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700 p-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+          <input
+            type="text"
+            placeholder="Дата"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Дата:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Наименование"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Наименование:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Ед.изм."
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Ед.изм.:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Количество"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Количество:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Реестровый номер"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Реестровый номер:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="УПД"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter УПД:', e.target.value)
+            }}
+          />
+        </div>
       </div>
 
-      {/* Table Container with Independent Scrolling */}
-      <div className="table-container max-h-96 overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700">
-        <DataTable
-          data={arrivalItems}
-          columns={columns}
-          loading={loading.arrival}
-          onRowClick={handleRowClick}
-        />
-      </div>
+      {/* Table with Independent Scrolling */}
+      <DataTable
+        data={arrivalItems}
+        columns={columns}
+        loading={loading.arrival}
+        onRowClick={handleRowClick}
+      />
 
       {/* Error State */}
       {errors.arrival && (

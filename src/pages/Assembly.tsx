@@ -191,55 +191,55 @@ function Assembly() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="ID"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter ID:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Наименование"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Наименование:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Ед.изм."
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Ед.изм.:', e.target.value)
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Количество"
-          className="input"
-          onChange={(e) => {
-            // TODO: Implement filtering
-            console.log('Filter Количество:', e.target.value)
-          }}
-        />
+      {/* Filters above table */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700 p-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <input
+            type="text"
+            placeholder="ID"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter ID:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Наименование"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Наименование:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Ед.изм."
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Ед.изм.:', e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Количество"
+            className="input"
+            onChange={(e) => {
+              // TODO: Implement filtering
+              console.log('Filter Количество:', e.target.value)
+            }}
+          />
+        </div>
       </div>
 
-      {/* Table Container with Independent Scrolling */}
-      <div className="table-container max-h-96 overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700">
-        <DataTable
-          data={assemblyItems || []}
-          columns={columns}
-          loading={isLoading}
-          onRowClick={handleRowClick}
-        />
-      </div>
+      {/* Table with Independent Scrolling */}
+      <DataTable
+        data={assemblyItems || []}
+        columns={columns}
+        loading={isLoading}
+        onRowClick={handleRowClick}
+      />
 
       {/* Action Buttons for Selected Items */}
       {assemblyItems && assemblyItems.length > 0 && (
