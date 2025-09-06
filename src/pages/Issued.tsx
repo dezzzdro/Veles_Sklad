@@ -5,14 +5,13 @@ import { useWarehouseStore } from '@/stores/warehouseStore'
 import { IssuedItem, TableColumn } from '@/types'
 
 const columns: TableColumn<IssuedItem>[] = [
-  { key: 'дата', label: 'Дата', sortable: true, width: '120px' },
-  { key: 'наименование', label: 'Наименование', sortable: true },
-  { key: 'ед_изм', label: 'Ед.изм.', sortable: true, width: '100px' },
-  { key: 'количество', label: 'Количество', sortable: true, width: '120px' },
-  { key: 'контрагент', label: 'Контрагент', sortable: true },
-  { key: 'ответственный', label: 'Ответственный', sortable: true },
-  { key: 'реестровый_номер', label: 'Реестровый номер', sortable: true },
-  { key: 'упд', label: 'УПД', sortable: true },
+  { key: 'дата', label: 'Дата', sortable: true, width: '15%' },
+  { key: 'наименование', label: 'Наименование', sortable: true, width: '25%' },
+  { key: 'ед_изм', label: 'Ед.изм.', sortable: true, width: '10%' },
+  { key: 'количество', label: 'Количество', sortable: true, width: '10%' },
+  { key: 'контрагент', label: 'Контрагент', sortable: true, width: '20%' },
+  { key: 'ответственный', label: 'Ответственный', sortable: true, width: '15%' },
+  { key: 'реестровый_номер', label: 'Реестровый номер', sortable: true, width: '5%' },
 ]
 
 function Issued() {

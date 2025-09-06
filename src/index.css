@@ -159,7 +159,7 @@ html, body {
 }
 
 .table-scroll-container {
-  @apply relative;
+  @apply relative w-full;
   height: calc(100vh - 300px); /* Fixed container height for 12 rows */
   min-height: 400px;
   max-height: calc(100vh - 200px);

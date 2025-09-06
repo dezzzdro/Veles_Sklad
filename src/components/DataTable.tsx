@@ -80,7 +80,7 @@ function DataTable<T extends Record<string, any>>({
       {/* Fixed Height Table Container - No Page Scrolling */}
       <div className="table-scroll-container">
         {/* Single Table with Fixed Header and Scrollable Body */}
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
           {/* Fixed Header Section */}
           <thead className="table-header-fixed">
             {/* Header Row */}

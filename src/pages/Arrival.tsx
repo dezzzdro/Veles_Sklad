@@ -5,12 +5,12 @@ import { useWarehouseStore } from '@/stores/warehouseStore'
 import { ArrivalItem, TableColumn, ArrivalFormData } from '@/types'
 
 const columns: TableColumn<ArrivalItem>[] = [
-  { key: 'дата', label: 'Дата', sortable: true, width: '120px' },
-  { key: 'наименование', label: 'Наименование', sortable: true },
-  { key: 'ед_изм', label: 'Ед.изм.', sortable: true, width: '100px' },
-  { key: 'количество', label: 'Количество', sortable: true, width: '120px' },
-  { key: 'реестровый_номер', label: 'Реестровый номер', sortable: true },
-  { key: 'упд', label: 'УПД', sortable: true },
+  { key: 'дата', label: 'Дата', sortable: true, width: '15%' },
+  { key: 'наименование', label: 'Наименование', sortable: true, width: '30%' },
+  { key: 'ед_изм', label: 'Ед.изм.', sortable: true, width: '10%' },
+  { key: 'количество', label: 'Количество', sortable: true, width: '15%' },
+  { key: 'реестровый_номер', label: 'Реестровый номер', sortable: true, width: '15%' },
+  { key: 'упд', label: 'УПД', sortable: true, width: '15%' },
 ]
 
 function Arrival() {
