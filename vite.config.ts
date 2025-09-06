@@ -19,6 +19,12 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    fs: {
+      strict: false,
+    },
+    hmr: {
+      overlay: false,
+    },
   },
   build: {
     outDir: 'dist',
@@ -33,10 +39,5 @@ export default defineConfig({
         },
       },
     },
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
   },
 })
