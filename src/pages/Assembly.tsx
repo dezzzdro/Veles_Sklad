@@ -191,21 +191,54 @@ function Assembly() {
         </div>
       </div>
 
+      {/* Filters */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <input
+          type="text"
+          placeholder="ID"
+          className="input"
+          onChange={(e) => {
+            // TODO: Implement filtering
+            console.log('Filter ID:', e.target.value)
+          }}
+        />
+        <input
+          type="text"
+          placeholder="Наименование"
+          className="input"
+          onChange={(e) => {
+            // TODO: Implement filtering
+            console.log('Filter Наименование:', e.target.value)
+          }}
+        />
+        <input
+          type="text"
+          placeholder="Ед.изм."
+          className="input"
+          onChange={(e) => {
+            // TODO: Implement filtering
+            console.log('Filter Ед.изм.:', e.target.value)
+          }}
+        />
+        <input
+          type="text"
+          placeholder="Количество"
+          className="input"
+          onChange={(e) => {
+            // TODO: Implement filtering
+            console.log('Filter Количество:', e.target.value)
+          }}
+        />
+      </div>
+
       {/* Table Container with Independent Scrolling */}
-      <div className="card">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-            Элементы сборки
-          </h3>
-        </div>
-        <div className="table-container max-h-96 overflow-auto">
-          <DataTable
-            data={assemblyItems || []}
-            columns={columns}
-            loading={isLoading}
-            onRowClick={handleRowClick}
-          />
-        </div>
+      <div className="table-container max-h-96 overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700">
+        <DataTable
+          data={assemblyItems || []}
+          columns={columns}
+          loading={isLoading}
+          onRowClick={handleRowClick}
+        />
       </div>
 
       {/* Action Buttons for Selected Items */}

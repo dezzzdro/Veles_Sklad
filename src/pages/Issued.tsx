@@ -109,20 +109,45 @@ function Issued() {
         </Card>
       </div>
 
+      {/* Filters */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <select className="input">
+          <option value="">Все контрагенты</option>
+          {/* TODO: Populate with actual counterparties */}
+        </select>
+        <select className="input">
+          <option value="">Все ответственные</option>
+          {/* TODO: Populate with actual persons */}
+        </select>
+        <input
+          type="text"
+          placeholder="Реестровый номер"
+          className="input"
+          onChange={(e) => {
+            // TODO: Implement filtering
+            console.log('Filter Реестровый номер:', e.target.value)
+          }}
+        />
+        <input
+          type="text"
+          placeholder="УПД"
+          className="input"
+          onChange={(e) => {
+            // TODO: Implement filtering
+            console.log('Filter УПД:', e.target.value)
+          }}
+        />
+      </div>
+
       {/* Table Container with Independent Scrolling */}
-      <Card>
-        <CardHeader>
-          <CardTitle>История выдачи товаров</CardTitle>
-        </CardHeader>
-        <div className="table-container max-h-96 overflow-auto">
-          <DataTable
-            data={issuedItems}
-            columns={columns}
-            loading={loading.issued}
-            onRowClick={handleRowClick}
-          />
-        </div>
-      </Card>
+      <div className="table-container max-h-96 overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700">
+        <DataTable
+          data={issuedItems}
+          columns={columns}
+          loading={loading.issued}
+          onRowClick={handleRowClick}
+        />
+      </div>
 
       {/* Error State */}
       {errors.issued && (
