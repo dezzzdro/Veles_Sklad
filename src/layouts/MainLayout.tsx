@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useThemeStore } from '@/stores/themeStore'
 
 const navigation = [
+  { name: 'Панель управления', href: '/', icon: 'fas fa-tachometer-alt' },
   { name: 'Склад', href: '/sklad', icon: 'fas fa-warehouse' },
   { name: 'Сборка', href: '/sborka', icon: 'fas fa-cogs' },
   { name: 'Приход', href: '/prihod', icon: 'fas fa-truck' },
@@ -13,6 +14,7 @@ const systemNavigation = [
   { name: 'Контрагенты', href: '/kontragenty', icon: 'fas fa-users' },
   { name: 'Настройки', href: '/nastroyki', icon: 'fas fa-cog' },
   { name: 'Уведомления', href: '/uvedomleniya', icon: 'fas fa-bell' },
+  { name: 'UI Demo', href: '/ui-demo', icon: 'fas fa-palette' },
   { name: 'Отладка', href: '/otladka', icon: 'fas fa-tools' },
 ]
 
