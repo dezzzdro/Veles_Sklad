@@ -160,7 +160,7 @@ html, body {
 
 .table-scroll-container {
   @apply relative;
-  height: calc(100vh - 300px); /* Fixed container height */
+  height: calc(100vh - 300px); /* Fixed container height for 12 rows */
   min-height: 400px;
   max-height: calc(100vh - 200px);
   overflow: hidden; /* Prevent container overflow */
@@ -175,7 +175,7 @@ html, body {
 
 .table-body-scroll {
   display: block;
-  max-height: calc(100vh - 389px);
+  max-height: 480px; /* Fixed height for 12 rows (40px per row) */
   overflow-y: auto; /* Only vertical scroll for data */
   overflow-x: hidden; /* No horizontal scroll */
 }

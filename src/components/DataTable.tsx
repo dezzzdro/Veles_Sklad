@@ -15,6 +15,7 @@ interface DataTableProps<T> {
   onRowClick?: (item: T) => void
   className?: string
   filters?: FilterField[]
+  maxRows?: number // Maximum number of rows to display
 }
 
 function DataTable<T extends Record<string, any>>({
@@ -23,14 +24,15 @@ function DataTable<T extends Record<string, any>>({
   loading = false,
   onRowClick,
   className = '',
-  filters = []
+  filters = [],
+  maxRows = 12 // Default to 12 rows to fit page without scrolling
 }: DataTableProps<T>) {
   const [sortConfig, setSortConfig] = useState<{
     key: keyof T | null
     direction: 'asc' | 'desc'
   }>({ key: null, direction: 'asc' })
 
-  // Sort data
+  // Sort and limit data
   const processedData = useMemo(() => {
     let sorted = data
 
@@ -46,8 +48,9 @@ function DataTable<T extends Record<string, any>>({
       })
     }
 
-    return sorted
-  }, [data, sortConfig])
+    // Limit rows to fit page without scrolling
+    return sorted.slice(0, maxRows)
+  }, [data, sortConfig, maxRows])
 
   const handleSort = (key: keyof T) => {
     setSortConfig(prev => ({
