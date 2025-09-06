@@ -152,22 +152,32 @@
 }
 
 /* Independent table scrolling with fixed header */
+/* Prevent page scrolling - only table content should scroll */
+html, body {
+  overflow: hidden;
+  height: 100vh;
+}
+
 .table-scroll-container {
   @apply relative;
-  height: calc(100vh - 300px); /* Full height minus header, filters, and footer */
+  height: calc(100vh - 300px); /* Fixed container height */
   min-height: 400px;
   max-height: calc(100vh - 200px);
+  overflow: hidden; /* Prevent container overflow */
 }
 
 .table-header-fixed {
   @apply sticky top-0 z-10 bg-white dark:bg-gray-800;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
 }
 
 .table-body-scroll {
-  @apply overflow-y-auto overflow-x-hidden;
-  height: calc(100% - 89px); /* Subtract header + filter row height */
+  display: block;
   max-height: calc(100vh - 389px);
+  overflow-y: auto; /* Only vertical scroll for data */
+  overflow-x: hidden; /* No horizontal scroll */
 }
 
 .table-filter-cell {
