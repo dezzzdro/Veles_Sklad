@@ -76,8 +76,8 @@ function DataTable<T extends Record<string, any>>({
     <div className={`card ${className}`}>
       {/* Table Container with Independent Scrolling */}
       <div className="table-scroll-container">
-        {/* Fixed Header with Filters */}
-        <div className="table-header-sticky">
+        {/* Fixed Header Block (Header + Filters as one unit) */}
+        <div className="table-header-fixed">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             {/* Header Row */}
             <thead className="bg-gray-50 dark:bg-gray-800">
@@ -104,9 +104,9 @@ function DataTable<T extends Record<string, any>>({
               </tr>
             </thead>
 
-            {/* Filter Row */}
+            {/* Filter Row - Part of fixed header block */}
             {filters.length > 0 && (
-              <tbody className="bg-gray-100 dark:bg-gray-700">
+              <tbody className="bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                 <tr>
                   {columns.map((column, index) => {
                     const filter = filters[index]
@@ -119,7 +119,7 @@ function DataTable<T extends Record<string, any>>({
                         {filter ? (
                           filter.type === 'select' ? (
                             <select
-                              className="input text-xs py-1 px-2 h-8"
+                              className="input text-xs py-1 px-2 h-8 w-full"
                               onChange={(e) => filter.onChange?.(e.target.value)}
                             >
                               <option value="">{filter.placeholder || 'Все'}</option>
@@ -133,7 +133,7 @@ function DataTable<T extends Record<string, any>>({
                             <input
                               type="text"
                               placeholder={filter.placeholder}
-                              className="input text-xs py-1 px-2 h-8"
+                              className="input text-xs py-1 px-2 h-8 w-full"
                               onChange={(e) => filter.onChange?.(e.target.value)}
                             />
                           )
@@ -149,7 +149,7 @@ function DataTable<T extends Record<string, any>>({
           </table>
         </div>
 
-        {/* Scrollable Body */}
+        {/* Scrollable Data Body Only */}
         <div className="table-body-scroll">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
