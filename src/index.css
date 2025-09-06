@@ -170,44 +170,79 @@
   max-height: calc(100vh - 357px);
 }
 
-.table-header-cell {
-  @apply border-b border-gray-200 dark:border-gray-700;
-  position: sticky;
-  top: 0;
-  background: inherit;
-  z-index: 10;
-}
-
-.table-body-cell {
-  @apply border-b border-gray-200 dark:border-gray-700;
-}
-
-/* Ensure table layout is consistent */
+/* Ensure proper table layout */
 .table-scroll-container table {
   @apply table-fixed;
   width: 100%;
+  border-collapse: collapse;
 }
 
-.table-scroll-container thead,
-.table-scroll-container tbody {
-  display: block;
+.table-scroll-container thead {
+  @apply block;
 }
 
 .table-scroll-container tbody {
-  @apply overflow-y-auto overflow-x-hidden;
+  @apply block overflow-y-auto overflow-x-hidden;
 }
 
 .table-scroll-container tr {
-  @apply flex;
+  @apply table-row;
   width: 100%;
 }
 
 .table-scroll-container th,
 .table-scroll-container td {
-  @apply flex-shrink-0;
-  display: block;
+  @apply table-cell;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Fixed column widths for proper alignment */
+.table-scroll-container th:nth-child(1),
+.table-scroll-container td:nth-child(1) {
+  width: 120px;
+}
+
+.table-scroll-container th:nth-child(2),
+.table-scroll-container td:nth-child(2) {
+  width: auto;
+  min-width: 200px;
+}
+
+.table-scroll-container th:nth-child(3),
+.table-scroll-container td:nth-child(3) {
+  width: 100px;
+}
+
+.table-scroll-container th:nth-child(4),
+.table-scroll-container td:nth-child(4) {
+  width: 120px;
+}
+
+.table-scroll-container th:nth-child(5),
+.table-scroll-container td:nth-child(5) {
+  width: auto;
+  min-width: 150px;
+}
+
+.table-scroll-container th:nth-child(6),
+.table-scroll-container td:nth-child(6) {
+  width: auto;
+  min-width: 120px;
+}
+
+.table-scroll-container th:nth-child(7),
+.table-scroll-container td:nth-child(7) {
+  width: auto;
+  min-width: 120px;
+}
+
+.table-scroll-container th:nth-child(8),
+.table-scroll-container td:nth-child(8) {
+  width: auto;
+  min-width: 120px;
 }
 
 /* Responsive adjustments for table scrolling */
@@ -220,6 +255,18 @@
   .table-body-scroll {
     height: calc(100% - 50px);
   }
+
+  /* Hide less important columns on mobile */
+  .table-scroll-container th:nth-child(5),
+  .table-scroll-container td:nth-child(5),
+  .table-scroll-container th:nth-child(6),
+  .table-scroll-container td:nth-child(6),
+  .table-scroll-container th:nth-child(7),
+  .table-scroll-container td:nth-child(7),
+  .table-scroll-container th:nth-child(8),
+  .table-scroll-container td:nth-child(8) {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -230,5 +277,11 @@
 
   .table-body-scroll {
     height: calc(100% - 45px);
+  }
+
+  /* Hide more columns on very small screens */
+  .table-scroll-container th:nth-child(4),
+  .table-scroll-container td:nth-child(4) {
+    display: none;
   }
 }

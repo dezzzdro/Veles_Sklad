@@ -154,155 +154,133 @@ function Arrival() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* 1. Заголовок раздела (чистый, без лишних блоков) */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Приход</h1>
           <p className="text-gray-600 dark:text-gray-400">Регистрация поступления товаров</p>
         </div>
-        <div className="flex space-x-3">
-          <button
-            onClick={() => {
-              clearErrors()
-              fetchArrivalItems()
-            }}
-            className="btn btn-secondary"
-          >
-            <i className="fas fa-sync-alt mr-2"></i>
-            Обновить
-          </button>
-        </div>
       </div>
 
-      {/* Action Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Paste from clipboard */}
-        <div className="card p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-            <i className="fas fa-paste mr-2"></i>
-            Вставка данных
-          </h3>
-          <div className="space-y-3">
-            <button
-              onClick={handlePasteFromClipboard}
-              className="btn btn-outline-primary w-full"
-            >
-              <i className="fas fa-paste mr-2"></i>
-              Вставить из буфера
-            </button>
-            <button
-              onClick={handleAddRow}
-              className="btn btn-outline-secondary w-full"
-            >
-              <i className="fas fa-plus mr-2"></i>
-              Добавить строку
-            </button>
-          </div>
-        </div>
-
-        {/* Document info */}
-        <div className="card p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-            <i className="fas fa-file-alt mr-2"></i>
-            Документы
-          </h3>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Реестровый номер
-              </label>
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={registryNumber}
-                  onChange={(e) => setRegistryNumber(e.target.value)}
-                  className="input flex-1"
-                  placeholder="Введите номер"
-                />
-                <button
-                  onClick={handleApplyRegistryNumber}
-                  className="btn btn-outline-primary"
-                >
-                  Применить
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                УПД
-              </label>
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={upd}
-                  onChange={(e) => setUpd(e.target.value)}
-                  className="input flex-1"
-                  placeholder="Введите УПД"
-                />
-                <button
-                  onClick={handleApplyUPD}
-                  className="btn btn-outline-primary"
-                >
-                  Применить
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="card p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-            <i className="fas fa-cogs mr-2"></i>
-            Действия
-          </h3>
-          <div className="space-y-3">
-            <button
-              onClick={async () => {
-                if (confirm('Очистить все данные прихода?')) {
-                  try {
-                    // Delete all arrival items
-                    for (const item of arrivalItems) {
-                      await deleteArrivalItem(item.id)
-                    }
-                    toast.success('Приход очищен')
-                  } catch (error) {
-                    toast.error('Ошибка очистки')
-                  }
+      {/* 2. Кнопки-функции для работы с разделом */}
+      <div className="flex flex-wrap gap-3">
+        <button
+          onClick={() => {
+            clearErrors()
+            fetchArrivalItems()
+          }}
+          className="btn btn-secondary"
+        >
+          <i className="fas fa-sync-alt mr-2"></i>
+          Обновить
+        </button>
+        <button
+          onClick={handlePasteFromClipboard}
+          className="btn btn-primary"
+        >
+          <i className="fas fa-paste mr-2"></i>
+          Вставить из буфера
+        </button>
+        <button
+          onClick={handleAddRow}
+          className="btn btn-primary"
+        >
+          <i className="fas fa-plus mr-2"></i>
+          Добавить строку
+        </button>
+        <button
+          onClick={handleExportToExcel}
+          className="btn btn-secondary"
+        >
+          <i className="fas fa-file-excel mr-2"></i>
+          Экспорт в Excel
+        </button>
+        <button
+          onClick={handleAcceptArrival}
+          className="btn btn-success"
+        >
+          <i className="fas fa-check mr-2"></i>
+          Принять приход
+        </button>
+        <button
+          onClick={async () => {
+            if (confirm('Очистить все данные прихода?')) {
+              try {
+                for (const item of arrivalItems) {
+                  await deleteArrivalItem(item.id)
                 }
-              }}
-              className="btn btn-outline-danger w-full"
-            >
-              <i className="fas fa-trash mr-2"></i>
-              Очистить приход
-            </button>
-            <button
-              onClick={handleExportToExcel}
-              className="btn btn-outline-info w-full"
-            >
-              <i className="fas fa-file-excel mr-2"></i>
-              Экспорт в Excel
-            </button>
-            <button
-              onClick={handleAcceptArrival}
-              className="btn btn-success w-full"
-            >
-              <i className="fas fa-check mr-2"></i>
-              Принять приход
-            </button>
-          </div>
-        </div>
+                toast.success('Приход очищен')
+              } catch (error) {
+                toast.error('Ошибка очистки')
+              }
+            }
+          }}
+          className="btn btn-danger"
+        >
+          <i className="fas fa-trash mr-2"></i>
+          Очистить приход
+        </button>
       </div>
 
-      {/* Filters above table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700 p-4 mb-4">
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+      {/* 3. Заголовок таблицы */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700 p-4">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+          <i className="fas fa-table mr-2"></i>
+          Таблица прихода
+        </h3>
+
+        {/* Документы */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Реестровый номер
+            </label>
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={registryNumber}
+                onChange={(e) => setRegistryNumber(e.target.value)}
+                className="input flex-1"
+                placeholder="Введите номер"
+              />
+              <button
+                onClick={handleApplyRegistryNumber}
+                className="btn btn-outline-primary"
+              >
+                Применить
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              УПД
+            </label>
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={upd}
+                onChange={(e) => setUpd(e.target.value)}
+                className="input flex-1"
+                placeholder="Введите УПД"
+              />
+              <button
+                onClick={handleApplyUPD}
+                className="btn btn-outline-primary"
+              >
+                Применить
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Поля ввода фильтра контента (над таблицей) */}
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
           <input
             type="text"
             placeholder="Дата"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by date
               console.log('Filter Дата:', e.target.value)
             }}
           />
@@ -311,7 +289,7 @@ function Arrival() {
             placeholder="Наименование"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by name
               console.log('Filter Наименование:', e.target.value)
             }}
           />
@@ -320,7 +298,7 @@ function Arrival() {
             placeholder="Ед.изм."
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by unit
               console.log('Filter Ед.изм.:', e.target.value)
             }}
           />
@@ -329,7 +307,7 @@ function Arrival() {
             placeholder="Количество"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by quantity
               console.log('Filter Количество:', e.target.value)
             }}
           />
@@ -338,7 +316,7 @@ function Arrival() {
             placeholder="Реестровый номер"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by registry number
               console.log('Filter Реестровый номер:', e.target.value)
             }}
           />
@@ -347,20 +325,20 @@ function Arrival() {
             placeholder="УПД"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by UPD
               console.log('Filter УПД:', e.target.value)
             }}
           />
         </div>
-      </div>
 
-      {/* Table with Independent Scrolling */}
-      <DataTable
-        data={arrivalItems}
-        columns={columns}
-        loading={loading.arrival}
-        onRowClick={handleRowClick}
-      />
+        {/* 5. Строки таблицы (прокручиваемые независимо) */}
+        <DataTable
+          data={arrivalItems}
+          columns={columns}
+          loading={loading.arrival}
+          onRowClick={handleRowClick}
+        />
+      </div>
 
       {/* Error State */}
       {errors.arrival && (

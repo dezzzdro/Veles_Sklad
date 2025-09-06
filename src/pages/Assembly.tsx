@@ -122,84 +122,47 @@ function Assembly() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* 1. Заголовок раздела (чистый, без лишних блоков) */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Сборка</h1>
           <p className="text-gray-600 dark:text-gray-400">Подготовка товаров к выдаче</p>
         </div>
-        <div className="flex space-x-3">
-          <button
-            onClick={() => queryClient.invalidateQueries({ queryKey: ['assembly'] })}
-            className="btn btn-secondary"
-          >
-            <i className="fas fa-sync-alt mr-2"></i>
-            Обновить
-          </button>
-          <button
-            onClick={handleAddItem}
-            className="btn btn-primary"
-          >
-            <i className="fas fa-plus mr-2"></i>
-            Добавить в сборку
-          </button>
-        </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900">
-              <i className="fas fa-cogs text-blue-600 text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">В сборке</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {assemblyItems?.length || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-lg bg-green-100 dark:bg-green-900">
-              <i className="fas fa-box text-green-600 text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Общее количество</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {assemblyItems?.reduce((sum, item) => sum + (item.количество || 0), 0) || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-lg bg-orange-100 dark:bg-orange-900">
-              <i className="fas fa-arrow-right text-orange-600 text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Готово к выдаче</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {assemblyItems?.length || 0}
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* 2. Кнопки-функции для работы с разделом */}
+      <div className="flex flex-wrap gap-3">
+        <button
+          onClick={() => queryClient.invalidateQueries({ queryKey: ['assembly'] })}
+          className="btn btn-secondary"
+        >
+          <i className="fas fa-sync-alt mr-2"></i>
+          Обновить
+        </button>
+        <button
+          onClick={handleAddItem}
+          className="btn btn-primary"
+        >
+          <i className="fas fa-plus mr-2"></i>
+          Добавить в сборку
+        </button>
       </div>
 
-      {/* Filters above table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700 p-4 mb-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* 3. Заголовок таблицы */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft border border-gray-200 dark:border-gray-700 p-4">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+          <i className="fas fa-table mr-2"></i>
+          Таблица сборки
+        </h3>
+
+        {/* 4. Поля ввода фильтра контента (над таблицей) */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           <input
             type="text"
             placeholder="ID"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by ID
               console.log('Filter ID:', e.target.value)
             }}
           />
@@ -208,7 +171,7 @@ function Assembly() {
             placeholder="Наименование"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by name
               console.log('Filter Наименование:', e.target.value)
             }}
           />
@@ -217,7 +180,7 @@ function Assembly() {
             placeholder="Ед.изм."
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by unit
               console.log('Filter Ед.изм.:', e.target.value)
             }}
           />
@@ -226,55 +189,55 @@ function Assembly() {
             placeholder="Количество"
             className="input"
             onChange={(e) => {
-              // TODO: Implement filtering
+              // TODO: Implement filtering by quantity
               console.log('Filter Количество:', e.target.value)
             }}
           />
         </div>
-      </div>
 
-      {/* Table with Independent Scrolling */}
-      <DataTable
-        data={assemblyItems || []}
-        columns={columns}
-        loading={isLoading}
-        onRowClick={handleRowClick}
-      />
+        {/* 5. Строки таблицы (прокручиваемые независимо) */}
+        <DataTable
+          data={assemblyItems || []}
+          columns={columns}
+          loading={isLoading}
+          onRowClick={handleRowClick}
+        />
 
-      {/* Action Buttons for Selected Items */}
-      {assemblyItems && assemblyItems.length > 0 && (
-        <div className="card p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-            Действия с элементами сборки
-          </h3>
-          <div className="flex flex-wrap gap-3">
-            {assemblyItems.map((item) => (
-              <div key={item.id} className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                <span className="text-sm font-medium">{item.наименование}</span>
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  ({item.количество} {item.ед_изм})
-                </span>
-                <div className="flex space-x-1">
-                  <button
-                    onClick={() => handleTransferItem(item)}
-                    className="btn btn-sm btn-outline-success"
-                    title="Передать в сборку"
-                  >
-                    <i className="fas fa-arrow-right"></i>
-                  </button>
-                  <button
-                    onClick={() => handleDeleteItem(item.id)}
-                    className="btn btn-sm btn-outline-danger"
-                    title="Удалить"
-                  >
-                    <i className="fas fa-trash"></i>
-                  </button>
+        {/* Action Buttons for Selected Items */}
+        {assemblyItems && assemblyItems.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <h4 className="text-md font-medium text-gray-900 dark:text-gray-100 mb-3">
+              Действия с элементами сборки
+            </h4>
+            <div className="flex flex-wrap gap-3">
+              {assemblyItems.map((item) => (
+                <div key={item.id} className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                  <span className="text-sm font-medium">{item.наименование}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    ({item.количество} {item.ед_изм})
+                  </span>
+                  <div className="flex space-x-1">
+                    <button
+                      onClick={() => handleTransferItem(item)}
+                      className="btn btn-sm btn-outline-success"
+                      title="Передать в сборку"
+                    >
+                      <i className="fas fa-arrow-right"></i>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteItem(item.id)}
+                      className="btn btn-sm btn-outline-danger"
+                      title="Удалить"
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Error State */}
       {error && (
