@@ -5,7 +5,6 @@ interface DataTableProps<T> {
   data: T[]
   columns: TableColumn<T>[]
   loading?: boolean
-  searchable?: boolean
   onRowClick?: (item: T) => void
   className?: string
 }
@@ -14,32 +13,21 @@ function DataTable<T extends Record<string, any>>({
   data,
   columns,
   loading = false,
-  searchable = true,
   onRowClick,
   className = ''
 }: DataTableProps<T>) {
-  const [searchTerm, setSearchTerm] = useState('')
   const [sortConfig, setSortConfig] = useState<{
     key: keyof T | null
     direction: 'asc' | 'desc'
   }>({ key: null, direction: 'asc' })
 
-  // Filter and sort data
+  // Sort data
   const processedData = useMemo(() => {
-    let filtered = data
-
-    // Apply search filter
-    if (searchTerm) {
-      filtered = data.filter(item =>
-        Object.values(item).some(value =>
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      )
-    }
+    let sorted = data
 
     // Apply sorting
     if (sortConfig.key) {
-      filtered = [...filtered].sort((a, b) => {
+      sorted = [...data].sort((a, b) => {
         const aValue = a[sortConfig.key!]
         const bValue = b[sortConfig.key!]
 
@@ -49,8 +37,8 @@ function DataTable<T extends Record<string, any>>({
       })
     }
 
-    return filtered
-  }, [data, searchTerm, sortConfig])
+    return sorted
+  }, [data, sortConfig])
 
   const handleSort = (key: keyof T) => {
     setSortConfig(prev => ({
@@ -77,24 +65,6 @@ function DataTable<T extends Record<string, any>>({
 
   return (
     <div className={`card ${className}`}>
-      {/* Search */}
-      {searchable && (
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i className="fas fa-search text-gray-400"></i>
-            </div>
-            <input
-              type="text"
-              placeholder="Поиск..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="input pl-10"
-            />
-          </div>
-        </div>
-      )}
-
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -129,7 +99,7 @@ function DataTable<T extends Record<string, any>>({
                   className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
                 >
                   <i className="fas fa-inbox text-4xl mb-4 block"></i>
-                  {searchTerm ? 'Ничего не найдено' : 'Нет данных'}
+                  Нет данных
                 </td>
               </tr>
             ) : (
@@ -162,14 +132,6 @@ function DataTable<T extends Record<string, any>>({
           <div className="text-sm text-gray-700 dark:text-gray-300">
             Показано {processedData.length} из {data.length} записей
           </div>
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="text-sm text-blue-600 hover:text-blue-500"
-            >
-              Очистить поиск
-            </button>
-          )}
         </div>
       </div>
     </div>
