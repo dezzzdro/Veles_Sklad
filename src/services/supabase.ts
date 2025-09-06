@@ -263,6 +263,26 @@ class SupabaseService {
     )
   }
 
+  async updateNotification(id: string, updates: Partial<Notification>): Promise<ApiResponse<Notification>> {
+    return this.query(() =>
+      this.client
+        .from('уведомления')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single()
+    )
+  }
+
+  async deleteNotification(id: string): Promise<ApiResponse<null>> {
+    return this.query(() =>
+      this.client
+        .from('уведомления')
+        .delete()
+        .eq('id', id)
+    )
+  }
+
   // Operations log
   async getOperations(): Promise<ApiResponse<Operation[]>> {
     return this.query(() =>
