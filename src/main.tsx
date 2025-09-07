@@ -1,26 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App.tsx'
-import './index.css'
+// Simple test to check if modules load
+console.log('main.tsx loaded successfully!')
 
-// Create a client for React Query
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
-    },
-  },
-})
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
-  </React.StrictMode>,
-)
+// Simple DOM manipulation
+const root = document.getElementById('root')
+if (root) {
+  root.innerHTML = `
+    <div style="padding: 20px; font-family: Arial, sans-serif;">
+      <h1 style="color: #2563eb;">Велес Склад - Современная версия</h1>
+      <p style="color: #374151;">JavaScript модули загружаются корректно!</p>
+      <p style="color: #059669;">✅ MIME type исправлен</p>
+      <p style="color: #059669;">✅ ES модули работают</p>
+      <p style="color: #059669;">✅ Vite сервер функционирует</p>
+    </div>
+  `
+}
