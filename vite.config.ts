@@ -1,12 +1,28 @@
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
+// Custom plugin to fix MIME type issues
+const mimeTypePlugin: Plugin = {
+  name: 'mime-type-fix',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      if (req.url?.endsWith('.tsx') || req.url?.endsWith('.ts') || req.url?.endsWith('.jsx') || req.url?.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript');
+      }
+      next();
+    });
+  },
+};
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({
-    include: '**/*.{jsx,tsx}',
-  })],
+  plugins: [
+    mimeTypePlugin,
+    react({
+      include: '**/*.{jsx,tsx}',
+    })
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -32,8 +48,12 @@ export default defineConfig({
       'Pragma': 'no-cache',
       'Expires': '0',
       'X-Content-Type-Options': 'nosniff',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
     middlewareMode: false,
+    cors: true,
   },
   build: {
     outDir: 'dist',
@@ -49,7 +69,17 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+  },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js'],
+    exclude: ['@vite/client', '@vite/env'],
+  },
+  esbuild: {
+    target: 'es2020',
+    define: {
+      global: 'globalThis',
+    },
   },
 })
