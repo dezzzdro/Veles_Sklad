@@ -4,7 +4,9 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react({
+    include: '**/*.{jsx,tsx}',
+  })],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -26,10 +28,12 @@ export default defineConfig({
       overlay: false,
     },
     headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
       'Pragma': 'no-cache',
       'Expires': '0',
+      'X-Content-Type-Options': 'nosniff',
     },
+    middlewareMode: false,
   },
   build: {
     outDir: 'dist',
@@ -44,5 +48,8 @@ export default defineConfig({
         },
       },
     },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js'],
   },
 })
